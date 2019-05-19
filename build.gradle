@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "https://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+version = "${mod_version}"
+group = "${mod_group}"
+
+// custom properties
+ext.author = "${mod_author}"
+ext.slug = "${mod_slug}"
+ext.description = "${mod_description}"
+
+sourceCompatibility = targetCompatibility = '1.8' // need this here so eclipse task generates correctly
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "${mc_version}-${forge_version}"
+    mappings = "${mcp_version}"
+    replace '@VERSION@', project.version
+    replace '@FINGERPRINT@', project.findProperty('signSHA1')
+    runDir = "run"
+    makeObfSourceJar = false
+}
+
+jar {
+    archiveName "${mod_name}-v${mod_version}-${mc_version}.jar" // use archiveFileName in the future
+}
+
+processResources {
+
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "mod_version", project.ext.author
+    inputs.property "mc_version", project.minecraft.version
+    inputs.property "mod_slug", project.ext.slug
+    inputs.property "mod_description", project.ext.description
+    inputs.property "mod_author", project.ext.author
+
+    // replace stuff in mcmod.info and pack.mcmeta
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info', 'pack.mcmeta'
+        expand 'mod_version':project.version, 'mc_version':project.minecraft.version, 'mod_slug':project.ext.slug, 'mod_description':project.ext.description, 'mod_author':project.ext.author
+    }
+
+    // copy everything else except mcmod.info and pack.mcmeta
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info', 'pack.mcmeta'
+    }
+}
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+
+    onlyIf {
+        project.hasProperty('keyStore')
+    }
+
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('alias')
+    storePass = project.findProperty('storePass')
+    keyPass = project.findProperty('keyPass')
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+build.dependsOn signJar

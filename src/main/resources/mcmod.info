@@ -1,0 +1,11 @@
+[
+{
+  "modid": "fivefeetsmall",
+  "name": "Five Feet Small",
+  "description": "${mod_description}",
+  "version": "${mod_version}",
+  "mcversion": "${mc_version}",
+  "url": "https://minecraft.curseforge.com/projects/${mod_slug}",
+  "authorList": ["${mod_author}"]
+}
+]
