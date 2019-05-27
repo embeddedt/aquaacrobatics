@@ -30,7 +30,7 @@ public class ClientEventHandler {
     }
 
     private boolean isSneakingPose(EntityPlayer player) {
-        String uuid = player.getUniqueID().toString();
+        String uuid = player.getPersistentID().toString();
 
         boolean flag = Math.abs(player.width - ConfigHandler.sneakingWidth / 0.6F * CommonEventHandler.width.get(uuid)) < 0.01F;
         boolean flag1 = Math.abs(player.height - ConfigHandler.sneakingHeight / 1.8F * CommonEventHandler.height.get(uuid)) < 0.01F;

@@ -26,7 +26,7 @@ public class CommonEventHandler implements IPrivateAccessor {
 
         EntityPlayer player = event.player;
 
-        uuid = player.getUniqueID().toString();
+        uuid = player.getPersistentID().toString();
 
         if (!player.isSneaking()) {
 
