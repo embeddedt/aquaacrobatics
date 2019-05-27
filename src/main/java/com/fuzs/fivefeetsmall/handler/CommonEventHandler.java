@@ -8,19 +8,38 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+
+import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 
 public class CommonEventHandler implements IPrivateAccessor {
 
-    @SubscribeEvent
-    public void adjustSneakingSize(TickEvent.PlayerTickEvent event) {
+    static HashMap<String, Float> height = new HashMap<>();
+    static HashMap<String, Float> width = new HashMap<>();
+    static HashMap<String, Float> eyeHeight = new HashMap<>();
+
+    String uuid;
+
+    @SubscribeEvent(priority = LOWEST)
+    public void adjustSneakingSize(TickEvent.PlayerTickEvent event)
+    {
 
         EntityPlayer player = event.player;
 
+        uuid = player.getUniqueID().toString();
+
+        if (!player.isSneaking()) {
+
+            height.put(uuid, player.height);
+            width.put(uuid, player.width);
+            eyeHeight.put(uuid, player.eyeHeight);
+        }
+
         if (player.isSneaking()) {
 
-            player.height = (float) ConfigHandler.sneakingHeight;
-            player.width = (float) ConfigHandler.sneakingWidth;
-            player.eyeHeight = (float) ConfigHandler.sneakingEyes;
+            player.height = (float) ConfigHandler.sneakingHeight / 1.8F * height.get(uuid);
+            player.width = (float) ConfigHandler.sneakingWidth / 0.6F * width.get(uuid);
+            player.eyeHeight = (float) ConfigHandler.sneakingEyes / 1.62F * eyeHeight.get(uuid);
 
             try {
                 this.findSetSize().invoke(player, player.width, player.height);
