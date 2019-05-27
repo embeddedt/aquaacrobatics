@@ -18,15 +18,13 @@ public class CommonEventHandler implements IPrivateAccessor {
     static HashMap<String, Float> width = new HashMap<>();
     static HashMap<String, Float> eyeHeight = new HashMap<>();
 
-    String uuid;
-
     @SubscribeEvent(priority = LOWEST)
     public void adjustSneakingSize(TickEvent.PlayerTickEvent event)
     {
 
         EntityPlayer player = event.player;
 
-        uuid = player.getPersistentID().toString();
+        String uuid = player.getPersistentID().toString();
 
         if (eyeHeight.get(uuid) != null) {
 
