@@ -28,6 +28,14 @@ public class CommonEventHandler implements IPrivateAccessor {
 
         uuid = player.getPersistentID().toString();
 
+        if (eyeHeight.get(uuid) != null) {
+
+            if (!player.isSneaking() && Math.abs(player.eyeHeight - (float) ConfigHandler.sneakingEyes / 1.62F * eyeHeight.get(uuid)) < 0.01F) {
+                player.eyeHeight = player.getDefaultEyeHeight();
+
+            }
+        }
+
         if (!player.isSneaking()) {
 
             height.put(uuid, player.height);
@@ -52,10 +60,6 @@ public class CommonEventHandler implements IPrivateAccessor {
                     player.posZ - player.width / 2.0D, player.posX + player.width / 2.0D,
                     axisalignedbb.minY + player.height, player.posZ + player.width / 2.0D);
             player.setEntityBoundingBox(axisalignedbb);
-
-        } else if (player.eyeHeight == (float) ConfigHandler.sneakingEyes) {
-
-            player.eyeHeight = player.getDefaultEyeHeight();
 
         }
     }
