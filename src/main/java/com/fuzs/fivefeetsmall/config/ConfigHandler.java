@@ -29,7 +29,7 @@ public class ConfigHandler {
 	public static double sneakingEyes = 1.27;
 
 	@Config.Name("Adjust Size")
-	@Config.Comment("Force the player to stay in sneaking position when the available space is less than 1.8 blocks (default player height) tall.")
+	@Config.Comment("Force the player to stay in sneaking position when there is not enough space to stand up.")
 	public static boolean adjustSize = true;
 
 	@SubscribeEvent

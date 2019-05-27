@@ -16,8 +16,13 @@ public class ClientEventHandler {
         }
 
         EntityPlayer player = evt.getEntityPlayer();
+        String uuid = player.getPersistentID().toString();
+
+        float height = CommonEventHandler.height.get(uuid);
+        float width = CommonEventHandler.width.get(uuid);
+
         AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
-        axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + 0.6, axisalignedbb.minY + 1.8, axisalignedbb.minZ + 0.6);
+        axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width);
 
         if (!player.isSneaking() && this.isSneakingPose(player) && player.world.collidesWithAnyBlock(axisalignedbb)) {
 
