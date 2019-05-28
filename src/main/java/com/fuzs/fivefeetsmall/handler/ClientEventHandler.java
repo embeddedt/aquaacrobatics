@@ -16,8 +16,13 @@ public class ClientEventHandler {
         }
 
         EntityPlayer player = evt.getEntityPlayer();
+        String uuid = player.getPersistentID().toString();
+
+        float height = CommonEventHandler.height.get(uuid);
+        float width = CommonEventHandler.width.get(uuid);
+
         AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
-        axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + 0.6, axisalignedbb.minY + 1.8, axisalignedbb.minZ + 0.6);
+        axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width);
 
         if (!player.isSneaking() && this.isSneakingPose(player) && player.world.collidesWithAnyBlock(axisalignedbb)) {
 
@@ -30,8 +35,10 @@ public class ClientEventHandler {
     }
 
     private boolean isSneakingPose(EntityPlayer player) {
-        boolean flag = Math.abs(player.width - ConfigHandler.sneakingWidth) < 0.01F;
-        boolean flag1 = Math.abs(player.height - ConfigHandler.sneakingHeight) < 0.01F;
+        String uuid = player.getPersistentID().toString();
+        
+        boolean flag = Math.abs(player.width - ConfigHandler.sneakingWidth / 0.6F * CommonEventHandler.width.get(uuid)) < 0.01F;
+        boolean flag1 = Math.abs(player.height - ConfigHandler.sneakingHeight / 1.8F * CommonEventHandler.height.get(uuid)) < 0.01F;
         return flag && flag1;
     }
 
