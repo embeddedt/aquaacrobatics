@@ -19,7 +19,7 @@ public class ClientEventHandler {
         AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
         axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + 0.6, axisalignedbb.minY + 1.8, axisalignedbb.minZ + 0.6);
 
-        if (!player.isSneaking() && this.isSneakingPose(player) && player.world.collidesWithAnyBlock(axisalignedbb)) {
+        if (!player.isSpectator() && !player.isSneaking() && this.isSneakingPose(player) && player.world.collidesWithAnyBlock(axisalignedbb)) {
 
             evt.getMovementInput().sneak = true;
             evt.getMovementInput().moveStrafe = (float)((double)evt.getMovementInput().moveStrafe * 0.3D);
