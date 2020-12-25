@@ -1,7 +1,6 @@
 package com.fuzs.fivefeetsmall.config;
 
 import com.fuzs.fivefeetsmall.FiveFeetSmall;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Type;
 import net.minecraftforge.common.config.ConfigManager;
@@ -32,9 +31,12 @@ public class ConfigHandler {
 	@Config.Comment("Force the player to stay in sneaking position when the available space is less than 1.8 blocks (default player height) tall.")
 	public static boolean adjustSize = true;
 
+	@SuppressWarnings("unused")
 	@SubscribeEvent
-	public static void configChanged(ConfigChangedEvent.OnConfigChangedEvent evt) {
+	public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent evt) {
+
 		if (evt.getModID().equals(FiveFeetSmall.MODID)) {
+
 			ConfigManager.sync(FiveFeetSmall.MODID, Type.INSTANCE);
 		}
 	}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.fuzs.fivefeetsmall.core.mixin",
+  "refmap": "mixins.fivefeetsmall.refmap.json",
+  "mixins": [
+    "EntityPlayerMixin"
+  ],
+  "client": [
+    "EntityPlayerSPMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
