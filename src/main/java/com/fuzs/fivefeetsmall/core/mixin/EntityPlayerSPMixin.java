@@ -1,9 +1,8 @@
 package com.fuzs.fivefeetsmall.core.mixin;
 
 import com.fuzs.fivefeetsmall.entity.Pose;
-import com.fuzs.fivefeetsmall.entity.player.ISwimmingPlayer;
-import com.fuzs.fivefeetsmall.entity.player.ISwimmingPlayerSP;
-import com.fuzs.fivefeetsmall.util.MathHelper;
+import com.fuzs.fivefeetsmall.entity.player.IPlayerSwimming;
+import com.fuzs.fivefeetsmall.entity.player.IPlayerSPSwimming;
 import com.fuzs.fivefeetsmall.util.MovementInputStorage;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityPlayerSP.class)
-public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implements ISwimmingPlayerSP {
+public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implements IPlayerSPSwimming {
 
     @Shadow
     protected Minecraft mc;
@@ -32,8 +31,6 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public MovementInput movementInput;
 
     private final MovementInputStorage storage = new MovementInputStorage();
-    private float swimAnimation;
-    private float lastSwimAnimation;
 
     public EntityPlayerSPMixin(World worldIn, GameProfile playerProfile) {
 
@@ -43,15 +40,21 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Override
     public boolean isSneaking() {
 
+        return this.hasSneakingInput();
+    }
+
+    @Override
+    public boolean hasSneakingInput() {
+
         return this.movementInput != null && this.movementInput.sneak;
     }
 
     @Override
-    public boolean isCrouching() {
+    public boolean shouldRenderSneaking() {
 
-        if (!this.capabilities.isFlying && !((ISwimmingPlayer) this).isSwimming() && ((ISwimmingPlayer) this).isPoseClear(Pose.CROUCHING)) {
+        if (!this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING)) {
 
-            return this.isSneaking() || !this.isPlayerSleeping() && !((ISwimmingPlayer) this).isPoseClear(Pose.STANDING);
+            return this.hasSneakingInput() || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING);
         } else {
 
             return false;
@@ -61,7 +64,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Override
     public boolean func_228354_I_() {
 
-        return this.isCrouching() || ((ISwimmingPlayer) this).isVisuallySwimming();
+        return this.shouldRenderSneaking() || ((IPlayerSwimming) this).isVisuallySwimming();
     }
 
     private boolean func_223110_ee() {
@@ -72,37 +75,13 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Override
     public boolean canSwim() {
 
-        return ((ISwimmingPlayer) this).getEyesInWaterPlayer();
+        return ((IPlayerSwimming) this).getEyesInWaterPlayer();
     }
 
     @Override
     public boolean func_223135_b() {
 
         return this.movementInput.moveForward > 1.0E-5F;
-    }
-
-    @Override
-    public float getSwimAnimation(float partialTicks) {
-
-        return MathHelper.lerp(partialTicks, this.lastSwimAnimation, this.swimAnimation);
-    }
-
-    private void updateSwimAnimation() {
-
-        this.lastSwimAnimation = this.swimAnimation;
-        if (((ISwimmingPlayer) this).isActuallySwimming()) {
-
-            this.swimAnimation = Math.min(1.0F, this.swimAnimation + 0.09F);
-        } else {
-
-            this.swimAnimation = Math.max(0.0F, this.swimAnimation - 0.09F);
-        }
-    }
-
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/entity/EntityPlayerSP;isRiding()Z"))
-    public void onUpdate(CallbackInfo callbackInfo) {
-
-        this.updateSwimAnimation();
     }
 
     @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", shift = At.Shift.BEFORE, target = "Lnet/minecraft/util/MovementInput;jump:Z"), slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;timeUntilPortal:I"), to = @At(value = "INVOKE", target = "Lnet/minecraft/util/MovementInput;updatePlayerMoveState()V")))
@@ -161,7 +140,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
             boolean flag5 = !this.func_223135_b() || !flag4;
             boolean flag6 = flag5 || this.collidedHorizontally || this.isInWater() && !this.canSwim();
-            if (((ISwimmingPlayer) this).isSwimming()) {
+            if (((IPlayerSwimming) this).isSwimming()) {
 
                 if (!this.onGround && !this.movementInput.sneak && flag5 || !this.isInWater()) {
 

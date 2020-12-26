@@ -2,8 +2,9 @@ package com.fuzs.fivefeetsmall.core.mixin;
 
 import com.fuzs.fivefeetsmall.entity.EntitySize;
 import com.fuzs.fivefeetsmall.entity.Pose;
-import com.fuzs.fivefeetsmall.entity.player.ISwimmingPlayer;
+import com.fuzs.fivefeetsmall.entity.player.IPlayerSwimming;
 import com.fuzs.fivefeetsmall.network.datasync.PoseSerializer;
+import com.fuzs.fivefeetsmall.util.MathHelper;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -28,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Map;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwimmingPlayer {
+public abstract class EntityPlayerMixin extends EntityLivingBase implements IPlayerSwimming {
 
     private static final EntitySize SLEEPING_SIZE = EntitySize.fixed(0.2F, 0.2F);
     private static final EntitySize STANDING_SIZE = EntitySize.flexible(0.6F, 1.8F);
@@ -39,6 +41,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwi
     protected boolean eyesInWaterPlayer;
     private EntitySize size;
     private float eyeHeight;
+    private float swimAnimation;
+    private float lastSwimAnimation;
 
     @Shadow
     public PlayerCapabilities capabilities;
@@ -67,6 +71,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwi
         super.notifyDataManagerChange(key);
     }
 
+    @Override
     public void onEntityUpdate() {
 
         super.onEntityUpdate();
@@ -74,6 +79,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwi
         // updateAquatics
         this.updateEyesInWater();
         this.updateSwimming();
+    }
+
+    @Inject(method = "onDeath", at = @At("TAIL"))
+    public void onDeath(DamageSource cause, CallbackInfo callbackInfo) {
+
+        if (this.isDead && this.getPose() != Pose.DYING) {
+
+            this.setPose(Pose.DYING);
+        }
     }
 
     public boolean canSwim() {
@@ -140,7 +154,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwi
 
     protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
 
-        return sizeIn.height * 0.85F;
+        return poseIn == Pose.SLEEPING ? 0.2F : this.getStandingEyeHeight(poseIn, sizeIn);
+    }
+
+    @Override
+    public float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
+
+        switch(poseIn) {
+
+            case SWIMMING:
+            case FALL_FLYING:
+            case SPIN_ATTACK:
+                return 0.4F;
+            case CROUCHING:
+                return 1.27F;
+            default:
+                return 1.62F;
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -175,9 +205,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwi
         return this.world.getCollisionBoxes(this, this.getBoundingBox(poseIn)).isEmpty();
     }
 
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/player/EntityPlayer;isPlayerSleeping()Z", ordinal = 0))
+    @Inject(method = "onUpdate", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/EntityLivingBase;onUpdate()V"))
     public void onUpdate(CallbackInfo callbackInfo) {
 
+        this.updateSwimAnimation();
         this.updateEyesInWaterPlayer();
     }
 
@@ -267,6 +298,24 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwi
     public void setSwimming(boolean flag) {
 
         this.setFlag(4, flag);
+    }
+
+    @Override
+    public float getSwimAnimation(float partialTicks) {
+
+        return MathHelper.lerp(partialTicks, this.lastSwimAnimation, this.swimAnimation);
+    }
+
+    private void updateSwimAnimation() {
+
+        this.lastSwimAnimation = this.swimAnimation;
+        if (((IPlayerSwimming) this).isActuallySwimming()) {
+
+            this.swimAnimation = Math.min(1.0F, this.swimAnimation + 0.09F);
+        } else {
+
+            this.swimAnimation = Math.max(0.0F, this.swimAnimation - 0.09F);
+        }
     }
 
 }

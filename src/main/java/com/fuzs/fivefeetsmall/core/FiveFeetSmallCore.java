@@ -11,6 +11,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 @IFMLLoadingPlugin.Name(FiveFeetSmallCore.NAME)
 @IFMLLoadingPlugin.MCVersion("1.12.2")
+@IFMLLoadingPlugin.SortingIndex(2001)
 public class FiveFeetSmallCore implements IFMLLoadingPlugin {
 
     public static final String MODID = FiveFeetSmall.MODID;

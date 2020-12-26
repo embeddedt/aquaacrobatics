@@ -9,7 +9,14 @@
   ],
   "client": [
     "EntityPlayerSPMixin",
-    "EntityRendererMixin"
+    "EntityRendererMixin",
+    "ModelPlayerMixin",
+    "RenderPlayerMixin",
+    "ModelElytraMixin",
+    "ModelBipedMixin",
+    "LayerCapeMixin",
+    "LayerHeldItemMixin",
+    "LayerCustomHeadMixin"
   ],
   "injectors": {
     "defaultRequire": 1
