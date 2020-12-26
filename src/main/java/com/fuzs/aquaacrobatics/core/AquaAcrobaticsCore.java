@@ -27,7 +27,7 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
     @Override
     public String getModContainerClass() {
 
-        return AquaAcrobaticsContainer.class.getName();
+        return null;
     }
 
     @SuppressWarnings("ConstantConditions")
