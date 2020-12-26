@@ -2,6 +2,7 @@ package com.fuzs.fivefeetsmall.core.mixin;
 
 import com.fuzs.fivefeetsmall.entity.EntitySize;
 import com.fuzs.fivefeetsmall.entity.Pose;
+import com.fuzs.fivefeetsmall.entity.player.ISwimmingPlayer;
 import com.fuzs.fivefeetsmall.network.datasync.PoseSerializer;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.material.Material;
@@ -18,16 +19,16 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase {
+public abstract class EntityPlayerMixin extends EntityLivingBase implements ISwimmingPlayer {
 
     private static final EntitySize SLEEPING_SIZE = EntitySize.fixed(0.2F, 0.2F);
     private static final EntitySize STANDING_SIZE = EntitySize.flexible(0.6F, 1.8F);
@@ -47,7 +48,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase {
         super(worldIn);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructed(CallbackInfo callbackInfo) {
 
         this.size = EntitySize.flexible(0.6F, 1.8F);
@@ -101,11 +102,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase {
         return this.eyesInWaterPlayer;
     }
 
+    public boolean getEyesInWaterPlayer() {
+
+        return this.eyesInWaterPlayer;
+    }
+
+    @Override
     public EntitySize getSize(Pose poseIn) {
 
         return poseIn == Pose.SLEEPING ? SLEEPING_SIZE : SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
     }
 
+    @Override
     public void recalculateSize() {
 
         EntitySize entitysize = this.size;
@@ -136,15 +144,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase {
     }
 
     @SideOnly(Side.CLIENT)
+    @Override
     public float getEyeHeight(Pose poseIn) {
 
         return this.getEyeHeight(poseIn, this.getSize(poseIn));
     }
 
-    @Overwrite
-    public final float getEyeHeight() {
+    @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
+    public final void getEyeHeight(CallbackInfoReturnable<Float> callbackInfoReturnable) {
 
-        return this.eyeHeight;
+        callbackInfoReturnable.setReturnValue(this.eyeHeight);
     }
 
     @Shadow
@@ -155,12 +164,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase {
         this.dataManager.set(POSE, poseIn);
     }
 
+    @Override
     public Pose getPose() {
 
         return this.dataManager.get(POSE);
     }
 
-    protected boolean isPoseClear(Pose poseIn) {
+    public boolean isPoseClear(Pose poseIn) {
 
         return this.world.getCollisionBoxes(this, this.getBoundingBox(poseIn)).isEmpty();
     }
@@ -171,13 +181,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase {
         this.updateEyesInWaterPlayer();
     }
 
-    @Overwrite
-    protected void updateSize() {
+    @Inject(method = "updateSize", at = @At("HEAD"), cancellable = true)
+    protected void updateSize(CallbackInfo callbackInfo) {
 
         this.updatePose();
         FMLCommonHandler.instance().onPlayerPostTick((EntityPlayer) (Object) this);
-        // TODO
-        System.out.println(this.getPose());
+        callbackInfo.cancel();
     }
 
 
@@ -235,16 +244,26 @@ public abstract class EntityPlayerMixin extends EntityLivingBase {
         return new AxisAlignedBB(vec3d, vec3d1);
     }
 
+    @Override
     public boolean isSwimming() {
 
         return !this.capabilities.isFlying && !this.isSpectator() && this.getFlag(4);
     }
 
+    @Override
     public boolean isActuallySwimming() {
 
         return this.getPose() == Pose.SWIMMING || !this.isElytraFlying() && this.getPose() == Pose.FALL_FLYING;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean isVisuallySwimming() {
+
+        return this.isActuallySwimming() && !this.isInWater();
+    }
+
+    @Override
     public void setSwimming(boolean flag) {
 
         this.setFlag(4, flag);
