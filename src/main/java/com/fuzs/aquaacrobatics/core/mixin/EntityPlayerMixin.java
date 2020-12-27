@@ -203,7 +203,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         return this.world.getCollisionBoxes(this, this.getBoundingBox(poseIn)).isEmpty();
     }
 
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/EntityLivingBase;onUpdate()V"))
+    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;onUpdate()V"))
     public void onUpdate(CallbackInfo callbackInfo) {
 
         this.updateSwimAnimation();

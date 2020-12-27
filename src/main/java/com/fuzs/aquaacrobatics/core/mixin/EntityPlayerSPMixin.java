@@ -74,7 +74,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         return this.movementInput.moveForward > 1.0E-5F;
     }
 
-    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", shift = At.Shift.BEFORE, target = "Lnet/minecraft/util/MovementInput;jump:Z"), slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;timeUntilPortal:I"), to = @At(value = "INVOKE", target = "Lnet/minecraft/util/MovementInput;updatePlayerMoveState()V")))
+    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/util/MovementInput;jump:Z"), slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;timeUntilPortal:I"), to = @At(value = "INVOKE", target = "Lnet/minecraft/util/MovementInput;updatePlayerMoveState()V")))
     public void onLivingUpdatePre(CallbackInfo callbackInfo) {
 
         this.storage.copyFrom(this.movementInput);
@@ -84,7 +84,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/player/PlayerCapabilities;allowFlying:Z"), slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"), to = @At(value = "FIELD:FIRST", target = "Lnet/minecraft/client/Minecraft;playerController:Lnet/minecraft/client/multiplayer/PlayerControllerMP;")))
+    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerCapabilities;allowFlying:Z"), slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"), to = @At(value = "FIELD:FIRST", target = "Lnet/minecraft/client/Minecraft;playerController:Lnet/minecraft/client/multiplayer/PlayerControllerMP;")))
     public void onLivingUpdatePost(CallbackInfo callbackInfo) {
 
         this.storage.copyTo(this.movementInput);

@@ -3,13 +3,13 @@ package com.fuzs.aquaacrobatics.core.mixin;
 import com.fuzs.aquaacrobatics.util.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.common.Loader;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("unused")
@@ -20,13 +20,22 @@ public abstract class EntityRendererMixin {
     @Final
     private Minecraft mc;
 
-    private float height;
-    private float previousHeight;
+    private float eyeHeight;
+    private float previousEyeHeight;
+    private float entityEyeHeight;
 
-    @Redirect(method = "orientCamera", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getEyeHeight()F"))
-    public float getEyeHeight(Entity entity, float partialTicks) {
+    @ModifyVariable(method = "orientCamera", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;prevPosX:D", ordinal = 0), ordinal = 1)
+    public float getEyeHeight(float eyeHeight, float partialTicks) {
 
-        return MathHelper.lerp(partialTicks, this.previousHeight, this.height);
+        // random patches has this feature as well
+        if (Loader.isModLoaded("randompatches")) {
+
+            return eyeHeight;
+        }
+
+        // need to do it like this to prevent crash with wings mod
+        this.entityEyeHeight = eyeHeight;
+        return MathHelper.lerp(partialTicks, this.previousEyeHeight, this.eyeHeight);
     }
 
     @Inject(method = "updateRenderer", at = @At("TAIL"))
@@ -37,12 +46,8 @@ public abstract class EntityRendererMixin {
 
     private void interpolateHeight() {
 
-        Entity renderViewEntity = this.mc.getRenderViewEntity();
-        if (renderViewEntity != null) {
-
-            this.previousHeight = this.height;
-            this.height += (renderViewEntity.getEyeHeight() - this.height) * 0.5F;
-        }
+        this.previousEyeHeight = this.eyeHeight;
+        this.eyeHeight += (this.entityEyeHeight - this.eyeHeight) * 0.5F;
     }
 
 }
