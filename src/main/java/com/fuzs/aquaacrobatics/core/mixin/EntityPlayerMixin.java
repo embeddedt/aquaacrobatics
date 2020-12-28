@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -90,7 +91,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public void updateSwimming() {
 
-        if (this.isSwimming()) {
+        if (this.capabilities.isFlying) {
+
+            this.setSwimming(false);
+        } else if (this.isSwimming()) {
 
             this.setSwimming(this.isSprinting() && this.isInWater() && !this.isRiding());
         } else {
@@ -315,6 +319,21 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
             this.swimAnimation = Math.max(0.0F, this.swimAnimation - 0.09F);
         }
+    }
+
+    @Inject(method = "travel", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerCapabilities;isFlying:Z"), cancellable = true)
+    public void travel(float strafe, float vertical, float forward, CallbackInfo callbackInfo) {
+
+//        if (this.isSwimming() && !this.isRiding()) {
+//
+//            double d3 = this.getLookVec().y;
+//            double d4 = d3 < -0.2D ? 0.085D : 0.06D;
+//            if (d3 <= 0.0D || this.isJumping || !this.world.getBlockState(new BlockPos(this.posX, this.posY + 1.0D - 0.1D, this.posZ)).getFluidState().isEmpty()) {
+//
+//                double d5 = this.motionY;
+//                this.motionY += (d3 - d5) * d4;
+//            }
+//        }
     }
 
 }

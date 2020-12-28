@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
+import com.fuzs.aquaacrobatics.compat.CompatibilityManager;
 import com.fuzs.aquaacrobatics.entity.player.IModelPlayerSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
@@ -55,15 +56,26 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
     @Inject(method = "applyRotations", at = @At("TAIL"))
     protected void applyRotations(AbstractClientPlayer entityLiving, float p_77043_2_, float rotationYaw, float partialTicks, CallbackInfo callbackInfo) {
 
-        float f = ((IPlayerSwimming) entityLiving).getSwimAnimation(partialTicks);
         if (!entityLiving.isElytraFlying()) {
 
-            float f3 = entityLiving.isInWater() ? -90.0F - entityLiving.rotationPitch : -90.0F;
-            float f4 = MathHelper.lerp(f, 0.0F, f3);
-            GlStateManager.rotate(f4, 1.0F, 0.0F, 0.0F);
+            boolean isMoBendsLoaded = CompatibilityManager.isLoaded(CompatibilityManager.MO_BENDS_ID);
+            if (!isMoBendsLoaded) {
+
+                float f = ((IPlayerSwimming) entityLiving).getSwimAnimation(partialTicks);
+                float f3 = entityLiving.isInWater() ? -90.0F - entityLiving.rotationPitch : -90.0F;
+                float f4 = MathHelper.lerp(f, 0.0F, f3);
+                GlStateManager.rotate(f4, 1.0F, 0.0F, 0.0F);
+            }
+
             if (((IPlayerSwimming) entityLiving).isActuallySwimming()) {
 
-                GlStateManager.translate(0.0F, -1.0F, 0.3F);
+                if (!isMoBendsLoaded) {
+
+                    GlStateManager.translate(0.0F, -1.0F, 0.3F);
+                } else {
+
+                    CompatibilityManager.apply(CompatibilityManager.MO_BENDS_ID, this, entityLiving);
+                }
             }
         }
     }

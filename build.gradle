@@ -40,6 +40,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 sourceSets {
 
     main
+    compat
 }
 
 minecraft {
@@ -71,12 +72,13 @@ repositories {
     maven { url = "http://dogforce-games.com/maven/" }
     // yarn mappings
     maven { url = "https://maven.tterrag.com/" }
-    maven { url = 'https://repo.spongepowered.org/maven' }
+    maven { url = "https://repo.spongepowered.org/maven" }
 }
 
 dependencies {
 
     minecraft "net.minecraftforge:forge:${forge_version}"
+    implementation sourceSets.compat.output
     compile ("org.spongepowered:mixin:0.8.2") {
 
         exclude module: "asm-commons"
@@ -91,10 +93,18 @@ dependencies {
 
 configurations.all {
 
-    resolutionStrategy {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
 
-        force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+        if (details.requested.group + ":" + details.requested.name == "org.lwjgl.lwjgl:lwjgl-platform") {
+
+            details.useVersion "2.9.4-nightly-20150209"
+        }
     }
+}
+
+configurations {
+
+    compatCompile.extendsFrom(compile)
 }
 
 mixin {

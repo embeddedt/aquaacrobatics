@@ -1,8 +1,9 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
+import com.fuzs.aquaacrobatics.compat.CompatibilityManager;
 import com.fuzs.aquaacrobatics.entity.Pose;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
+import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -48,7 +49,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Override
     public boolean isCrouching() {
 
-        return this.isCrouching;
+        return CompatibilityManager.isLoaded(CompatibilityManager.MO_BENDS_ID) ? this.isSneaking() : this.isCrouching;
     }
 
     @Override
