@@ -9,4 +9,5 @@ public enum Pose {
     SPIN_ATTACK,
     CROUCHING,
     DYING
+
 }

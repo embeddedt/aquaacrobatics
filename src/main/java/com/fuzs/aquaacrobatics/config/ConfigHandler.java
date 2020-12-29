@@ -22,17 +22,23 @@ public class ConfigHandler {
 
     public static class CompatConfig {
 
+        private static final String COMPAT_DESCRIPTION = "Only applies when the mod is installed. Disable when there are issues with the mod.";
+
         @Config.Name("Random Patches Compat")
-        @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
+        @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean randomPatchesCompat = true;
 
         @Config.Name("Mo' Bends Compat")
-        @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
+        @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean moBendsCompat = true;
 
         @Config.Name("Obfuscate Compat")
-        @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
+        @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean obfuscateCompat = true;
+
+        @Config.Name("Wings Compat")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean wingsCompat = true;
     }
 
     @SuppressWarnings("unused")

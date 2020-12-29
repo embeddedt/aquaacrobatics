@@ -21,6 +21,7 @@ public class AquaAcrobatics {
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;
     private static boolean isObfuscateLoaded;
+    private static boolean isWingsLoaded;
 
     @Mod.EventHandler
     public void onPreInit(final FMLPreInitializationEvent evt) {
@@ -28,6 +29,7 @@ public class AquaAcrobatics {
         isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
         isMoBendsLoaded = Loader.isModLoaded("mobends");
         isObfuscateLoaded = Loader.isModLoaded("obfuscate");
+        isWingsLoaded = Loader.isModLoaded("wings");
     }
 
     public static boolean enableRandomPatchesCompat() {
@@ -43,6 +45,11 @@ public class AquaAcrobatics {
     public static boolean enableObfuscateCompat() {
 
         return isObfuscateLoaded && ConfigHandler.CompatConfig.obfuscateCompat;
+    }
+
+    public static boolean enableWingsCompat() {
+
+        return isWingsLoaded && ConfigHandler.CompatConfig.wingsCompat;
     }
 
 }

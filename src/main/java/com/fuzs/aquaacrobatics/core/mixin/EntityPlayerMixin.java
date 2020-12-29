@@ -1,6 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
+import com.fuzs.aquaacrobatics.compat.WingsCompat;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
@@ -37,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ConstantConditions"})
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements IPlayerSwimming {
 
@@ -226,7 +227,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         this.updateEyesInWaterPlayer();
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Inject(method = "updateSize", at = @At("HEAD"), cancellable = true)
     protected void updateSize(CallbackInfo callbackInfo) {
 
@@ -241,7 +241,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         if (this.isPoseClear(Pose.SWIMMING)) {
 
             Pose pose;
-            if (this.isElytraFlying()) {
+            if (AquaAcrobatics.enableWingsCompat() ? WingsCompat.onFlightCheck((EntityPlayer) (Object) this, this.isElytraFlying()) : this.isElytraFlying()) {
 
                 pose = Pose.FALL_FLYING;
             } else if (this.isPlayerSleeping()) {
@@ -299,7 +299,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public boolean isActuallySwimming() {
 
-        return this.getPose() == Pose.SWIMMING || !this.isElytraFlying() && this.getPose() == Pose.FALL_FLYING;
+        boolean isFallFlying = !this.isElytraFlying() && this.getPose() == Pose.FALL_FLYING;
+        return this.getPose() == Pose.SWIMMING || (AquaAcrobatics.enableWingsCompat() ? !WingsCompat.onFlightCheck((EntityPlayer) (Object) this, !isFallFlying) : isFallFlying);
     }
 
     @SideOnly(Side.CLIENT)
