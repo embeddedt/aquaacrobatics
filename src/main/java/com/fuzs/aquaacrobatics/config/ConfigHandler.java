@@ -11,18 +11,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class ConfigHandler {
 
-    @Config.Name("Enable Random Patches Compat")
-    @Config.Comment("Obviously only applies when the mod is installed. Disable when there are issues with the mod.")
+    @Config.Name("Random Patches Compat")
+    @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
     public static boolean randomPatchesCompat = true;
 
-    @Config.Name("Enable Mo' Bends Compat")
-    @Config.Comment("Obviously only applies when the mod is installed. Disable when there are issues with the mod.")
+    @Config.Name("Mo' Bends Compat")
+    @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
     public static boolean moBendsCompat = true;
 
-    @Config.Name("Enable Obfuscate Compat")
-    @Config.Comment("Obviously only applies when the mod is installed. Disable when there are issues with the mod.")
+    @Config.Name("Obfuscate Compat")
+    @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
     public static boolean obfuscateCompat = true;
 
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent evt) {
 

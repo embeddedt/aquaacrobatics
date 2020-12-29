@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
+import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
@@ -9,6 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.passive.EntityFlying;
@@ -242,7 +244,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             } else if (this.isSwimming()) {
 
                 pose = Pose.SWIMMING;
-            } else if (this.isSneaking() && !this.capabilities.isFlying) {
+            } else if (this.isSneaking() && (AquaAcrobatics.enableObfuscateCompat() || !this.capabilities.isFlying && (!this.isInWater() || this.onGround))) {
 
                 pose = Pose.CROUCHING;
             } else {
@@ -325,9 +327,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
     }
 
-    @Inject(method = "travel", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerCapabilities;isFlying:Z"))
+    @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
     public void travel(float strafe, float vertical, float forward, CallbackInfo callbackInfo) {
 
+        double d0 = this.posX;
+        double d1 = this.posY;
+        double d2 = this.posZ;
         if (this.isSwimming() && !this.isRiding()) {
 
             double d3 = this.getLookVec().y;
@@ -337,6 +342,86 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
                 double d5 = this.motionY;
                 this.motionY += (d3 - d5) * d4;
+            }
+        }
+
+        double d3 = this.motionY;
+        float f = this.jumpMovementFactor;
+        if (this.capabilities.isFlying && !this.isRiding()) {
+
+            this.jumpMovementFactor = this.capabilities.getFlySpeed() * (float) (this.isSprinting() ? 2 : 1);
+        }
+
+        // replaces a section in super method, therefore super is called otherwise
+        if (!this.capabilities.isFlying && this.isInWater()) {
+
+            if (this.isServerWorld() || this.canPassengerSteer()) {
+
+                double d8 = this.posY;
+                float f5 = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
+                float f6 = 0.02F;
+                float f7 = (float) EnchantmentHelper.getDepthStriderModifier(this);
+                if (f7 > 3.0F) {
+
+                    f7 = 3.0F;
+                }
+
+                if (!this.onGround) {
+
+                    f7 *= 0.5F;
+                }
+
+                if (f7 > 0.0F) {
+
+                    f5 += (0.54600006F - f5) * f7 / 3.0F;
+                    f6 += (this.getAIMoveSpeed() - f6) * f7 / 3.0F;
+                }
+
+                this.moveRelative(strafe, vertical, forward, f6);
+                this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+                if (this.collidedHorizontally && this.isOnLadder()) {
+
+                    this.motionY = 0.2;
+                }
+
+                this.motionX *= f5;
+                this.motionY *= 0.8;
+                this.motionZ *= f5;
+                this.applyGravity();
+                if (this.collidedHorizontally && this.isOffsetPositionInLiquid(this.motionX, this.motionY + 0.6 - this.posY + d8, this.motionZ)) {
+
+                    this.motionY = 0.3;
+                }
+
+                this.updateLimbSwing();
+            }
+        } else {
+
+            super.travel(strafe, vertical, forward);
+        }
+
+        if (this.capabilities.isFlying && !this.isRiding()) {
+
+            this.motionY = d3 * 0.6D;
+            this.jumpMovementFactor = f;
+            this.fallDistance = 0.0F;
+            this.setFlag(7, false);
+        }
+
+        this.addMovementStat(this.posX - d0, this.posY - d1, this.posZ - d2);
+        callbackInfo.cancel();
+    }
+
+    public void applyGravity() {
+
+        if (!this.hasNoGravity() && !this.isSprinting()) {
+
+            if (this.motionY <= 0.0 && Math.abs(this.motionY - 0.005) >= 0.003 && Math.abs(this.motionY - 0.08 / 16.0) < 0.003) {
+
+                this.motionY = -0.003;
+            } else {
+
+                this.motionY -= 0.08 / 16.0;
             }
         }
     }
@@ -356,6 +441,24 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         this.limbSwingAmount += (f10 - this.limbSwingAmount) * 0.4F;
         this.limbSwing += this.limbSwingAmount;
+    }
+
+    @Shadow
+    public abstract void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_);
+
+    @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/entity/EntityLivingBase;onLivingUpdate()V"))
+    public void onLivingUpdate(CallbackInfo callbackInfo) {
+
+        // handle this on the server instead of client
+        if (this.isInWater() && this.isSneaking() && !this.capabilities.isFlying) {
+
+            this.handleSneakWater();
+        }
+    }
+
+    protected void handleSneakWater() {
+
+        this.motionY -= 0.03999999910593033 * this.getEntityAttribute(SWIM_SPEED).getAttributeValue();
     }
 
 }

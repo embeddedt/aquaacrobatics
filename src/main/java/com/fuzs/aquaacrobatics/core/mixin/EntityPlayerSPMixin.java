@@ -95,7 +95,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         boolean flag1 = this.movementInput.sneak;
         boolean flag2 = this.isUsingSwimmingAnimation();
-        this.isCrouching = !this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING) && (this.isSneaking() || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING));
+        this.isCrouching = !this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING) && (this.isSneaking() || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING));
         MovementInputStorage.updatePlayerMoveState(this.movementInput, this.mc.gameSettings, this.isForcedDown());
         net.minecraftforge.client.ForgeHooksClient.onInputUpdate((EntityPlayerSP) (Object) this, this.movementInput);
 
@@ -112,10 +112,15 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             this.movementInput.jump = true;
         }
 
-        boolean flag4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
-        if ((this.onGround || this.canSwim()) && !flag1 && !flag2 && this.isUsingSwimmingAnimation() && !this.isSprinting() && flag4 && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
+        if (flag1) {
 
-            if (this.storage.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
+            this.sprintToggleTimer = 0;
+        }
+
+        boolean flag4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
+        if ((this.onGround || this.canSwim() || this.capabilities.isFlying) && !flag1 && !flag2 && this.isUsingSwimmingAnimation() && !this.isSprinting() && flag4 && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
+
+            if (this.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
 
                 this.sprintToggleTimer = 7;
             } else {
