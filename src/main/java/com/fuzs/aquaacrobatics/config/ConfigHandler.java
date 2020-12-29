@@ -32,10 +32,6 @@ public class ConfigHandler {
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean moBendsCompat = true;
 
-        @Config.Name("Obfuscate Compat")
-        @Config.Comment(COMPAT_DESCRIPTION)
-        public static boolean obfuscateCompat = true;
-
         @Config.Name("Wings Compat")
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean wingsCompat = true;

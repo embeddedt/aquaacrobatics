@@ -1,6 +1,5 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
-import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
@@ -44,19 +43,13 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
     public void isSneaking(CallbackInfoReturnable<Boolean> callbackInfo) {
 
-        callbackInfo.setReturnValue(this.movementInput != null && this.movementInput.sneak);
-    }
-
-    @Override
-    public boolean isCrouching() {
-
-        return AquaAcrobatics.enableMoBendsCompat() || AquaAcrobatics.enableObfuscateCompat() ? this.isSneaking() : this.isCrouching;
+        callbackInfo.setReturnValue(this.isCrouching);
     }
 
     @Override
     public boolean isForcedDown() {
 
-        return this.isCrouching() || ((IPlayerSwimming) this).isVisuallySwimming();
+        return this.isSneaking() || ((IPlayerSwimming) this).isVisuallySwimming();
     }
 
     private boolean isUsingSwimmingAnimation() {
@@ -96,7 +89,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         boolean flag1 = this.movementInput.sneak;
         boolean flag2 = this.isUsingSwimmingAnimation();
-        this.isCrouching = !this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING) && (this.isSneaking() || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING));
+        this.isCrouching = !this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING) && (this.movementInput != null && this.movementInput.sneak || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING));
         MovementInputStorage.updatePlayerMoveState(this.movementInput, this.mc.gameSettings, this.isForcedDown());
         net.minecraftforge.client.ForgeHooksClient.onInputUpdate((EntityPlayerSP) (Object) this, this.movementInput);
 
@@ -151,5 +144,33 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             }
         }
     }
+
+    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;wasFallFlying:Z"))
+    public void onLivingUpdate(CallbackInfo callbackInfo) {
+
+        // needs to be handled on the client since the server doesn't receive actual sneak state while in water
+        if (this.isInWater() && this.movementInput.sneak && !this.capabilities.isFlying) {
+
+            this.handleSneakWater();
+        }
+
+        if (this.capabilities.isFlying && this.isCurrentViewEntity()) {
+
+            if (this.movementInput.sneak) {
+
+                // normally used to counter sneaking slowdown when flying, but sneaking is no longer activated while flying now
+                this.movementInput.moveStrafe = (float) ((double) this.movementInput.moveStrafe * 0.3);
+                this.movementInput.moveForward = (float) ((double) this.movementInput.moveForward * 0.3);
+            }
+        }
+    }
+
+    protected void handleSneakWater() {
+
+        this.motionY -= 0.03999999910593033 * this.getEntityAttribute(SWIM_SPEED).getAttributeValue();
+    }
+
+    @Shadow
+    protected abstract boolean isCurrentViewEntity();
 
 }

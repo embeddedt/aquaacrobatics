@@ -3,7 +3,6 @@ package com.fuzs.aquaacrobatics.core.mixin;
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.compat.MoBendsCompat;
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
 import com.fuzs.aquaacrobatics.util.MathHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -16,7 +15,6 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("unused")
@@ -26,18 +24,6 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
     public RenderPlayerMixin(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn) {
 
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
-    }
-
-    @Redirect(method = "doRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isSneaking()Z"))
-    public boolean shouldRenderSneakingDoRender(AbstractClientPlayer entity) {
-
-        return ((IPlayerSPSwimming) entity).isCrouching();
-    }
-
-    @Redirect(method = "setModelVisibilities", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isSneaking()Z"))
-    public boolean shouldRenderSneakingSetModelVisibilities(AbstractClientPlayer clientPlayer) {
-
-        return ((IPlayerSPSwimming) clientPlayer).isCrouching();
     }
 
     @Inject(method = "renderRightArm", at = @At(value = "FIELD", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/model/ModelPlayer;isSneak:Z"))

@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "BooleanMethodIsAlwaysInverted"})
 @Mod(
         modid = AquaAcrobatics.MODID,
         name = AquaAcrobatics.NAME,
@@ -20,7 +20,6 @@ public class AquaAcrobatics {
 
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;
-    private static boolean isObfuscateLoaded;
     private static boolean isWingsLoaded;
 
     @Mod.EventHandler
@@ -28,7 +27,6 @@ public class AquaAcrobatics {
 
         isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
         isMoBendsLoaded = Loader.isModLoaded("mobends");
-        isObfuscateLoaded = Loader.isModLoaded("obfuscate");
         isWingsLoaded = Loader.isModLoaded("wings");
     }
 
@@ -40,11 +38,6 @@ public class AquaAcrobatics {
     public static boolean enableMoBendsCompat() {
 
         return isMoBendsLoaded && ConfigHandler.CompatConfig.moBendsCompat;
-    }
-
-    public static boolean enableObfuscateCompat() {
-
-        return isObfuscateLoaded && ConfigHandler.CompatConfig.obfuscateCompat;
     }
 
     public static boolean enableWingsCompat() {

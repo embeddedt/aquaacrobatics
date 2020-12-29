@@ -250,7 +250,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             } else if (this.isSwimming()) {
 
                 pose = Pose.SWIMMING;
-            } else if (this.isSneaking() && (AquaAcrobatics.enableObfuscateCompat() || !this.capabilities.isFlying && (!this.isInWater() || this.onGround))) {
+            } else if (this.isSneaking()) {
 
                 pose = Pose.CROUCHING;
             } else {
@@ -452,20 +452,5 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Shadow
     public abstract void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_);
-
-    @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/entity/EntityLivingBase;onLivingUpdate()V"))
-    public void onLivingUpdate(CallbackInfo callbackInfo) {
-
-        // handle this on the server instead of client
-        if (this.isInWater() && this.isSneaking() && !this.capabilities.isFlying) {
-
-            this.handleSneakWater();
-        }
-    }
-
-    protected void handleSneakWater() {
-
-        this.motionY -= 0.03999999910593033 * this.getEntityAttribute(SWIM_SPEED).getAttributeValue();
-    }
 
 }

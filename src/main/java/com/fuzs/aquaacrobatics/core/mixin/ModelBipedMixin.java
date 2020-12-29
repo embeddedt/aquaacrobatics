@@ -1,7 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
 import com.fuzs.aquaacrobatics.util.MathHelper;
 import net.minecraft.client.model.ModelBase;
@@ -15,7 +14,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nonnull;
@@ -36,19 +34,6 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
     public ModelRenderer bipedLeftLeg;
     
     public float swimAnimation;
-
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isSneaking()Z"))
-    public boolean shouldRenderSneakingRender(Entity entityIn) {
-
-        if (entityIn instanceof IPlayerSPSwimming) {
-
-            return ((IPlayerSPSwimming) entityIn).isCrouching();
-        }
-         else {
-
-             return entityIn.isSneaking();
-        }
-    }
 
     @ModifyVariable(method = "setRotationAngles", at = @At("HEAD"), ordinal = 4, argsOnly = true)
     public float getHeadPitch(float f, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
