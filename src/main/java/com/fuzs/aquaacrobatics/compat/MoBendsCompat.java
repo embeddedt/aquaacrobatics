@@ -8,14 +8,11 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 
-public class MoBendsCompat implements IModCompat {
+public class MoBendsCompat {
 
     @SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
-    @Override
-    public void apply(Object... data) {
+    public static void applyRotations(RenderPlayer renderer, AbstractClientPlayer entityLiving) {
 
-        RenderPlayer renderer = (RenderPlayer) data[0];
-        AbstractClientPlayer entityLiving = (AbstractClientPlayer) data[1];
         EntityBender<AbstractClientPlayer> entityBender = EntityBenderRegistry.instance.getForEntity(entityLiving);
         if (entityBender != null && entityBender.isAnimated()) {
 

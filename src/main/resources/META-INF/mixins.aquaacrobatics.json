@@ -5,7 +5,8 @@
   "package": "com.fuzs.aquaacrobatics.core.mixin",
   "refmap": "mixins.aquaacrobatics.refmap.json",
   "mixins": [
-    "EntityPlayerMixin"
+    "EntityPlayerMixin",
+    "EntityLivingBaseMixin"
   ],
   "client": [
     "EntityPlayerSPMixin",

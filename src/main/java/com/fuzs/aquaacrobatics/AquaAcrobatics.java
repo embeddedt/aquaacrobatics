@@ -1,6 +1,7 @@
 package com.fuzs.aquaacrobatics;
 
-import com.fuzs.aquaacrobatics.compat.CompatibilityManager;
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -17,11 +18,31 @@ public class AquaAcrobatics {
     public static final String NAME = "Aqua Acrobatics";
     public static final String VERSION = "1.1";
 
+    private static boolean isRandomPatchesLoaded;
+    private static boolean isMoBendsLoaded;
+    private static boolean isObfuscateLoaded;
+
     @Mod.EventHandler
     public void onPreInit(final FMLPreInitializationEvent evt) {
 
-        CompatibilityManager.init();
-        CompatibilityManager.apply(CompatibilityManager.OBFUSCATE_ID);
+        isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
+        isMoBendsLoaded = Loader.isModLoaded("mobends");
+        isObfuscateLoaded = Loader.isModLoaded("obfuscate");
+    }
+
+    public static boolean enableRandomPatchesCompat() {
+
+        return isRandomPatchesLoaded && ConfigHandler.randomPatchesCompat;
+    }
+
+    public static boolean enableMoBendsCompat() {
+
+        return isMoBendsLoaded && ConfigHandler.moBendsCompat;
+    }
+
+    public static boolean enableObfuscateCompat() {
+
+        return isObfuscateLoaded && ConfigHandler.obfuscateCompat;
     }
 
 }

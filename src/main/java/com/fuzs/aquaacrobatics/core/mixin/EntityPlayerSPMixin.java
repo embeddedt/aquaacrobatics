@@ -1,6 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
-import com.fuzs.aquaacrobatics.compat.CompatibilityManager;
+import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
@@ -49,7 +49,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Override
     public boolean isCrouching() {
 
-        return CompatibilityManager.isLoaded(CompatibilityManager.MO_BENDS_ID) ? this.isSneaking() : this.isCrouching;
+        return AquaAcrobatics.enableMoBendsCompat() || AquaAcrobatics.enableObfuscateCompat() ? this.isSneaking() : this.isCrouching;
     }
 
     @Override

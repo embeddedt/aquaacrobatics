@@ -6,9 +6,12 @@ import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.MathHelper;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.passive.EntityFlying;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.datasync.DataParameter;
@@ -17,6 +20,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -137,7 +141,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         this.eyeHeight = this.getEyeHeight(pose, entitysize1);
         if (entitysize1.width < entitysize.width) {
 
-            double d0 = (double)entitysize1.width / 2.0D;
+            double d0 = (double)entitysize1.width / 2.0;
             this.setEntityBoundingBox(new AxisAlignedBB(this.posX - d0, this.posY, this.posZ - d0, this.posX + d0, this.posY + (double) entitysize1.height, this.posZ + d0));
         } else {
 
@@ -312,7 +316,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private void updateSwimAnimation() {
 
         this.lastSwimAnimation = this.swimAnimation;
-        if (((IPlayerSwimming) this).isActuallySwimming()) {
+        if (this.isActuallySwimming()) {
 
             this.swimAnimation = Math.min(1.0F, this.swimAnimation + 0.09F);
         } else {
@@ -321,19 +325,37 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
     }
 
-    @Inject(method = "travel", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerCapabilities;isFlying:Z"), cancellable = true)
+    @Inject(method = "travel", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerCapabilities;isFlying:Z"))
     public void travel(float strafe, float vertical, float forward, CallbackInfo callbackInfo) {
 
-//        if (this.isSwimming() && !this.isRiding()) {
-//
-//            double d3 = this.getLookVec().y;
-//            double d4 = d3 < -0.2D ? 0.085D : 0.06D;
-//            if (d3 <= 0.0D || this.isJumping || !this.world.getBlockState(new BlockPos(this.posX, this.posY + 1.0D - 0.1D, this.posZ)).getFluidState().isEmpty()) {
-//
-//                double d5 = this.motionY;
-//                this.motionY += (d3 - d5) * d4;
-//            }
-//        }
+        if (this.isSwimming() && !this.isRiding()) {
+
+            double d3 = this.getLookVec().y;
+            double d4 = d3 < -0.2 ? 0.085 : 0.06;
+            IBlockState fluidState = this.world.getBlockState(new BlockPos(this.posX, this.posY + 1.0 - 0.1, this.posZ));
+            if (d3 <= 0.0 || this.isJumping || fluidState.getBlock() instanceof BlockLiquid || fluidState.getBlock() instanceof IFluidBlock) {
+
+                double d5 = this.motionY;
+                this.motionY += (d3 - d5) * d4;
+            }
+        }
+    }
+
+    private void updateLimbSwing() {
+
+        this.prevLimbSwingAmount = this.limbSwingAmount;
+        double d5 = this.posX - this.prevPosX;
+        double d7 = this.posZ - this.prevPosZ;
+        double d9 = this instanceof EntityFlying ? this.posY - this.prevPosY : 0.0;
+        float f10 = net.minecraft.util.math.MathHelper.sqrt(d5 * d5 + d9 * d9 + d7 * d7) * 4.0F;
+
+        if (f10 > 1.0F) {
+
+            f10 = 1.0F;
+        }
+
+        this.limbSwingAmount += (f10 - this.limbSwingAmount) * 0.4F;
+        this.limbSwing += this.limbSwingAmount;
     }
 
 }
