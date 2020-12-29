@@ -2,7 +2,7 @@ package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.compat.MoBendsCompat;
-import com.fuzs.aquaacrobatics.entity.player.IModelPlayerSwimming;
+import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
 import com.fuzs.aquaacrobatics.util.MathHelper;
@@ -44,14 +44,14 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
     public void renderRightArm(AbstractClientPlayer clientPlayer, CallbackInfo callbackInfo) {
 
         ModelPlayer modelplayer = (ModelPlayer) this.getMainModel();
-        ((IModelPlayerSwimming) modelplayer).setSwimAnimation(0.0F);
+        ((IModelBipedSwimming) modelplayer).setSwimAnimation(0.0F);
     }
 
     @Inject(method = "renderLeftArm", at = @At(value = "FIELD", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/model/ModelPlayer;isSneak:Z"))
     public void renderLeftArm(AbstractClientPlayer clientPlayer, CallbackInfo callbackInfo) {
 
         ModelPlayer modelplayer = (ModelPlayer) this.getMainModel();
-        ((IModelPlayerSwimming) modelplayer).setSwimAnimation(0.0F);
+        ((IModelBipedSwimming) modelplayer).setSwimAnimation(0.0F);
     }
 
     @SuppressWarnings("ConstantConditions")

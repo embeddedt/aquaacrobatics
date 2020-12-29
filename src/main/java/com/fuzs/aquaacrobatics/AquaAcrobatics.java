@@ -32,17 +32,17 @@ public class AquaAcrobatics {
 
     public static boolean enableRandomPatchesCompat() {
 
-        return isRandomPatchesLoaded && ConfigHandler.randomPatchesCompat;
+        return isRandomPatchesLoaded && ConfigHandler.CompatConfig.randomPatchesCompat;
     }
 
     public static boolean enableMoBendsCompat() {
 
-        return isMoBendsLoaded && ConfigHandler.moBendsCompat;
+        return isMoBendsLoaded && ConfigHandler.CompatConfig.moBendsCompat;
     }
 
     public static boolean enableObfuscateCompat() {
 
-        return isObfuscateLoaded && ConfigHandler.obfuscateCompat;
+        return isObfuscateLoaded && ConfigHandler.CompatConfig.obfuscateCompat;
     }
 
 }

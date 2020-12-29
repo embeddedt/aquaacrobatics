@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @SuppressWarnings("unused")
 @Mixin(EntityPlayerSP.class)
@@ -40,10 +41,10 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         super(worldIn, playerProfile);
     }
 
-    @Override
-    public boolean isSneaking() {
+    @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
+    public void isSneaking(CallbackInfoReturnable<Boolean> callbackInfo) {
 
-        return this.movementInput != null && this.movementInput.sneak;
+        callbackInfo.setReturnValue(this.movementInput != null && this.movementInput.sneak);
     }
 
     @Override

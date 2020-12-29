@@ -1,6 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
@@ -82,7 +83,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public void onEntityUpdate() {
 
+        int air = this.getAir();
         super.onEntityUpdate();
+        if (ConfigHandler.slowAirReplenish && air < this.getAir()) {
+
+            this.setAir(Math.min(air + 4, 300));
+        }
 
         // updateAquatics
         this.updateEyesInWater();

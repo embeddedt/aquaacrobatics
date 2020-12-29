@@ -16,7 +16,8 @@
     "ModelBipedMixin",
     "LayerCapeMixin",
     "LayerHeldItemMixin",
-    "LayerCustomHeadMixin"
+    "LayerCustomHeadMixin",
+    "GuiIngameForgeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

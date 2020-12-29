@@ -11,17 +11,29 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class ConfigHandler {
 
-    @Config.Name("Random Patches Compat")
-    @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
-    public static boolean randomPatchesCompat = true;
+    @Config.Name("Replenish Air Slowly")
+    @Config.Comment("Replenish air slowly when out of water instead of immediately.")
+    public static boolean slowAirReplenish = false;
 
-    @Config.Name("Mo' Bends Compat")
-    @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
-    public static boolean moBendsCompat = true;
+    @SuppressWarnings("unused")
+    @Config.Name("compat")
+    @Config.Comment("Control compatibility settings for individual mods.")
+    public static CompatConfig compatConfig;
 
-    @Config.Name("Obfuscate Compat")
-    @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
-    public static boolean obfuscateCompat = true;
+    public static class CompatConfig {
+
+        @Config.Name("Random Patches Compat")
+        @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
+        public static boolean randomPatchesCompat = true;
+
+        @Config.Name("Mo' Bends Compat")
+        @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
+        public static boolean moBendsCompat = true;
+
+        @Config.Name("Obfuscate Compat")
+        @Config.Comment("Only applies when the mod is installed. Disable when there are issues with the mod.")
+        public static boolean obfuscateCompat = true;
+    }
 
     @SuppressWarnings("unused")
     @SubscribeEvent

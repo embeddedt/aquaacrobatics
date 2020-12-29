@@ -1,6 +1,6 @@
 package com.fuzs.aquaacrobatics.entity.player;
 
-public interface IModelPlayerSwimming {
+public interface IModelBipedSwimming {
 
     void setSwimAnimation(float swimAnimation);
 
