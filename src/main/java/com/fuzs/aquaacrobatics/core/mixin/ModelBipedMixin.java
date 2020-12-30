@@ -25,6 +25,8 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
     @Shadow
     public ModelRenderer bipedHead;
     @Shadow
+    public ModelRenderer bipedHeadwear;
+    @Shadow
     public ModelRenderer bipedRightArm;
     @Shadow
     public ModelRenderer bipedLeftArm;
@@ -57,7 +59,7 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
         return headPitch;
     }
 
-    @Inject(method = "setRotationAngles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBiped;copyModelAngles(Lnet/minecraft/client/model/ModelRenderer;Lnet/minecraft/client/model/ModelRenderer;)V"))
+    @Inject(method = "setRotationAngles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBiped;copyModelAngles(Lnet/minecraft/client/model/ModelRenderer;Lnet/minecraft/client/model/ModelRenderer;)V"), cancellable = true)
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn, CallbackInfo callbackInfo) {
 
         if (this.swimAnimation > 0.0F) {
@@ -96,6 +98,10 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
 
             this.bipedLeftLeg.rotateAngleX = MathHelper.lerp(this.swimAnimation, this.bipedLeftLeg.rotateAngleX, 0.3F * MathHelper.cos(limbSwing * 0.33333334F + (float) Math.PI));
             this.bipedRightLeg.rotateAngleX = MathHelper.lerp(this.swimAnimation, this.bipedRightLeg.rotateAngleX, 0.3F * MathHelper.cos(limbSwing * 0.33333334F));
+
+            // prevent Quark's emotes from being applied as they mess with arm rotations
+            copyModelAngles(this.bipedHead, this.bipedHeadwear);
+            callbackInfo.cancel();
         }
     }
 

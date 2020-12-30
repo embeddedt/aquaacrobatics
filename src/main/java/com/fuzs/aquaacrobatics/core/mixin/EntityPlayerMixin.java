@@ -46,15 +46,20 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private static final Map<Pose, EntitySize> SIZE_BY_POSE = ImmutableMap.<Pose, EntitySize>builder().put(Pose.STANDING, STANDING_SIZE).put(Pose.SLEEPING, SLEEPING_SIZE).put(Pose.FALL_FLYING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SWIMMING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SPIN_ATTACK, EntitySize.flexible(0.6F, 0.6F)).put(Pose.CROUCHING, EntitySize.flexible(0.6F, 1.5F)).put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F)).build();
     private static final DataParameter<Pose> POSE = EntityDataManager.createKey(EntityPlayer.class, PoseSerializer.POSE);
 
+    @Shadow
+    public PlayerCapabilities capabilities;
+    @Shadow
+    public float prevCameraYaw;
+    @Shadow
+    public float cameraYaw;
+
     protected boolean eyesInWater;
     protected boolean eyesInWaterPlayer;
     private EntitySize size;
-    private float eyeHeight;
+    // Forge adds an eyeHeight field, we need a different name
+    private float playerEyeHeight;
     private float swimAnimation;
     private float lastSwimAnimation;
-
-    @Shadow
-    public PlayerCapabilities capabilities;
 
     public EntityPlayerMixin(World worldIn) {
 
@@ -65,7 +70,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private void onConstructed(CallbackInfo callbackInfo) {
 
         this.size = EntitySize.flexible(0.6F, 1.8F);
-        this.eyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
+        this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
         this.dataManager.register(POSE, Pose.STANDING);
     }
 
@@ -85,7 +90,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         int air = this.getAir();
         super.onEntityUpdate();
-        if (ConfigHandler.slowAirReplenish && air < this.getAir()) {
+        if (ConfigHandler.slowAirReplenish && air < this.getAir() && this.getAir() > 0) {
 
             this.setAir(Math.min(air + 4, 300));
         }
@@ -146,7 +151,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         Pose pose = this.getPose();
         EntitySize entitysize1 = this.getSize(pose);
         this.size = entitysize1;
-        this.eyeHeight = this.getEyeHeight(pose, entitysize1);
+        this.playerEyeHeight = this.getEyeHeight(pose, entitysize1);
         if (entitysize1.width < entitysize.width) {
 
             double d0 = (double) entitysize1.width / 2.0;
@@ -188,7 +193,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
     public final void getEyeHeight(CallbackInfoReturnable<Float> callbackInfoReturnable) {
 
-        callbackInfoReturnable.setReturnValue(this.eyeHeight);
+        callbackInfoReturnable.setReturnValue(this.playerEyeHeight);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -429,7 +434,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         double d5 = this.posX - this.prevPosX;
         double d7 = this.posZ - this.prevPosZ;
         double d9 = this instanceof EntityFlying ? this.posY - this.prevPosY : 0.0;
-        float f10 = net.minecraft.util.math.MathHelper.sqrt(d5 * d5 + d9 * d9 + d7 * d7) * 4.0F;
+        float f10 = MathHelper.sqrt(d5 * d5 + d9 * d9 + d7 * d7) * 4.0F;
 
         if (f10 > 1.0F) {
 
@@ -442,5 +447,22 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Shadow
     public abstract void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_);
+
+    @Inject(method = "onLivingUpdate", at = @At("TAIL"))
+    public void onLivingUpdate(CallbackInfo callbackInfo) {
+
+        // disable bobbing view when swimming
+        float f;
+        if (this.onGround && this.getHealth() > 0.0F && !this.isSwimming()) {
+
+            f = Math.min(0.1F, MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ));
+        } else {
+
+            f = 0.0F;
+        }
+
+        this.cameraYaw = this.prevCameraYaw + (f - this.prevCameraYaw) * 0.4F;
+        this.cameraPitch = 0.0F;
+    }
 
 }
