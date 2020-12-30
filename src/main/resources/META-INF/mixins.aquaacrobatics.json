@@ -10,10 +10,8 @@
   "client": [
     "EntityPlayerSPMixin",
     "EntityRendererMixin",
-    "ModelPlayerMixin",
-    "RenderPlayerMixin",
     "ModelBipedMixin",
-    "GuiIngameForgeMixin"
+    "RenderPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

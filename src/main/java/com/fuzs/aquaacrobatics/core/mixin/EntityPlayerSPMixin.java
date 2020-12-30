@@ -33,7 +33,6 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public MovementInput movementInput;
 
     private final MovementInputStorage storage = new MovementInputStorage();
-    private boolean isCrouching;
 
     public EntityPlayerSPMixin(World worldIn, GameProfile playerProfile) {
 
@@ -43,7 +42,8 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
     public void isSneaking(CallbackInfoReturnable<Boolean> callbackInfo) {
 
-        callbackInfo.setReturnValue(this.isCrouching);
+        boolean isCrouching = !this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING) && (this.movementInput != null && this.movementInput.sneak || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING));
+        callbackInfo.setReturnValue(isCrouching);
     }
 
     @Override
@@ -89,7 +89,6 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         boolean flag1 = this.movementInput.sneak;
         boolean flag2 = this.isUsingSwimmingAnimation();
-        this.isCrouching = !this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING) && (this.movementInput != null && this.movementInput.sneak || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING));
         MovementInputStorage.updatePlayerMoveState(this.movementInput, this.mc.gameSettings, this.isForcedDown());
         net.minecraftforge.client.ForgeHooksClient.onInputUpdate((EntityPlayerSP) (Object) this, this.movementInput);
 

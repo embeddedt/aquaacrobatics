@@ -18,6 +18,8 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
     public static final String VERSION = AquaAcrobatics.VERSION;
     public static final Logger LOGGER = LogManager.getLogger(AquaAcrobaticsCore.NAME);
 
+    public static boolean isLoaded;
+
     @Override
     public String[] getASMTransformerClass() {
 
@@ -39,6 +41,7 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
 
             if (Class.forName("org.spongepowered.asm.launch.MixinTweaker") != null) {
 
+                isLoaded = true;
                 AquaAcrobaticsCore.LOGGER.info("Found valid mixin instance. Proceeding to load.");
                 return AquaAcrobaticsSetupHook.class.getName();
             }

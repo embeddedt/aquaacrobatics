@@ -1,11 +1,13 @@
 package com.fuzs.aquaacrobatics;
 
-import com.fuzs.aquaacrobatics.config.ConfigHandler;
-import net.minecraftforge.fml.common.Loader;
+import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-@SuppressWarnings({"unused", "BooleanMethodIsAlwaysInverted"})
+@SuppressWarnings("unused")
 @Mod(
         modid = AquaAcrobatics.MODID,
         name = AquaAcrobatics.NAME,
@@ -16,33 +18,19 @@ public class AquaAcrobatics {
 
     public static final String MODID = "aquaacrobatics";
     public static final String NAME = "Aqua Acrobatics";
-    public static final String VERSION = "1.1";
+    public static final String VERSION = "1.1.5";
+    public static final Logger LOGGER = LogManager.getLogger(NAME);
 
-    private static boolean isRandomPatchesLoaded;
-    private static boolean isMoBendsLoaded;
-    private static boolean isWingsLoaded;
+    private static final String CLIENT_PROXY = "com.fuzs." + MODID + ".proxy.ClientProxy";
+    private static final String COMMON_PROXY = "com.fuzs." + MODID + ".proxy.CommonProxy";
+
+    @SidedProxy(clientSide = CLIENT_PROXY, serverSide = COMMON_PROXY)
+    private static CommonProxy proxy;
 
     @Mod.EventHandler
     public void onPreInit(final FMLPreInitializationEvent evt) {
 
-        isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
-        isMoBendsLoaded = Loader.isModLoaded("mobends");
-        isWingsLoaded = Loader.isModLoaded("wings");
-    }
-
-    public static boolean enableRandomPatchesCompat() {
-
-        return isRandomPatchesLoaded && ConfigHandler.CompatConfig.randomPatchesCompat;
-    }
-
-    public static boolean enableMoBendsCompat() {
-
-        return isMoBendsLoaded && ConfigHandler.CompatConfig.moBendsCompat;
-    }
-
-    public static boolean enableWingsCompat() {
-
-        return isWingsLoaded && ConfigHandler.CompatConfig.wingsCompat;
+        proxy.onPreInit();
     }
 
 }
