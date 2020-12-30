@@ -3,6 +3,7 @@ package com.fuzs.aquaacrobatics;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +13,8 @@ import org.apache.logging.log4j.Logger;
         modid = AquaAcrobatics.MODID,
         name = AquaAcrobatics.NAME,
         version = AquaAcrobatics.VERSION,
-        acceptedMinecraftVersions = "[1.12.2]"
+        acceptedMinecraftVersions = "[1.12.2]",
+        dependencies = "before:mobends@(0.24,)"
 )
 public class AquaAcrobatics {
 
@@ -31,6 +33,12 @@ public class AquaAcrobatics {
     public void onPreInit(final FMLPreInitializationEvent evt) {
 
         proxy.onPreInit();
+    }
+
+    @Mod.EventHandler
+    public void onPostInit(final FMLPostInitializationEvent evt) {
+
+        proxy.onPostInit();
     }
 
 }

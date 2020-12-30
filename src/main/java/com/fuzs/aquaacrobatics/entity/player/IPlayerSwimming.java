@@ -5,7 +5,6 @@ import com.fuzs.aquaacrobatics.entity.Pose;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SuppressWarnings("unused")
 public interface IPlayerSwimming {
 
     boolean canSwim();
@@ -19,8 +18,6 @@ public interface IPlayerSwimming {
     void recalculateSize();
 
     float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn);
-
-    float getEyeHeight(Pose poseIn);
 
     Pose getPose();
 

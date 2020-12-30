@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
-import com.fuzs.aquaacrobatics.compat.MoBendsCompat;
-import com.fuzs.aquaacrobatics.compat.ModCompat;
+import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
+import com.fuzs.aquaacrobatics.compat.ModCompatManager;
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
 import com.fuzs.aquaacrobatics.util.MathHelper;
@@ -46,7 +46,7 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
 
         if (!entityLiving.isElytraFlying()) {
 
-            if (!ModCompat.enableMoBendsCompat()) {
+            if (!ModCompatManager.enableMoBendsCompat()) {
 
                 float f = ((IPlayerSwimming) entityLiving).getSwimAnimation(partialTicks);
                 float f3 = entityLiving.isInWater() ? -90.0F - entityLiving.rotationPitch : -90.0F;
@@ -56,7 +56,7 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
 
             if (((IPlayerSwimming) entityLiving).isActuallySwimming()) {
 
-                if (!ModCompat.enableMoBendsCompat()) {
+                if (!ModCompatManager.enableMoBendsCompat()) {
 
                     GlStateManager.translate(0.0F, -1.0F, 0.3F);
                 } else {

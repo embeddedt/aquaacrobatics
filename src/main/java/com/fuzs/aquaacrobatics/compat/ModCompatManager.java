@@ -3,7 +3,7 @@ package com.fuzs.aquaacrobatics.compat;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import net.minecraftforge.fml.common.Loader;
 
-public class ModCompat {
+public class ModCompatManager {
 
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;

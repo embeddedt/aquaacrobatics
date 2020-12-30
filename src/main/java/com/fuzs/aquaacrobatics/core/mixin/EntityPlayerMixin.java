@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
-import com.fuzs.aquaacrobatics.compat.ModCompat;
-import com.fuzs.aquaacrobatics.compat.WingsCompat;
+import com.fuzs.aquaacrobatics.compat.ModCompatManager;
+import com.fuzs.aquaacrobatics.compat.wings.WingsCompat;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
@@ -22,7 +22,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -150,7 +149,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         this.eyeHeight = this.getEyeHeight(pose, entitysize1);
         if (entitysize1.width < entitysize.width) {
 
-            double d0 = (double)entitysize1.width / 2.0;
+            double d0 = (double) entitysize1.width / 2.0;
             this.setEntityBoundingBox(new AxisAlignedBB(this.posX - d0, this.posY, this.posZ - d0, this.posX + d0, this.posY + (double) entitysize1.height, this.posZ + d0));
         } else {
 
@@ -184,13 +183,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             default:
                 return 1.62F;
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public float getEyeHeight(Pose poseIn) {
-
-        return this.getEyeHeight(poseIn, this.getSize(poseIn));
     }
 
     @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
@@ -241,7 +233,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         if (this.isPoseClear(Pose.SWIMMING)) {
 
             Pose pose;
-            if (ModCompat.enableWingsCompat() ? WingsCompat.onFlightCheck((EntityPlayer) (Object) this, this.isElytraFlying()) : this.isElytraFlying()) {
+            if (ModCompatManager.enableWingsCompat() ? WingsCompat.onFlightCheck((EntityPlayer) (Object) this, this.isElytraFlying()) : this.isElytraFlying()) {
 
                 pose = Pose.FALL_FLYING;
             } else if (this.isPlayerSleeping()) {
@@ -285,9 +277,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         
         EntitySize entitysize = this.getSize(p_213321_1_);
         float f = entitysize.width / 2.0F;
-        Vec3d vec3d = new Vec3d(this.posX - (double)f, this.posY, this.posZ - (double)f);
-        Vec3d vec3d1 = new Vec3d(this.posX + (double)f, this.posY + (double)entitysize.height, this.posZ + (double)f);
-        return new AxisAlignedBB(vec3d, vec3d1);
+        return new AxisAlignedBB(this.posX - (double) f, this.posY, this.posZ - (double) f, this.posX + (double) f, this.posY + (double) entitysize.height, this.posZ + (double) f);
     }
 
     @Override
@@ -300,7 +290,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public boolean isActuallySwimming() {
 
         boolean isFallFlying = !this.isElytraFlying() && this.getPose() == Pose.FALL_FLYING;
-        return this.getPose() == Pose.SWIMMING || (ModCompat.enableWingsCompat() ? !WingsCompat.onFlightCheck((EntityPlayer) (Object) this, !isFallFlying) : isFallFlying);
+        return this.getPose() == Pose.SWIMMING || (ModCompatManager.enableWingsCompat() ? !WingsCompat.onFlightCheck((EntityPlayer) (Object) this, !isFallFlying) : isFallFlying);
     }
 
     @SideOnly(Side.CLIENT)

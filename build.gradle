@@ -37,12 +37,6 @@ ext.mc = "${mc_version}"
 // need this here so eclipse task generates correctly.
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
-sourceSets {
-
-    main
-    compat
-}
-
 minecraft {
 
     mappings channel: "${mcp_channel}", version: "${mcp_version}"
@@ -65,6 +59,17 @@ minecraft {
 
 }
 
+configurations.all {
+
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+
+        if (details.requested.group + ":" + details.requested.name == "org.lwjgl.lwjgl:lwjgl-platform") {
+
+            details.useVersion "2.9.4-nightly-20150209"
+        }
+    }
+}
+
 repositories {
 
     mavenLocal()
@@ -78,8 +83,8 @@ repositories {
 dependencies {
 
     minecraft "net.minecraftforge:forge:${forge_version}"
-    implementation sourceSets.compat.output
-    compile ("org.spongepowered:mixin:0.8.2") {
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    implementation ("org.spongepowered:mixin:0.8.2") {
 
         exclude module: "asm-commons"
         exclude module: "asm-tree"
@@ -89,22 +94,6 @@ dependencies {
         exclude module: "gson"
         exclude module: "commons-io"
     }
-}
-
-configurations.all {
-
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-
-        if (details.requested.group + ":" + details.requested.name == "org.lwjgl.lwjgl:lwjgl-platform") {
-
-            details.useVersion "2.9.4-nightly-20150209"
-        }
-    }
-}
-
-configurations {
-
-    compatCompile.extendsFrom(compile)
 }
 
 mixin {

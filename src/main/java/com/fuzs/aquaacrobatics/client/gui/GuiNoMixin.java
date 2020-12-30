@@ -28,8 +28,8 @@ public class GuiNoMixin extends GuiScreen {
     public void initGui() {
 
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 116, this.height / 2 + 62 + -16, 114, 20, new TextComponentString("Get Mixins").getFormattedText()));
-        this.buttonList.add(new GuiButton(2, this.width / 2 + 2, this.height / 2 + 62 + -16, 114, 20, new TextComponentString("Continue").getFormattedText()));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 116, this.height / 2 + 62 + -16, 114, 20, new TextComponentString("Go to CurseForge").getFormattedText()));
+        this.buttonList.add(new GuiButton(2, this.width / 2 + 2, this.height / 2 + 62 + -16, 114, 20, new TextComponentString("Ignore Message").getFormattedText()));
     }
 
     @Override

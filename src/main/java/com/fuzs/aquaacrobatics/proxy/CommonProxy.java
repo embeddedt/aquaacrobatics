@@ -1,6 +1,7 @@
 package com.fuzs.aquaacrobatics.proxy;
 
-import com.fuzs.aquaacrobatics.compat.ModCompat;
+import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
+import com.fuzs.aquaacrobatics.compat.ModCompatManager;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 
 public class CommonProxy {
@@ -9,7 +10,15 @@ public class CommonProxy {
 
         if (AquaAcrobaticsCore.isLoaded) {
 
-            ModCompat.loadCompat();
+            ModCompatManager.loadCompat();
+        }
+    }
+
+    public void onPostInit() {
+
+        if (ModCompatManager.enableMoBendsCompat()) {
+
+            MoBendsCompat.registerSwimmingPlayer();
         }
     }
 

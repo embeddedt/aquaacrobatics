@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.compat;
+package com.fuzs.aquaacrobatics.compat.wings;
 
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
 import net.minecraft.entity.player.EntityPlayer;

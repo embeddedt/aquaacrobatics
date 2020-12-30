@@ -52,9 +52,10 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         return this.isSneaking() || ((IPlayerSwimming) this).isVisuallySwimming();
     }
 
-    private boolean isUsingSwimmingAnimation() {
+    @Override
+    public boolean isUsingSwimmingAnimation() {
 
-        return this.canSwim() ? this.isMovingForward() : (double)this.movementInput.moveForward >= 0.8D;
+        return this.canSwim() ? this.isMovingForward() : (double) this.movementInput.moveForward >= 0.8;
     }
 
     @Override
@@ -133,7 +134,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             boolean flag6 = flag5 || this.collidedHorizontally || this.isInWater() && !this.canSwim();
             if (((IPlayerSwimming) this).isSwimming()) {
 
-                if (!this.onGround && !this.movementInput.sneak && flag5 || !this.isInWater()) {
+                if (!this.movementInput.sneak && flag5 || !this.isInWater()) {
 
                     this.setSprinting(false);
                 }

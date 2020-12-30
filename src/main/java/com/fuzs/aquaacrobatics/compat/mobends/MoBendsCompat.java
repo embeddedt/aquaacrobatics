@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.compat;
+package com.fuzs.aquaacrobatics.compat.mobends;
 
 import goblinbob.mobends.core.bender.EntityBender;
 import goblinbob.mobends.core.bender.EntityBenderRegistry;
@@ -10,7 +10,12 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 
 public class MoBendsCompat {
 
-    @SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
+    public static void registerSwimmingPlayer() {
+
+        EntityBenderRegistry.instance.registerBender(new SwimmingPlayerBender());
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static void applyRotations(RenderPlayer renderer, AbstractClientPlayer entityLiving) {
 
         EntityBender<AbstractClientPlayer> entityBender = EntityBenderRegistry.instance.getForEntity(entityLiving);
