@@ -5,7 +5,7 @@ import com.fuzs.aquaacrobatics.compat.wings.WingsCompat;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
+import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.MathHelper;
 import com.google.common.collect.ImmutableMap;
@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -39,11 +40,10 @@ import java.util.Map;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase implements IPlayerSwimming {
+public abstract class EntityPlayerMixin extends EntityLivingBase implements IPlayerResizeable {
 
-    private static final EntitySize SLEEPING_SIZE = EntitySize.fixed(0.2F, 0.2F);
     private static final EntitySize STANDING_SIZE = EntitySize.flexible(0.6F, 1.8F);
-    private static final Map<Pose, EntitySize> SIZE_BY_POSE = ImmutableMap.<Pose, EntitySize>builder().put(Pose.STANDING, STANDING_SIZE).put(Pose.SLEEPING, SLEEPING_SIZE).put(Pose.FALL_FLYING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SWIMMING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SPIN_ATTACK, EntitySize.flexible(0.6F, 0.6F)).put(Pose.CROUCHING, EntitySize.flexible(0.6F, 1.5F)).put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F)).build();
+    private static final Map<Pose, EntitySize> SIZE_BY_POSE = ImmutableMap.<Pose, EntitySize>builder().put(Pose.STANDING, STANDING_SIZE).put(Pose.SLEEPING, EntitySize.fixed(0.2F, 0.2F)).put(Pose.FALL_FLYING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SWIMMING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SPIN_ATTACK, EntitySize.flexible(0.6F, 0.6F)).put(Pose.CROUCHING, EntitySize.flexible(0.6F, 1.5F)).put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F)).build();
     private static final DataParameter<Pose> POSE = EntityDataManager.createKey(EntityPlayer.class, PoseSerializer.POSE);
 
     @Shadow
@@ -83,6 +83,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
 
         super.notifyDataManagerChange(key);
+    }
+
+    @Override
+    protected void setSize(float width, float height) {
+
+        // TODO
     }
 
     @Override
@@ -139,9 +145,21 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
 
     @Override
+    public final float getWidth() {
+
+        return this.size.width;
+    }
+
+    @Override
+    public final float getHeight() {
+
+        return this.size.height;
+    }
+
+    @Override
     public EntitySize getSize(Pose poseIn) {
 
-        return poseIn == Pose.SLEEPING ? SLEEPING_SIZE : SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
+        return SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
     }
 
     @Override
@@ -165,8 +183,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
                 float f = entitysize.width - entitysize1.width;
                 this.move(MoverType.SELF, f, 0.0, f);
             }
-
         }
+
+        // update those as they're still in use in a lot of places
+        this.width = this.getWidth();
+        this.height = this.getHeight();
     }
 
     protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
@@ -200,7 +221,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Shadow
     public abstract boolean isSpectator();
 
-    protected void setPose(Pose poseIn) {
+    @Override
+    public void setPose(Pose poseIn) {
 
         this.dataManager.set(POSE, poseIn);
     }
@@ -217,6 +239,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         return this.world.getCollisionBoxes(this, this.getBoundingBox(poseIn)).isEmpty();
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void preparePlayerToSpawn() {
+
+        // need to overwrite whole method due to this being client exclusive
+        this.setPose(Pose.STANDING);
+        super.preparePlayerToSpawn();
+        this.setHealth(this.getMaxHealth());
+        this.deathTime = 0;
+    }
+
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;onUpdate()V"))
     public void onUpdate(CallbackInfo callbackInfo) {
 
@@ -229,13 +262,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         this.updatePose();
         FMLCommonHandler.instance().onPlayerPostTick((EntityPlayer) (Object) this);
+        // cancel vanilla updateSize
         callbackInfo.cancel();
     }
 
-
     protected void updatePose() {
 
-        if (this.isPoseClear(Pose.SWIMMING)) {
+        if (this.getShouldBeDead()) {
+
+            // this is completely ignored in vanilla
+            this.setPose(Pose.DYING);
+        } else if (this.isPoseClear(Pose.SWIMMING)) {
 
             Pose pose;
             if (ModCompatManager.enableWingsCompat() ? WingsCompat.onFlightCheck((EntityPlayer) (Object) this, this.isElytraFlying()) : this.isElytraFlying()) {
@@ -271,10 +308,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             }
 
             this.setPose(pose1);
-
-            // update those as they're still in use in a lot of places
-            this.width = this.getSize(pose1).width;
-            this.height = this.getSize(pose1).height;
         }
     }
 
@@ -283,6 +316,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         EntitySize entitysize = this.getSize(p_213321_1_);
         float f = entitysize.width / 2.0F;
         return new AxisAlignedBB(this.posX - (double) f, this.posY, this.posZ - (double) f, this.posX + (double) f, this.posY + (double) entitysize.height, this.posZ + (double) f);
+    }
+
+    @Override
+    public boolean getShouldBeDead() {
+
+        return this.getHealth() <= 0.0F;
     }
 
     @Override
@@ -453,7 +492,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         // disable bobbing view when swimming
         float f;
-        if (this.onGround && this.getHealth() > 0.0F && !this.isSwimming()) {
+        if (this.onGround && !this.getShouldBeDead() && !this.isSwimming()) {
 
             f = Math.min(0.1F, MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ));
         } else {
@@ -463,6 +502,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         this.cameraYaw = this.prevCameraYaw + (f - this.prevCameraYaw) * 0.4F;
         this.cameraPitch = 0.0F;
+    }
+
+    @Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"))
+    public void setSizeTrySleep(EntityPlayer player, float width, float height) {
+
+        this.setPose(Pose.SLEEPING);
+    }
+
+    @Redirect(method = "wakeUpPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"))
+    public void setSizeWakeUpPlayer(EntityPlayer player, float width, float height) {
+
+        this.setPose(Pose.STANDING);
     }
 
 }

@@ -2,7 +2,7 @@ package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
+import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -33,6 +33,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public MovementInput movementInput;
 
     private final MovementInputStorage storage = new MovementInputStorage();
+    private boolean isCrouching;
 
     public EntityPlayerSPMixin(World worldIn, GameProfile playerProfile) {
 
@@ -42,14 +43,14 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
     public void isSneaking(CallbackInfoReturnable<Boolean> callbackInfo) {
 
-        boolean isCrouching = !this.capabilities.isFlying && !((IPlayerSwimming) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerSwimming) this).isPoseClear(Pose.CROUCHING) && (this.movementInput != null && this.movementInput.sneak || !this.isPlayerSleeping() && !((IPlayerSwimming) this).isPoseClear(Pose.STANDING));
-        callbackInfo.setReturnValue(isCrouching);
+        // don't check this directly every time to prevent crash with random things mod caused by loop
+        callbackInfo.setReturnValue(this.isCrouching);
     }
 
     @Override
     public boolean isForcedDown() {
 
-        return this.isSneaking() || ((IPlayerSwimming) this).isVisuallySwimming();
+        return this.isSneaking() || ((IPlayerResizeable) this).isVisuallySwimming();
     }
 
     @Override
@@ -61,7 +62,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Override
     public boolean canSwim() {
 
-        return ((IPlayerSwimming) this).getEyesInWaterPlayer();
+        return ((IPlayerResizeable) this).getEyesInWaterPlayer();
     }
 
     @Override
@@ -90,6 +91,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         boolean flag1 = this.movementInput.sneak;
         boolean flag2 = this.isUsingSwimmingAnimation();
+        this.isCrouching = !this.capabilities.isFlying && !((IPlayerResizeable) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerResizeable) this).isPoseClear(Pose.CROUCHING) && (this.movementInput.sneak || !this.isPlayerSleeping() && !((IPlayerResizeable) this).isPoseClear(Pose.STANDING));
         MovementInputStorage.updatePlayerMoveState(this.movementInput, this.mc.gameSettings, this.isForcedDown());
         net.minecraftforge.client.ForgeHooksClient.onInputUpdate((EntityPlayerSP) (Object) this, this.movementInput);
 
@@ -132,7 +134,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
             boolean flag5 = !this.isMovingForward() || !flag4;
             boolean flag6 = flag5 || this.collidedHorizontally || this.isInWater() && !this.canSwim();
-            if (((IPlayerSwimming) this).isSwimming()) {
+            if (((IPlayerResizeable) this).isSwimming()) {
 
                 if (!this.movementInput.sneak && flag5 || !this.isInWater()) {
 

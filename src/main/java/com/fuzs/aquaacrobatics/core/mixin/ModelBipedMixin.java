@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
+import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.MathHelper;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -40,10 +40,10 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
     @ModifyVariable(method = "setRotationAngles", at = @At("HEAD"), ordinal = 4, argsOnly = true)
     public float getHeadPitch(float f, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
 
-        if (entityIn instanceof IPlayerSwimming) {
+        if (entityIn instanceof IPlayerResizeable) {
 
             boolean flag = ((EntityLivingBase) entityIn).getTicksElytraFlying() > 4;
-            boolean flag1 = ((IPlayerSwimming) entityIn).isActuallySwimming();
+            boolean flag1 = ((IPlayerResizeable) entityIn).isActuallySwimming();
             if (!flag && this.swimAnimation > 0.0F) {
 
                 if (flag1) {
@@ -108,9 +108,9 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
     @Override
     public void setLivingAnimations(@Nonnull EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
 
-        if (entitylivingbaseIn instanceof IPlayerSwimming) {
+        if (entitylivingbaseIn instanceof IPlayerResizeable) {
 
-            this.swimAnimation = ((IPlayerSwimming) entitylivingbaseIn).getSwimAnimation(partialTickTime);
+            this.swimAnimation = ((IPlayerResizeable) entitylivingbaseIn).getSwimAnimation(partialTickTime);
         }
     }
 

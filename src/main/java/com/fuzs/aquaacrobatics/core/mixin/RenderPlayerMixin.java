@@ -3,7 +3,7 @@ package com.fuzs.aquaacrobatics.core.mixin;
 import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
 import com.fuzs.aquaacrobatics.compat.ModCompatManager;
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
+import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.MathHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -48,13 +48,13 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
 
             if (!ModCompatManager.enableMoBendsCompat()) {
 
-                float f = ((IPlayerSwimming) entityLiving).getSwimAnimation(partialTicks);
+                float f = ((IPlayerResizeable) entityLiving).getSwimAnimation(partialTicks);
                 float f3 = entityLiving.isInWater() ? -90.0F - entityLiving.rotationPitch : -90.0F;
                 float f4 = MathHelper.lerp(f, 0.0F, f3);
                 GlStateManager.rotate(f4, 1.0F, 0.0F, 0.0F);
             }
 
-            if (((IPlayerSwimming) entityLiving).isActuallySwimming()) {
+            if (((IPlayerResizeable) entityLiving).isActuallySwimming()) {
 
                 if (!ModCompatManager.enableMoBendsCompat()) {
 

@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.compat.mobends;
 
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSwimming;
+import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import goblinbob.mobends.standard.data.PlayerData;
 import net.minecraft.client.entity.AbstractClientPlayer;
 
@@ -26,7 +26,7 @@ public class SwimmingPlayerData extends PlayerData {
     @Override
     public boolean isUnderwater() {
 
-        return ((IPlayerSwimming) this.entity).isActuallySwimming() && super.isUnderwater();
+        return ((IPlayerResizeable) this.entity).isActuallySwimming() && super.isUnderwater();
     }
 
 }
