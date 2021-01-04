@@ -15,6 +15,18 @@ public class ConfigHandler {
     @Config.Comment("Replenish air slowly when out of water instead of immediately.")
     public static boolean slowAirReplenish = false;
 
+    @Config.Name("Easy Elytra Takeoff")
+    @Config.Comment("Taking off with an elytra from the ground is now far easier like in Minecraft 1.15+.")
+    public static boolean easyElytraTakeoff = true;
+
+    @Config.Name("Sneaking Dismounts Parrots")
+    @Config.Comment("Parrots no longer leave the players shoulders as easily, instead the player needs to press the sneak key.")
+    public static boolean sneakingForParrots = true;
+
+    @Config.Name("Eating Animation")
+    @Config.Comment("Animate eating in third-person view.")
+    public static boolean eatingAnimation = true;
+
     @SuppressWarnings("unused")
     @Config.Name("compat")
     @Config.Comment("Control compatibility settings for individual mods.")
@@ -35,6 +47,20 @@ public class ConfigHandler {
         @Config.Name("Wings Compat")
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean wingsCompat = true;
+
+        @Config.Name("ArtemisLib Compat")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean artemisLibCompat = true;
+
+        @Config.Name("ArtemisLib Fix Player Model")
+        @Config.Comment("Fix player model having wrong horizontal scale while elytra flying and swimming. Incompatible with a lot of mods that touch player rendering.")
+        @Config.RequiresMcRestart
+        public static boolean artemisLibFixModel = false;
+
+        @Config.Name("Morph Compat")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean morphCompat = true;
     }
 
     @SuppressWarnings("unused")

@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.MathHelper;
@@ -8,6 +9,9 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -59,8 +63,42 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
         return headPitch;
     }
 
+    @Inject(method = "setRotationAngles", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/ModelBiped;swingProgress:F"))
+    public void setRotationAnglesPre(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn, CallbackInfo callbackInfo) {
+
+        if (!ConfigHandler.eatingAnimation || !(entityIn instanceof EntityLivingBase)) {
+
+            return;
+        }
+
+        EntityLivingBase livingEntityIn = (EntityLivingBase) entityIn;
+        int inUseCount = livingEntityIn.getItemInUseCount();
+        if (livingEntityIn.isHandActive() && inUseCount > 0) {
+
+            EnumHand hand = livingEntityIn.getActiveHand();
+            ItemStack stack = livingEntityIn.getHeldItem(hand);
+            EnumHandSide handSide = livingEntityIn.getPrimaryHand();
+            if (stack.getItemUseAction() == EnumAction.EAT || stack.getItemUseAction() == EnumAction.DRINK) {
+
+                boolean isRight = (hand == EnumHand.MAIN_HAND ? handSide : handSide.opposite()) == EnumHandSide.RIGHT;
+                float partialTicks = (float) MathHelper.frac(ageInTicks);
+                float animationCount = inUseCount - partialTicks + 1.0F;
+                float useRatio = animationCount / (float) stack.getMaxItemUseDuration();
+                float f = 1.0F - (float) Math.pow(useRatio, 27.0D);
+                if (useRatio < 0.8F) {
+
+                    f += MathHelper.abs(MathHelper.cos(animationCount / 4.0F * (float)Math.PI) * 0.1F);
+                }
+
+                ModelRenderer bipedArm = isRight ? this.bipedRightArm : this.bipedLeftArm;
+                bipedArm.rotateAngleX = f * (bipedArm.rotateAngleX * 0.5F - ((float) Math.PI * 4.0F / 10.0F));
+                bipedArm.rotateAngleY = f * (float) Math.PI / 6F * (isRight ? -1.0F : 1.0F);
+            }
+        }
+    }
+
     @Inject(method = "setRotationAngles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBiped;copyModelAngles(Lnet/minecraft/client/model/ModelRenderer;Lnet/minecraft/client/model/ModelRenderer;)V"), cancellable = true)
-    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn, CallbackInfo callbackInfo) {
+    public void setRotationAnglesPost(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn, CallbackInfo callbackInfo) {
 
         if (this.swimAnimation > 0.0F) {
 

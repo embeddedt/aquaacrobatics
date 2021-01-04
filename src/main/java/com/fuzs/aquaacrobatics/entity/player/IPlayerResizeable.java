@@ -21,6 +21,10 @@ public interface IPlayerResizeable {
 
     void recalculateSize();
 
+    boolean isResizingAllowed();
+
+    boolean isActuallySneaking();
+
     float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn);
 
     void setPose(Pose poseIn);

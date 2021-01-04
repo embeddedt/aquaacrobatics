@@ -2,8 +2,10 @@ package com.fuzs.aquaacrobatics.compat.mobends;
 
 import goblinbob.mobends.core.bender.EntityBender;
 import goblinbob.mobends.core.bender.EntityBenderRegistry;
+import goblinbob.mobends.core.data.IEntityDataFactory;
 import goblinbob.mobends.core.data.LivingEntityData;
 import goblinbob.mobends.core.mutators.Mutator;
+import goblinbob.mobends.standard.PlayerBender;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -12,7 +14,15 @@ public class MoBendsCompat {
 
     public static void registerSwimmingPlayer() {
 
-        EntityBenderRegistry.instance.registerBender(new SwimmingPlayerBender());
+        EntityBenderRegistry.instance.registerBender(new PlayerBender() {
+
+            @Override
+            public IEntityDataFactory<AbstractClientPlayer> getDataFactory() {
+
+                return SwimmingPlayerData::new;
+            }
+
+        });
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
-import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
 import com.fuzs.aquaacrobatics.compat.ModCompatManager;
+import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.MathHelper;

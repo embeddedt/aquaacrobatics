@@ -8,6 +8,7 @@ public class MovementInputStorage extends MovementInput {
     public int sprintToggleTimer;
     public int autoJumpTime;
     public boolean sprinting;
+    public boolean isStartingToFly;
 
     public void copyFrom(MovementInput movement) {
 

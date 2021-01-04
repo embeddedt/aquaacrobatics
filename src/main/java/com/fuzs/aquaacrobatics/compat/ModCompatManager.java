@@ -8,12 +8,16 @@ public class ModCompatManager {
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;
     private static boolean isWingsLoaded;
+    private static boolean isArtemisLibLoaded;
+    private static boolean isMorphLoaded;
 
     public static void loadCompat() {
 
         isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
         isMoBendsLoaded = Loader.isModLoaded("mobends");
         isWingsLoaded = Loader.isModLoaded("wings");
+        isArtemisLibLoaded = Loader.isModLoaded("artemislib");
+        isMorphLoaded = Loader.isModLoaded("morph");
     }
 
     public static boolean enableRandomPatchesCompat() {
@@ -30,4 +34,15 @@ public class ModCompatManager {
 
         return isWingsLoaded && ConfigHandler.CompatConfig.wingsCompat;
     }
+
+    public static boolean enableArtemisLibCompat() {
+
+        return isArtemisLibLoaded && ConfigHandler.CompatConfig.artemisLibCompat;
+    }
+
+    public static boolean enableMorphCompat() {
+
+        return isMorphLoaded && ConfigHandler.CompatConfig.morphCompat;
+    }
+
 }

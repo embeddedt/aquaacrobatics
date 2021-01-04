@@ -34,6 +34,21 @@ public class EntitySize {
         return new EntitySize(widthIn, heightIn, true);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == this) {
+
+            return true;
+        } else if (obj instanceof EntitySize) {
+
+            return this.width == ((EntitySize) obj).width && this.height == ((EntitySize) obj).height;
+        }
+
+        return false;
+    }
+
+    @Override
     public String toString() {
 
         return "EntityDimensions w=" + this.width + ", h=" + this.height + ", fixed=" + this.fixed;

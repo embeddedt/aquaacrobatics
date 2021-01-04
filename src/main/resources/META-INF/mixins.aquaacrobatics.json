@@ -6,7 +6,8 @@
   "refmap": "mixins.aquaacrobatics.refmap.json",
   "mixins": [
     "EntityPlayerMixin",
-    "EntityPlayerMPMixin"
+    "EntityPlayerMPMixin",
+    "NetHandlerPlayServerMixin"
   ],
   "client": [
     "EntityPlayerSPMixin",
