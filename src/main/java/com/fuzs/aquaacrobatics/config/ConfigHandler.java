@@ -42,6 +42,7 @@ public class ConfigHandler {
 
         @Config.Name("Mo' Bends Compat")
         @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
         public static boolean moBendsCompat = true;
 
         @Config.Name("Wings Compat")
@@ -61,6 +62,11 @@ public class ConfigHandler {
         @Config.Name("Morph Compat")
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean morphCompat = true;
+
+        @Config.Name("Hats Compat")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean hatsCompat = true;
     }
 
     @SuppressWarnings("unused")

@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.proxy;
 
+import com.fuzs.aquaacrobatics.compat.hats.HatsCompat;
 import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
 import com.fuzs.aquaacrobatics.compat.ModCompatManager;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
@@ -19,6 +20,11 @@ public class CommonProxy {
         if (ModCompatManager.enableMoBendsCompat()) {
 
             MoBendsCompat.registerSwimmingPlayer();
+        }
+
+        if (ModCompatManager.enableHatsCompat()) {
+
+            HatsCompat.registerSwimmingPlayer();
         }
     }
 

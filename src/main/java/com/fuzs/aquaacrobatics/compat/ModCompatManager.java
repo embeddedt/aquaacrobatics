@@ -10,6 +10,7 @@ public class ModCompatManager {
     private static boolean isWingsLoaded;
     private static boolean isArtemisLibLoaded;
     private static boolean isMorphLoaded;
+    private static boolean isHatsLoaded;
 
     public static void loadCompat() {
 
@@ -18,6 +19,7 @@ public class ModCompatManager {
         isWingsLoaded = Loader.isModLoaded("wings");
         isArtemisLibLoaded = Loader.isModLoaded("artemislib");
         isMorphLoaded = Loader.isModLoaded("morph");
+        isHatsLoaded = Loader.isModLoaded("hats");
     }
 
     public static boolean enableRandomPatchesCompat() {
@@ -43,6 +45,11 @@ public class ModCompatManager {
     public static boolean enableMorphCompat() {
 
         return isMorphLoaded && ConfigHandler.CompatConfig.morphCompat;
+    }
+
+    public static boolean enableHatsCompat() {
+
+        return isHatsLoaded && ConfigHandler.CompatConfig.hatsCompat;
     }
 
 }

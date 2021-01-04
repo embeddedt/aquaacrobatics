@@ -71,7 +71,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public boolean isActuallySneaking() {
 
         // switched with #isSneaking
-        return this.movementInput != null && this.movementInput.sneak && !this.capabilities.isFlying && (!this.isInWater() || this.onGround) && this.getTicksElytraFlying() <= 4;
+        return this.movementInput != null && this.movementInput.sneak && !this.capabilities.isFlying && (!this.isInWater() || this.onGround);
     }
 
     @Override
