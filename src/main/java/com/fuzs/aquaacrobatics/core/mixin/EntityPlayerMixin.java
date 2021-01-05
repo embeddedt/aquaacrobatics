@@ -335,7 +335,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
                 pose = Pose.SWIMMING;
                 // otherwise unable to sneak on client when there is not enough space for the pose, but actual player size is smaller
-            } else if (this.isActuallySneaking()) {
+            } else if (this.isActuallySneaking() && !this.capabilities.isFlying && (!this.isInWater() || this.onGround)) {
 
                 pose = Pose.CROUCHING;
             } else {

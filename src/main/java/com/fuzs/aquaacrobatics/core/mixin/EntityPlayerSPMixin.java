@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.MovementInput;
 import net.minecraft.world.World;
-import net.minecraftforge.client.ForgeHooksClient;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,7 +44,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Shadow
     public MovementInput movementInput;
 
-    private final MovementInputStorage storage = new MovementInputStorage();
+    private final MovementInputStorage movementStorage = new MovementInputStorage();
     private boolean isCrouching;
 
     public EntityPlayerSPMixin(World worldIn, GameProfile playerProfile) {
@@ -71,7 +70,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public boolean isActuallySneaking() {
 
         // switched with #isSneaking
-        return this.movementInput != null && this.movementInput.sneak && !this.capabilities.isFlying && (!this.isInWater() || this.onGround);
+        return this.movementInput != null && this.movementInput.sneak;
     }
 
     @Override
@@ -81,9 +80,9 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     }
 
     @Override
-    public boolean isUsingSwimmingAnimation() {
+    public boolean isUsingSwimmingAnimation(float moveForward) {
 
-        return this.canSwim() ? this.isMovingForward() : (double) this.movementInput.moveForward >= 0.8;
+        return this.canSwim() ? this.isMovingForward(moveForward) : (double) moveForward >= 0.8;
     }
 
     @Override
@@ -93,59 +92,50 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     }
 
     @Override
-    public boolean isMovingForward() {
+    public boolean isMovingForward(float moveForward) {
 
-        return this.movementInput.moveForward > 1.0E-5F;
+        return moveForward > 1.0E-5F;
     }
 
     @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/util/MovementInput;jump:Z"), slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;timeUntilPortal:I"), to = @At(value = "INVOKE", target = "Lnet/minecraft/util/MovementInput;updatePlayerMoveState()V")))
     public void onLivingUpdatePre(CallbackInfo callbackInfo) {
 
-        this.storage.copyFrom(this.movementInput);
-        this.storage.sprintToggleTimer = this.sprintToggleTimer;
-        this.storage.autoJumpTime = this.autoJumpTime;
-        this.storage.sprinting = this.isSprinting();
+        this.movementStorage.copyFrom(this.movementInput);
+        this.movementStorage.sprintToggleTimer = this.sprintToggleTimer;
+        this.movementStorage.autoJumpTime = this.autoJumpTime;
+        this.movementStorage.sprinting = this.isSprinting();
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/MovementInput;updatePlayerMoveState()V"))
+    public void updatePlayerMoveState(MovementInput movementInput) {
+
+        MovementInputStorage.updatePlayerMoveState(movementInput, this.mc.gameSettings, this.isForcedDown());
+    }
+
     @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerCapabilities;allowFlying:Z"), slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"), to = @At(value = "FIELD:FIRST", target = "Lnet/minecraft/client/Minecraft;playerController:Lnet/minecraft/client/multiplayer/PlayerControllerMP;")))
     public void onLivingUpdatePost(CallbackInfo callbackInfo) {
 
-        this.storage.copyTo(this.movementInput);
-        this.sprintToggleTimer = this.storage.sprintToggleTimer;
-        this.autoJumpTime = this.storage.autoJumpTime;
-        this.setSprinting(this.storage.sprinting);
+        this.sprintToggleTimer = this.movementStorage.sprintToggleTimer;
+        this.setSprinting(this.movementStorage.sprinting);
 
-        boolean jumping = this.movementInput.jump;
-        boolean sneaking = this.movementInput.sneak;
-        boolean swimming = this.isUsingSwimmingAnimation();
+        boolean jumping = this.movementStorage.jump;
+        boolean sneaking = this.movementStorage.sneak;
+        boolean swimming = this.isUsingSwimmingAnimation(this.movementStorage.moveForward);
         boolean cantStand = ((IPlayerResizeable) this).isPoseClear(Pose.STANDING);
         this.isCrouching = (!this.capabilities.isFlying || !cantStand) && this.getTicksElytraFlying() <= 4 && !((IPlayerResizeable) this).isSwimming() && (!this.isInWater() || this.onGround) && ((IPlayerResizeable) this).isPoseClear(Pose.CROUCHING) && (this.movementInput.sneak || ((IPlayerResizeable) this).isResizingAllowed() && !this.isPlayerSleeping() && !cantStand);
-        MovementInputStorage.updatePlayerMoveState(this.movementInput, this.mc.gameSettings, this.isForcedDown());
-        ForgeHooksClient.onInputUpdate((EntityPlayerSP) (Object) this, this.movementInput);
-
         if (this.isHandActive() && !this.isRiding()) {
 
-            this.movementInput.moveStrafe *= 0.2F;
-            this.movementInput.moveForward *= 0.2F;
             this.sprintToggleTimer = 0;
         }
 
-        boolean hasAutoJumped = false;
-        if (this.autoJumpTime > 0) {
-
-            --this.autoJumpTime;
-            hasAutoJumped = true;
-            this.movementInput.jump = true;
-        }
-
+        boolean hasAutoJumped = this.movementStorage.autoJumpTime > 0;
         if (sneaking) {
 
             this.sprintToggleTimer = 0;
         }
 
         boolean flag4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
-        if ((this.onGround || this.canSwim() || this.capabilities.isFlying) && !sneaking && !swimming && this.isUsingSwimmingAnimation() && !this.isSprinting() && flag4 && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
+        if ((this.onGround || this.canSwim() || this.capabilities.isFlying) && !sneaking && !swimming && this.isUsingSwimmingAnimation(this.movementInput.moveForward) && !this.isSprinting() && flag4 && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
 
             if (this.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
 
@@ -156,14 +146,14 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             }
         }
 
-        if (!this.isSprinting() && (!this.isInWater() || this.canSwim()) && this.isUsingSwimmingAnimation() && flag4 && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS) && this.mc.gameSettings.keyBindSprint.isKeyDown()) {
+        if (!this.isSprinting() && (!this.isInWater() || this.canSwim()) && this.isUsingSwimmingAnimation(this.movementInput.moveForward) && flag4 && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS) && this.mc.gameSettings.keyBindSprint.isKeyDown()) {
 
             this.setSprinting(true);
         }
 
         if (this.isSprinting()) {
 
-            boolean flag5 = !this.isMovingForward() || !flag4;
+            boolean flag5 = !this.isMovingForward(this.movementInput.moveForward) || !flag4;
             // don't stop sprint flying when breaching water surface
             boolean flag6 = flag5 || this.collidedHorizontally || this.isInWater() && !this.canSwim() && !this.capabilities.isFlying;
             if (((IPlayerResizeable) this).isSwimming()) {
@@ -178,20 +168,20 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             }
         }
 
-        this.storage.isStartingToFly = false;
+        this.movementStorage.isStartingToFly = false;
         if (this.capabilities.allowFlying) {
 
             if (this.mc.playerController.isSpectatorMode()) {
 
                 if (!this.capabilities.isFlying) {
 
-                    this.storage.isStartingToFly = true;
+                    this.movementStorage.isStartingToFly = true;
                 }
             } else if (!jumping && this.movementInput.jump && !hasAutoJumped) {
 
                 if (this.flyToggleTimer != 0 && !((IPlayerResizeable) this).isSwimming()) {
 
-                    this.storage.isStartingToFly = true;
+                    this.movementStorage.isStartingToFly = true;
                 }
             }
         }
@@ -201,7 +191,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public void onLivingUpdate(CallbackInfo callbackInfo) {
 
         // 1.15 change for easier elytra takeoff
-        if (ConfigHandler.easyElytraTakeoff && this.movementInput.jump && !this.storage.isStartingToFly && !this.storage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder()) {
+        if (ConfigHandler.easyElytraTakeoff && this.movementInput.jump && !this.movementStorage.isStartingToFly && !this.movementStorage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder()) {
 
             ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
             if (itemstack.getItem() == Items.ELYTRA && ItemElytra.isUsable(itemstack)) {

@@ -13,7 +13,8 @@
     "EntityPlayerSPMixin",
     "EntityRendererMixin",
     "ModelBipedMixin",
-    "RenderPlayerMixin"
+    "RenderPlayerMixin",
+    "PlayerControllerMPMixin"
   ],
   "injectors": {
     "defaultRequire": 1

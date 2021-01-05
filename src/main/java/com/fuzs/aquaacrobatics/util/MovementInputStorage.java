@@ -22,18 +22,6 @@ public class MovementInputStorage extends MovementInput {
         this.sneak = movement.sneak;
     }
 
-    public void copyTo(MovementInput movement) {
-
-        movement.moveStrafe = this.moveStrafe;
-        movement.moveForward = this.moveForward;
-        movement.forwardKeyDown = this.forwardKeyDown;
-        movement.backKeyDown = this.backKeyDown;
-        movement.leftKeyDown = this.leftKeyDown;
-        movement.rightKeyDown = this.rightKeyDown;
-        movement.jump = this.jump;
-        movement.sneak = this.sneak;
-    }
-
     public static void updatePlayerMoveState(MovementInput movement, GameSettings gameSettings, boolean isCrouching) {
 
         movement.forwardKeyDown = gameSettings.keyBindForward.isKeyDown();
@@ -46,8 +34,8 @@ public class MovementInputStorage extends MovementInput {
         movement.sneak = gameSettings.keyBindSneak.isKeyDown();
         if (isCrouching) {
 
-            movement.moveStrafe = (float) ((double) movement.moveStrafe * 0.3D);
-            movement.moveForward = (float) ((double) movement.moveForward * 0.3D);
+            movement.moveStrafe = (float) ((double) movement.moveStrafe * 0.3);
+            movement.moveForward = (float) ((double) movement.moveForward * 0.3);
         }
     }
 
