@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ArtemisLibCompat {
 
     private static final UUID SWIMMING_HEIGHT_ID = UUID.fromString("F5ED4D20-4DAB-11EB-AE93-0242AC130002");
-    private static final AttributeModifier SWIMMING_HEIGHT = new AttributeModifier(SWIMMING_HEIGHT_ID, "Swimming height modifier", -2.0 / 3.0, 2).setSaved(false);
+    private static final AttributeModifier SWIMMING_HEIGHT = new AttributeModifier(SWIMMING_HEIGHT_ID, "Swimming height modifier", -2.0 / 3.0, 2);
 
     public static void register() {
 

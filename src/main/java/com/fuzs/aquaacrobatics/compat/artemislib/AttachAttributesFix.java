@@ -42,12 +42,6 @@ public class AttachAttributesFix extends AttachAttributes {
     @Override
     @SubscribeEvent
     public void onEntityRenderPre(final RenderLivingEvent.Pre evt) {
-
-        if (!ConfigHandler.CompatConfig.artemisLibFixModel) {
-
-            super.onEntityRenderPre(evt);
-            return;
-        }
         
         EntityLivingBase entity = evt.getEntity();
         if(entity.hasCapability(SizeCapPro.sizeCapability, null)) {
