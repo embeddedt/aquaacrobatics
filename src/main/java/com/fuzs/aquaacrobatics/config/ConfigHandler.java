@@ -55,9 +55,8 @@ public class ConfigHandler {
         public static boolean artemisLibCompat = true;
 
         @Config.Name("ArtemisLib Fix Player Model")
-        @Config.Comment("Fix player model having wrong horizontal scale while elytra flying and swimming. Incompatible with a lot of mods that touch player rendering.")
-        @Config.RequiresMcRestart
-        public static boolean artemisLibFixModel = false;
+        @Config.Comment("Fix player model having wrong horizontal scale while elytra flying and swimming.")
+        public static boolean artemisLibFixModel = true;
 
         @Config.Name("Morph Compat")
         @Config.Comment(COMPAT_DESCRIPTION)

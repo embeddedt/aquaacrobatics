@@ -1,6 +1,8 @@
 package com.fuzs.aquaacrobatics.core;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
+import com.fuzs.aquaacrobatics.client.handler.NoMixinHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +20,8 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
     public static final String VERSION = AquaAcrobatics.VERSION;
     public static final Logger LOGGER = LogManager.getLogger(AquaAcrobaticsCore.NAME);
 
-    public static boolean isLoaded;
+    private static boolean isLoaded;
+    private static boolean isScreenRegistered;
 
     @Override
     public String[] getASMTransformerClass() {
@@ -62,6 +65,17 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
     public String getAccessTransformerClass() {
 
         return null;
+    }
+
+    public static boolean isLoaded() {
+
+        if (!isLoaded && !isScreenRegistered) {
+
+            isScreenRegistered = true;
+            MinecraftForge.EVENT_BUS.register(new NoMixinHandler());
+        }
+
+        return isLoaded;
     }
 
 }

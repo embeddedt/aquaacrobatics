@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 
 public class MoBendsCompat {
 
-    public static void registerSwimmingPlayer() {
+    public static void register() {
 
         EntityBenderRegistry.instance.registerBender(new PlayerBender() {
 

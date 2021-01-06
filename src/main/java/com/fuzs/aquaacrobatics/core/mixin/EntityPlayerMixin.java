@@ -322,15 +322,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
             // this is completely ignored in vanilla
             this.setPose(Pose.DYING);
+        } else if (this.isPlayerSleeping()) {
+
+            // handle this before swimming pose clear check
+            this.setPose(Pose.SLEEPING);
         } else if (this.isPoseClear(Pose.SWIMMING)) {
 
             Pose pose;
             if (ModCompatManager.enableWingsCompat() ? WingsCompat.onFlightCheck(this.getPlayer(), this.isElytraFlying()) : this.isElytraFlying()) {
 
                 pose = Pose.FALL_FLYING;
-            } else if (this.isPlayerSleeping()) {
-
-                pose = Pose.SLEEPING;
             } else if (this.isSwimming()) {
 
                 pose = Pose.SWIMMING;

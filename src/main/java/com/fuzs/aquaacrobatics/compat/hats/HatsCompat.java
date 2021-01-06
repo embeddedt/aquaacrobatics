@@ -7,7 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 public class HatsCompat {
 
-    public static void registerSwimmingPlayer() {
+    public static void register() {
 
         ApiHandler.registerHelper(new HelperPlayer() {
 
