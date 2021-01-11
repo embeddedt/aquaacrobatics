@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class ArtemisLibCompat {
@@ -18,10 +19,13 @@ public class ArtemisLibCompat {
 
     public static void register() {
 
-        ((IEventBusAccessor) MinecraftForge.EVENT_BUS).getListeners().keySet().stream()
-                .filter(key -> key instanceof AttachAttributes)
-                .findFirst().ifPresent(MinecraftForge.EVENT_BUS::unregister);
-        MinecraftForge.EVENT_BUS.register(new AttachAttributesFix());
+        Optional<Object> optional = ((IEventBusAccessor) MinecraftForge.EVENT_BUS).getListeners().keySet().stream()
+                .filter(key -> key instanceof AttachAttributes).findFirst();
+        if (optional.isPresent()) {
+
+            MinecraftForge.EVENT_BUS.unregister(optional.get());
+            MinecraftForge.EVENT_BUS.register(new AttachAttributesFix());
+        }
     }
 
     public static void updateSwimmingSize(EntityPlayer player, Pose pose) {

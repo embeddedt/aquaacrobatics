@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.core.mixin;
+package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.compat.ModCompatManager;
 import com.fuzs.aquaacrobatics.util.MathHelper;

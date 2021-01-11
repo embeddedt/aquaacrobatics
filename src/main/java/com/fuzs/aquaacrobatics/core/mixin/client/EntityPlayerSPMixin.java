@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.core.mixin;
+package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;

@@ -11,11 +11,11 @@
     "accessor.IEventBusAccessor"
   ],
   "client": [
-    "EntityPlayerSPMixin",
-    "EntityRendererMixin",
-    "ModelBipedMixin",
-    "RenderPlayerMixin",
-    "PlayerControllerMPMixin"
+    "client.EntityPlayerSPMixin",
+    "client.EntityRendererMixin",
+    "client.ModelBipedMixin",
+    "client.RenderPlayerMixin",
+    "client.PlayerControllerMPMixin"
   ],
   "injectors": {
     "defaultRequire": 1

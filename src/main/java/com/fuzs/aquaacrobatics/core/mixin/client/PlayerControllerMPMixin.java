@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.core.mixin;
+package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @SuppressWarnings("unused")
 @Mixin(PlayerControllerMP.class)
-public class PlayerControllerMPMixin {
+public abstract class PlayerControllerMPMixin {
 
     @Redirect(method = "processRightClickBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isSneaking()Z"))
     public boolean isSneaking(EntityPlayerSP playerIn) {

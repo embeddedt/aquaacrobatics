@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @SuppressWarnings("unused")
 @Mixin(NetHandlerPlayServer.class)
-public class NetHandlerPlayServerMixin {
+public abstract class NetHandlerPlayServerMixin {
 
     @Redirect(method = "processEntityAction", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/EntityPlayerMP;motionY:D"))
     public double getElytraFlyingMotion(EntityPlayerMP player) {

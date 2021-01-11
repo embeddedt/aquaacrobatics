@@ -11,6 +11,7 @@ public class ModCompatManager {
     private static boolean isArtemisLibLoaded;
     private static boolean isMorphLoaded;
     private static boolean isHatsLoaded;
+    private static boolean isBetterSprintingLoaded;
 
     public static void loadCompat() {
 
@@ -20,6 +21,7 @@ public class ModCompatManager {
         isArtemisLibLoaded = Loader.isModLoaded("artemislib");
         isMorphLoaded = Loader.isModLoaded("morph");
         isHatsLoaded = Loader.isModLoaded("hats");
+        isBetterSprintingLoaded = Loader.isModLoaded("bettersprinting");
     }
 
     public static boolean enableRandomPatchesCompat() {
@@ -50,6 +52,11 @@ public class ModCompatManager {
     public static boolean enableHatsCompat() {
 
         return isHatsLoaded && ConfigHandler.CompatConfig.hatsCompat;
+    }
+
+    public static boolean enableBetterSprintingCompat() {
+
+        return isBetterSprintingLoaded && ConfigHandler.CompatConfig.betterSprintingCompat;
     }
 
 }

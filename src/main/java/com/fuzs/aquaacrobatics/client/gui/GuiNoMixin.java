@@ -82,4 +82,5 @@ public class GuiNoMixin extends GuiScreen {
         this.fontRenderer.drawSplitString(new TextComponentString("Download the MixinBootstrap mod from CurseForge to enable the Mixin library. Click the button below to head to the downloads page.").getFormattedText(), i, j + 56, 218, 2039583);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
 }
