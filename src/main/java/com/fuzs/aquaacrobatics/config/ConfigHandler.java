@@ -63,9 +63,6 @@ public class ConfigHandler {
         @Config.RequiresMcRestart
         public static boolean hatsCompat = true;
 
-        @Config.Name("Better Sprinting Compat")
-        @Config.Comment(COMPAT_DESCRIPTION)
-        public static boolean betterSprintingCompat = true;
     }
 
     @SuppressWarnings("unused")

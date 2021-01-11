@@ -6,8 +6,8 @@ import net.minecraft.util.MovementInput;
 public class MovementInputStorage extends MovementInput {
 
     public int sprintToggleTimer;
-    public int autoJumpTime;
-    public boolean sprinting;
+    public boolean isFlying;
+    public boolean isSprinting;
     public boolean isStartingToFly;
 
     public void copyFrom(MovementInput movement) {
