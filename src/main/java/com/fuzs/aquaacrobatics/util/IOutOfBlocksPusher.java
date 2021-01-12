@@ -77,16 +77,7 @@ public interface IOutOfBlocksPusher {
         double maxY = entity.getEntityBoundingBox().maxY;
         AxisAlignedBB blockBoundingBox = new AxisAlignedBB(pos.getX(), minY, pos.getZ(), (double) pos.getX() + 1.0, maxY, (double) pos.getZ() + 1.0);
 
-//        return this.world.collidesWithAnyBlock(playerBoundingBox);
-//        return ((IWorldAccessor) this.world).callGetCollisionBoxes(this, blockBoundingBox, false, Lists.newArrayList());
-
-//        BiPredicate<IBlockAccess, BlockPos> statePositionPredicate = (world, pos) -> {
-//
-//            IBlockState iblockstate = world.getBlockState(pos);
-//            return iblockstate.causesSuffocation() && iblockstate.getCollisionBoundingBox(world, pos) != null;
-//        };
-
-        return doesEntityCollideWithAABB(entity.world, createCubeIterator(blockBoundingBox), entity, (world, pos1) -> true);
+        return doesEntityCollideWithAABB(entity.world, entity, createCubeIterator(blockBoundingBox));
     }
 
     static CubeCoordinateIterator createCubeIterator(AxisAlignedBB aabb) {
@@ -101,7 +92,7 @@ public interface IOutOfBlocksPusher {
         return new CubeCoordinateIterator(startX, startY, startZ, endX, yHeight, endZ);
     }
 
-    static boolean doesEntityCollideWithAABB(World world, CubeCoordinateIterator cubeCoordinateIterator, Entity entity, BiPredicate<IBlockAccess, BlockPos> statePositionPredicate) {
+    static boolean doesEntityCollideWithAABB(World world, Entity entity, CubeCoordinateIterator cubeCoordinateIterator) {
 
         AxisAlignedBB aabb = entity.getEntityBoundingBox();
         BlockPos.PooledMutableBlockPos mutablePos = BlockPos.PooledMutableBlockPos.retain();
@@ -119,11 +110,6 @@ public interface IOutOfBlocksPusher {
 
             mutablePos.setPos(x, y, z);
             IBlockState iblockstate = world.getBlockState(mutablePos);
-            if (!statePositionPredicate.test(world, mutablePos) || boundariesTouched == 2 && iblockstate.getBlock() != Blocks.PISTON_EXTENSION) {
-
-                continue;
-            }
-
             if (iblockstate.isFullCube()) {
 
                 if (aabb.intersects(Block.FULL_BLOCK_AABB.offset(mutablePos))) {

@@ -4,6 +4,8 @@ import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
+import com.fuzs.aquaacrobatics.integration.bettersprinting.BetterSprintingIntegration;
 import com.fuzs.aquaacrobatics.util.IOutOfBlocksPusher;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.mojang.authlib.GameProfile;
@@ -18,6 +20,8 @@ import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -89,9 +93,19 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     }
 
     @Override
-    public boolean isUsingSwimmingAnimation(float moveForward) {
+    public boolean isUsingSwimmingAnimation(float moveForward, float moveStrafe) {
 
-        return this.canSwim() ? this.isMovingForward(moveForward) : (double) moveForward >= 0.8;
+        if (this.canSwim()) {
+
+            return this.isMovingForward(moveForward, moveStrafe);
+        }
+
+        if (IntegrationManager.isBetterSprintingEnabled() && BetterSprintingIntegration.enableAllDirs()) {
+
+            return moveForward >= 0.8F || Math.abs(moveStrafe) > 0.8F;
+        }
+
+        return moveForward >= 0.8F;
     }
 
     @Override
@@ -101,9 +115,17 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     }
 
     @Override
-    public boolean isMovingForward(float moveForward) {
+    public boolean isMovingForward(float moveForward, float moveStrafe) {
 
-        return moveForward > 1.0E-5F;
+        if (moveForward > 1.0E-5F) {
+
+            return true;
+        } else if (ConfigHandler.sidewaysSwimming || IntegrationManager.isBetterSprintingEnabled() && BetterSprintingIntegration.enableAllDirs()) {
+
+            return Math.abs(moveStrafe) > 1.0E-5F;
+        }
+
+        return false;
     }
 
     @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
@@ -120,6 +142,14 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         }
 
         callbackInfo.setReturnValue(false);
+    }
+
+    @Inject(method = "isHeadspaceFree", at = @At("HEAD"), cancellable = true, remap = false)
+    private void isHeadspaceFree(BlockPos pos, int height, CallbackInfoReturnable<Boolean> callbackInfo) {
+
+        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + this.height, pos.getZ() + 1.0);
+        boolean doesCollide = IOutOfBlocksPusher.doesEntityCollideWithAABB(this.world, this, IOutOfBlocksPusher.createCubeIterator(axisAlignedBB));
+        callbackInfo.setReturnValue(doesCollide);
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
@@ -218,11 +248,11 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     private void startSprinting(boolean isSaturated) {
 
         boolean wasSneaking = this.movementStorage.sneak;
-        boolean wasSwimming = this.isUsingSwimmingAnimation(this.movementStorage.moveForward);
+        boolean wasSwimming = this.isUsingSwimmingAnimation(this.movementStorage.moveForward, this.movementStorage.moveStrafe);
         boolean isSprintingEnvironment = this.onGround || this.canSwim() || this.movementStorage.isFlying;
-        if (isSprintingEnvironment && !wasSneaking && !wasSwimming && this.isUsingSwimmingAnimation(this.movementInput.moveForward) && !this.isSprinting() && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
+        if (isSprintingEnvironment && !wasSneaking && !wasSwimming && this.isUsingSwimmingAnimation(this.movementInput.moveForward, this.movementInput.moveStrafe) && !this.isSprinting() && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
 
-            if (this.movementStorage.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
+            if (this.movementStorage.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown() && (!IntegrationManager.isBetterSprintingEnabled() || BetterSprintingIntegration.enableDoubleTap())) {
 
                 this.sprintToggleTimer = 7;
             } else {
@@ -231,7 +261,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             }
         }
 
-        if (!this.isSprinting() && (!this.isInWater() || this.canSwim()) && this.isUsingSwimmingAnimation(this.movementInput.moveForward) && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS) && this.mc.gameSettings.keyBindSprint.isKeyDown()) {
+        if (!this.isSprinting() && (!this.isInWater() || this.canSwim()) && this.isUsingSwimmingAnimation(this.movementInput.moveForward, this.movementInput.moveStrafe) && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS) && this.mc.gameSettings.keyBindSprint.isKeyDown()) {
 
             this.setSprinting(true);
         }
@@ -241,7 +271,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         if (this.isSprinting()) {
 
-            boolean isNotMoving = !this.isMovingForward(this.movementInput.moveForward) || !isSaturated;
+            boolean isNotMoving = !this.isMovingForward(this.movementInput.moveForward, this.movementInput.moveStrafe) || !isSaturated;
             // don't stop sprint flying when breaching water surface
             boolean hasCollided = isNotMoving || this.collidedHorizontally || this.isInWater() && !this.canSwim() && !this.movementStorage.isFlying;
             if (((IPlayerResizeable) this).isSwimming()) {

@@ -1,11 +1,11 @@
-package com.fuzs.aquaacrobatics.compat.wings;
+package com.fuzs.aquaacrobatics.integration.wings;
 
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class WingsCompat {
+public class WingsIntegration {
 
     public static boolean onFlightCheck(EntityPlayer player, boolean isElytraFlying) {
         

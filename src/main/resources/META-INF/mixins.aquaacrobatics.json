@@ -8,8 +8,7 @@
     "EntityPlayerMixin",
     "EntityPlayerMPMixin",
     "NetHandlerPlayServerMixin",
-    "accessor.IEventBusAccessor",
-    "accessor.IWorldAccessor"
+    "accessor.IEventBusAccessor"
   ],
   "client": [
     "client.EntityPlayerSPMixin",

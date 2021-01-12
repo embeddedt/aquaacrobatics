@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
-import com.fuzs.aquaacrobatics.compat.ModCompatManager;
-import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
+import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.math.MathHelper;
@@ -46,7 +46,7 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
 
         if (!entityLiving.isElytraFlying()) {
 
-            if (!ModCompatManager.enableMoBendsCompat()) {
+            if (!IntegrationManager.isMoBendsEnabled()) {
 
                 float f = ((IPlayerResizeable) entityLiving).getSwimAnimation(partialTicks);
                 float f3 = entityLiving.isInWater() ? -90.0F - entityLiving.rotationPitch : -90.0F;
@@ -56,12 +56,12 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
 
             if (((IPlayerResizeable) entityLiving).isActuallySwimming()) {
 
-                if (!ModCompatManager.enableMoBendsCompat()) {
+                if (!IntegrationManager.isMoBendsEnabled()) {
 
                     GlStateManager.translate(0.0F, -1.0F, 0.3F);
                 } else {
 
-                    MoBendsCompat.applyRotations((RenderPlayer) (Object) this, entityLiving);
+                    MoBendsIntegration.applyRotations((RenderPlayer) (Object) this, entityLiving);
                 }
             }
         }

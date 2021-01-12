@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.compat.artemislib;
+package com.fuzs.aquaacrobatics.integration.artemislib;
 
 import com.artemis.artemislib.util.AttachAttributes;
 import com.artemis.artemislib.util.attributes.ArtemisLibAttributes;
@@ -12,7 +12,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ArtemisLibCompat {
+public class ArtemisLibIntegration {
 
     private static final UUID SWIMMING_HEIGHT_ID = UUID.fromString("F5ED4D20-4DAB-11EB-AE93-0242AC130002");
     private static final AttributeModifier SWIMMING_HEIGHT = new AttributeModifier(SWIMMING_HEIGHT_ID, "Swimming height modifier", -2.0 / 3.0, 2);

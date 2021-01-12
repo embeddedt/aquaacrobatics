@@ -1,9 +1,9 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
-import com.fuzs.aquaacrobatics.compat.ModCompatManager;
-import com.fuzs.aquaacrobatics.compat.artemislib.ArtemisLibCompat;
-import com.fuzs.aquaacrobatics.compat.morph.MorphCompat;
-import com.fuzs.aquaacrobatics.compat.wings.WingsCompat;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
+import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
+import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
+import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
@@ -90,9 +90,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
             this.recalculateEyeHeight();
             this.recalculateSize();
-            if (ModCompatManager.enableArtemisLibCompat()) {
+            if (IntegrationManager.isArtemisLibEnabled()) {
 
-                ArtemisLibCompat.updateSwimmingSize(this.getPlayer(), this.getPose());
+                ArtemisLibIntegration.updateSwimmingSize(this.getPlayer(), this.getPose());
             }
         }
 
@@ -218,7 +218,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public boolean isResizingAllowed() {
 
-        if (ModCompatManager.enableMorphCompat() && MorphCompat.isMorphing(this.getPlayer())) {
+        if (IntegrationManager.isMorphEnabled() && MorphIntegration.isMorphing(this.getPlayer())) {
 
             return false;
         }
@@ -329,7 +329,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         } else if (this.isPoseClear(Pose.SWIMMING)) {
 
             Pose pose;
-            if (ModCompatManager.enableWingsCompat() ? WingsCompat.onFlightCheck(this.getPlayer(), this.isElytraFlying()) : this.isElytraFlying()) {
+            if (IntegrationManager.isWingsEnabled() ? WingsIntegration.onFlightCheck(this.getPlayer(), this.isElytraFlying()) : this.isElytraFlying()) {
 
                 pose = Pose.FALL_FLYING;
             } else if (this.isSwimming()) {
@@ -394,7 +394,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public boolean isActuallySwimming() {
 
         boolean isFallFlying = !this.isElytraFlying() && this.getPose() == Pose.FALL_FLYING;
-        return this.getPose() == Pose.SWIMMING || (ModCompatManager.enableWingsCompat() ? !WingsCompat.onFlightCheck(this.getPlayer(), !isFallFlying) : isFallFlying);
+        return this.getPose() == Pose.SWIMMING || (IntegrationManager.isWingsEnabled() ? !WingsIntegration.onFlightCheck(this.getPlayer(), !isFallFlying) : isFallFlying);
     }
 
     @SideOnly(Side.CLIENT)

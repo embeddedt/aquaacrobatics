@@ -1,8 +1,8 @@
 package com.fuzs.aquaacrobatics.proxy;
 
 import com.fuzs.aquaacrobatics.client.handler.AirMeterHandler;
-import com.fuzs.aquaacrobatics.compat.ModCompatManager;
-import com.fuzs.aquaacrobatics.compat.artemislib.ArtemisLibCompat;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
+import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
 import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("unused")
@@ -19,9 +19,9 @@ public class ClientProxy extends CommonProxy {
     public void onPostInit() {
 
         super.onPostInit();
-        if (ModCompatManager.enableArtemisLibCompat()) {
+        if (IntegrationManager.isArtemisLibEnabled()) {
 
-            ArtemisLibCompat.register();
+            ArtemisLibIntegration.register();
         }
     }
 

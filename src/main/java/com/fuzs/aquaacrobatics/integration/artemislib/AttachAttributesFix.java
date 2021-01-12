@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.compat.artemislib;
+package com.fuzs.aquaacrobatics.integration.artemislib;
 
 import com.artemis.artemislib.compatibilities.sizeCap.ISizeCap;
 import com.artemis.artemislib.compatibilities.sizeCap.SizeCapPro;

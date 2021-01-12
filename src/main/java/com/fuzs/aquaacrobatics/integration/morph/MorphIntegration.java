@@ -1,11 +1,11 @@
-package com.fuzs.aquaacrobatics.compat.morph;
+package com.fuzs.aquaacrobatics.integration.morph;
 
 import me.ichun.mods.morph.api.IApi;
 import me.ichun.mods.morph.api.MorphApi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MorphCompat {
+public class MorphIntegration {
 
     public static boolean isMorphing(EntityPlayer player) {
 

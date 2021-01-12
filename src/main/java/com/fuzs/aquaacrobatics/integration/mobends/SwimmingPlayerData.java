@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.compat.mobends;
+package com.fuzs.aquaacrobatics.integration.mobends;
 
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;

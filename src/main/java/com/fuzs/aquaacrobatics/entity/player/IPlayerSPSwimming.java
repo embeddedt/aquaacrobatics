@@ -6,10 +6,10 @@ public interface IPlayerSPSwimming {
 
     boolean isForcedDown();
 
-    boolean isUsingSwimmingAnimation(float moveForward);
+    boolean isUsingSwimmingAnimation(float moveForward, float moveStrafe);
 
     boolean canSwim();
 
-    boolean isMovingForward(float moveForward);
+    boolean isMovingForward(float moveForward, float moveStrafe);
 
 }

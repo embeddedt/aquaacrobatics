@@ -1,11 +1,11 @@
-package com.fuzs.aquaacrobatics.compat.hats;
+package com.fuzs.aquaacrobatics.integration.hats;
 
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import me.ichun.mods.hats.client.render.helper.HelperPlayer;
 import me.ichun.mods.hats.common.core.ApiHandler;
 import net.minecraft.entity.EntityLivingBase;
 
-public class HatsCompat {
+public class HatsIntegration {
 
     public static void register() {
 

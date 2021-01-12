@@ -1,6 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
-import com.fuzs.aquaacrobatics.compat.ModCompatManager;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.util.math.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -28,7 +28,7 @@ public abstract class EntityRendererMixin {
     public float getEyeHeight(float eyeHeight, float partialTicks) {
 
         // random patches has this feature as well
-        if (ModCompatManager.enableRandomPatchesCompat()) {
+        if (IntegrationManager.isRandomPatchesEnabled()) {
 
             return eyeHeight;
         }

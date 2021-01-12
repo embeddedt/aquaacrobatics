@@ -1,26 +1,26 @@
 package com.fuzs.aquaacrobatics.proxy;
 
-import com.fuzs.aquaacrobatics.compat.ModCompatManager;
-import com.fuzs.aquaacrobatics.compat.hats.HatsCompat;
-import com.fuzs.aquaacrobatics.compat.mobends.MoBendsCompat;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
+import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
+import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 
 public class CommonProxy {
 
     public void onPreInit() {
 
-        ModCompatManager.loadCompat();
+        IntegrationManager.loadCompat();
     }
 
     public void onPostInit() {
 
-        if (ModCompatManager.enableMoBendsCompat()) {
+        if (IntegrationManager.isMoBendsEnabled()) {
 
-            MoBendsCompat.register();
+            MoBendsIntegration.register();
         }
 
-        if (ModCompatManager.enableHatsCompat()) {
+        if (IntegrationManager.isHatsEnabled()) {
 
-            HatsCompat.register();
+            HatsIntegration.register();
         }
     }
 

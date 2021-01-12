@@ -28,44 +28,52 @@ public class ConfigHandler {
     public static boolean eatingAnimation = true;
 
     @Config.Name("Exact Player Collisions")
-    @Config.Comment("Calculate player collisions with blocks exactly instead of merely estimating them based on full cubes as Minecraft 1.12 normally does. This is the default behavior in Minecraft 1.13+, but enabling it might have a negative impact on client performance.")
+    @Config.Comment("Calculate player collisions with blocks exactly instead of merely estimating them based on full cubes as Minecraft 1.12 normally does. This is the default behavior in Minecraft 1.13+, but there might be a negative impact on client performance.")
     public static boolean exactPlayerCollisions = true;
 
-    @SuppressWarnings("unused")
-    @Config.Name("compat")
-    @Config.Comment("Control compatibility settings for individual mods.")
-    public static CompatConfig compatConfig;
+    @Config.Name("Sideways Swimming")
+    @Config.Comment("Enables swimming to both sides.")
+    public static boolean sidewaysSwimming = false;
 
-    public static class CompatConfig {
+    @SuppressWarnings("unused")
+    @Config.Name("integration")
+    @Config.Comment("Control compatibility settings for individual mods.")
+    public static IntegrationConfig integrationConfig;
+
+    public static class IntegrationConfig {
 
         private static final String COMPAT_DESCRIPTION = "Only applies when the mod is installed. Disable when there are issues with the mod.";
 
-        @Config.Name("Random Patches Compat")
+        @Config.Name("Random Patches Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
-        public static boolean randomPatchesCompat = true;
+        public static boolean randomPatchesIntegration = true;
 
-        @Config.Name("Mo' Bends Compat")
+        @Config.Name("Mo' Bends Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         @Config.RequiresMcRestart
-        public static boolean moBendsCompat = true;
+        public static boolean moBendsIntegration = true;
 
-        @Config.Name("Wings Compat")
+        @Config.Name("Wings Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
-        public static boolean wingsCompat = true;
+        public static boolean wingsIntegration = true;
 
-        @Config.Name("ArtemisLib Compat")
-        @Config.Comment(COMPAT_DESCRIPTION)
-        @Config.RequiresMcRestart
-        public static boolean artemisLibCompat = true;
-
-        @Config.Name("Morph Compat")
-        @Config.Comment(COMPAT_DESCRIPTION)
-        public static boolean morphCompat = true;
-
-        @Config.Name("Hats Compat")
+        @Config.Name("ArtemisLib Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         @Config.RequiresMcRestart
-        public static boolean hatsCompat = true;
+        public static boolean artemisLibIntegration = true;
+
+        @Config.Name("Morph Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean morphIntegration = true;
+
+        @Config.Name("Hats Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean hatsIntegration = true;
+
+        @Config.Name("Better Sprinting Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean betterSprintingIntegration = true;
 
     }
 
