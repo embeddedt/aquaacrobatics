@@ -9,7 +9,7 @@ import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
-import com.fuzs.aquaacrobatics.util.MathHelper;
+import com.fuzs.aquaacrobatics.util.math.MathHelper;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;

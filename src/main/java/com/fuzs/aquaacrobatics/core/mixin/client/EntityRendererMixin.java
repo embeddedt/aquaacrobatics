@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.compat.ModCompatManager;
-import com.fuzs.aquaacrobatics.util.MathHelper;
+import com.fuzs.aquaacrobatics.util.math.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import org.spongepowered.asm.mixin.Final;

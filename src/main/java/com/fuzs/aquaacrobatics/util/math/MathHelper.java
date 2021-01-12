@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.util;
+package com.fuzs.aquaacrobatics.util.math;
 
 public class MathHelper extends net.minecraft.util.math.MathHelper {
 

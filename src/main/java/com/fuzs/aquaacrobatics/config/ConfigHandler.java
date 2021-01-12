@@ -27,6 +27,10 @@ public class ConfigHandler {
     @Config.Comment("Animate eating in third-person view.")
     public static boolean eatingAnimation = true;
 
+    @Config.Name("Exact Player Collisions")
+    @Config.Comment("Calculate player collisions with blocks exactly instead of merely estimating them based on full cubes as Minecraft 1.12 normally does. This is the default behavior in Minecraft 1.13+, but enabling it might have a negative impact on client performance.")
+    public static boolean exactPlayerCollisions = true;
+
     @SuppressWarnings("unused")
     @Config.Name("compat")
     @Config.Comment("Control compatibility settings for individual mods.")

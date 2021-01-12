@@ -4,6 +4,7 @@ import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
+import com.fuzs.aquaacrobatics.util.IOutOfBlocksPusher;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -103,6 +104,22 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public boolean isMovingForward(float moveForward) {
 
         return moveForward > 1.0E-5F;
+    }
+
+    @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
+    protected void pushOutOfBlocks(double x, double y, double z, CallbackInfoReturnable<Boolean> callbackInfo) {
+
+        if (!ConfigHandler.exactPlayerCollisions) {
+
+            return;
+        }
+
+        if (!this.noClip) {
+
+            IOutOfBlocksPusher.setPlayerOffsetMotion(this, x, z);
+        }
+
+        callbackInfo.setReturnValue(false);
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))

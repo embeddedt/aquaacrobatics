@@ -16,6 +16,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AttachAttributesFix extends AttachAttributes {
 
+    private boolean isResizingRequired;
+
     @Override
     @SubscribeEvent
     public void attachAttributes(final EntityEvent.EntityConstructing evt) {
@@ -42,7 +44,8 @@ public class AttachAttributesFix extends AttachAttributes {
     public void onEntityRenderPre(final RenderLivingEvent.Pre evt) {
         
         EntityLivingBase entity = evt.getEntity();
-        if(this.isResizingRequired(entity)) {
+        this.updateResizingFlag(entity);
+        if (this.isResizingRequired) {
 
             double widthAttribute = entity.getAttributeMap().getAttributeInstance(ArtemisLibAttributes.ENTITY_WIDTH).getAttributeValue();
             double heightAttribute = entity.getAttributeMap().getAttributeInstance(ArtemisLibAttributes.ENTITY_HEIGHT).getAttributeValue();
@@ -64,27 +67,26 @@ public class AttachAttributesFix extends AttachAttributes {
     @SubscribeEvent
     public void onLivingRenderPost(final RenderLivingEvent.Post evt) {
 
-        EntityLivingBase entity = evt.getEntity();
-        if(this.isResizingRequired(entity)) {
+        if (this.isResizingRequired) {
 
             GlStateManager.popMatrix();
         }
     }
 
-    private boolean isResizingRequired(EntityLivingBase entity) {
+    private void updateResizingFlag(EntityLivingBase entity) {
 
-        if(entity.hasCapability(SizeCapPro.sizeCapability, null)) {
+        if (entity.hasCapability(SizeCapPro.sizeCapability, null)) {
 
             ISizeCap cap = entity.getCapability(SizeCapPro.sizeCapability, null);
             if (cap != null && cap.getTrans()) {
 
                 boolean isWidthModified = !entity.getAttributeMap().getAttributeInstance(ArtemisLibAttributes.ENTITY_WIDTH).getModifiers().isEmpty();
                 boolean isHeightModified = !entity.getAttributeMap().getAttributeInstance(ArtemisLibAttributes.ENTITY_HEIGHT).getModifiers().isEmpty();
-                return isWidthModified || isHeightModified;
+                this.isResizingRequired = isWidthModified || isHeightModified;
             }
         }
 
-        return false;
+        this.isResizingRequired = false;
     }
 
 }
