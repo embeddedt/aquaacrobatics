@@ -5,20 +5,17 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.function.BiPredicate;
 
-public interface IOutOfBlocksPusher {
+public class PlayerOffsetMotion {
 
-    static void setPlayerOffsetMotion(Entity entity, double x, double z) {
+    public static void setPlayerOffsetMotion(Entity entity, double x, double z) {
 
         BlockPos blockpos = new BlockPos(x, entity.posY, z);
         if (shouldBlockPushPlayer(entity, blockpos)) {
@@ -54,7 +51,7 @@ public interface IOutOfBlocksPusher {
     }
 
     @SuppressWarnings("SameParameterValue")
-    static double getCoordinateFromAxis(EnumFacing.Axis axis, double x, double y, double z) {
+    public static double getCoordinateFromAxis(EnumFacing.Axis axis, double x, double y, double z) {
 
         switch (axis) {
 
@@ -71,7 +68,7 @@ public interface IOutOfBlocksPusher {
         throw new Error("Someone's been tampering with the universe!");
     }
 
-    static boolean shouldBlockPushPlayer(Entity entity, BlockPos pos) {
+    public static boolean shouldBlockPushPlayer(Entity entity, BlockPos pos) {
 
         double minY = entity.getEntityBoundingBox().minY;
         double maxY = entity.getEntityBoundingBox().maxY;
@@ -80,7 +77,7 @@ public interface IOutOfBlocksPusher {
         return doesEntityCollideWithAABB(entity.world, entity, createCubeIterator(blockBoundingBox));
     }
 
-    static CubeCoordinateIterator createCubeIterator(AxisAlignedBB aabb) {
+    public static CubeCoordinateIterator createCubeIterator(AxisAlignedBB aabb) {
 
         int startX = MathHelper.floor(aabb.minX) - 1;
         int endX = MathHelper.floor(aabb.maxX) + 1;
@@ -92,7 +89,7 @@ public interface IOutOfBlocksPusher {
         return new CubeCoordinateIterator(startX, startY, startZ, endX, yHeight, endZ);
     }
 
-    static boolean doesEntityCollideWithAABB(World world, Entity entity, CubeCoordinateIterator cubeCoordinateIterator) {
+    public static boolean doesEntityCollideWithAABB(World world, Entity entity, CubeCoordinateIterator cubeCoordinateIterator) {
 
         AxisAlignedBB aabb = entity.getEntityBoundingBox();
         BlockPos.PooledMutableBlockPos mutablePos = BlockPos.PooledMutableBlockPos.retain();
@@ -112,20 +109,24 @@ public interface IOutOfBlocksPusher {
             IBlockState iblockstate = world.getBlockState(mutablePos);
             if (iblockstate.isFullCube()) {
 
-                if (aabb.intersects(Block.FULL_BLOCK_AABB.offset(mutablePos))) {
+                if (!aabb.intersects(Block.FULL_BLOCK_AABB.offset(mutablePos))) {
 
-                    mutablePos.release();
-                    return true;
+                    continue;
                 }
-            }
-
-            List<AxisAlignedBB> collidingBoxes = Lists.newArrayList();
-            iblockstate.addCollisionBoxToList(world, mutablePos, aabb, collidingBoxes, entity, false);
-            if (!collidingBoxes.isEmpty()) {
 
                 mutablePos.release();
                 return true;
             }
+
+            List<AxisAlignedBB> collidingBoxes = Lists.newArrayList();
+            iblockstate.addCollisionBoxToList(world, mutablePos, aabb, collidingBoxes, entity, false);
+            if (collidingBoxes.isEmpty()) {
+
+                continue;
+            }
+
+            mutablePos.release();
+            return true;
         }
 
         mutablePos.release();

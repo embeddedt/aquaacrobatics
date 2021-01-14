@@ -4,9 +4,7 @@ import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
-import com.fuzs.aquaacrobatics.integration.IntegrationManager;
-import com.fuzs.aquaacrobatics.integration.bettersprinting.BetterSprintingIntegration;
-import com.fuzs.aquaacrobatics.util.IOutOfBlocksPusher;
+import com.fuzs.aquaacrobatics.util.PlayerOffsetMotion;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -20,8 +18,6 @@ import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -100,7 +96,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             return this.isMovingForward(moveForward, moveStrafe);
         }
 
-        if (IntegrationManager.isBetterSprintingEnabled() && BetterSprintingIntegration.enableAllDirs()) {
+        if (ConfigHandler.MovementConfig.sidewaysSprinting) {
 
             return moveForward >= 0.8F || Math.abs(moveStrafe) > 0.8F;
         }
@@ -120,7 +116,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         if (moveForward > 1.0E-5F) {
 
             return true;
-        } else if (ConfigHandler.sidewaysSwimming || IntegrationManager.isBetterSprintingEnabled() && BetterSprintingIntegration.enableAllDirs()) {
+        } else if (ConfigHandler.MovementConfig.sidewaysSwimming) {
 
             return Math.abs(moveStrafe) > 1.0E-5F;
         }
@@ -138,18 +134,16 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         if (!this.noClip) {
 
-            IOutOfBlocksPusher.setPlayerOffsetMotion(this, x, z);
+            PlayerOffsetMotion.setPlayerOffsetMotion(this, x, z);
         }
 
         callbackInfo.setReturnValue(false);
     }
 
-    @Inject(method = "isHeadspaceFree", at = @At("HEAD"), cancellable = true, remap = false)
-    private void isHeadspaceFree(BlockPos pos, int height, CallbackInfoReturnable<Boolean> callbackInfo) {
+    @Redirect(method = "pushOutOfBlocks", at = @At(value = "INVOKE", target = "Ljava/lang/Math;ceil(D)D"))
+    private double ceil(double a) {
 
-        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + this.height, pos.getZ() + 1.0);
-        boolean doesCollide = IOutOfBlocksPusher.doesEntityCollideWithAABB(this.world, this, IOutOfBlocksPusher.createCubeIterator(axisAlignedBB));
-        callbackInfo.setReturnValue(doesCollide);
+        return Math.ceil(a - 0.65);
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
@@ -252,9 +246,9 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         boolean isSprintingEnvironment = this.onGround || this.canSwim() || this.movementStorage.isFlying;
         if (isSprintingEnvironment && !wasSneaking && !wasSwimming && this.isUsingSwimmingAnimation(this.movementInput.moveForward, this.movementInput.moveStrafe) && !this.isSprinting() && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
 
-            if (this.movementStorage.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown() && (!IntegrationManager.isBetterSprintingEnabled() || BetterSprintingIntegration.enableDoubleTap())) {
+            if (this.movementStorage.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
 
-                this.sprintToggleTimer = 7;
+                this.sprintToggleTimer = ConfigHandler.MovementConfig.noDoubleTapSprinting ? 0 : 7;
             } else {
 
                 this.setSprinting(true);
@@ -290,7 +284,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     private void handleElytraTakeoff() {
 
         // 1.15 change for easier elytra takeoff
-        if (ConfigHandler.easyElytraTakeoff && this.movementInput.jump && !this.movementStorage.isStartingToFly && !this.movementStorage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder()) {
+        if (ConfigHandler.MiscellaneousConfig.easyElytraTakeoff && this.movementInput.jump && !this.movementStorage.isStartingToFly && !this.movementStorage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder()) {
 
             ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
             if (itemstack.getItem() == Items.ELYTRA && ItemElytra.isUsable(itemstack)) {

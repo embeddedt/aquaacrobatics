@@ -104,7 +104,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         int air = this.getAir();
         super.onEntityUpdate();
-        if (ConfigHandler.slowAirReplenish && air < this.getAir() && this.getAir() > 0) {
+        if (ConfigHandler.MiscellaneousConfig.slowAirReplenish && air < this.getAir() && this.getAir() > 0) {
 
             this.setAir(Math.min(air + 4, 300));
         }
@@ -298,16 +298,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         this.deathTime = 0;
     }
 
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;onUpdate()V"))
-    public void onUpdate(CallbackInfo callbackInfo) {
-
-        this.updateSwimAnimation();
-        this.updateEyesInWaterPlayer();
-    }
-
     @Inject(method = "updateSize", at = @At("HEAD"), cancellable = true)
     protected void updateSize(CallbackInfo callbackInfo) {
 
+        this.updateSwimAnimation();
+        this.updateEyesInWaterPlayer();
         FMLCommonHandler.instance().onPlayerPostTick(this.getPlayer());
         // run after Forge event in case a mod still wants to do changes
         this.updatePose();
@@ -551,20 +546,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public void onLivingUpdate(CallbackInfo callbackInfo) {
 
         // disable bobbing view when swimming
-        float f;
+        float f = 0.0F;
         if (this.onGround && !this.getShouldBeDead() && !this.isSwimming()) {
 
             f = Math.min(0.1F, MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ));
-        } else {
-
-            f = 0.0F;
         }
 
         this.cameraYaw = this.prevCameraYaw + (f - this.prevCameraYaw) * 0.4F;
         // no longer exists in 1.13+
         this.cameraPitch = 0.0F;
 
-        if (!ConfigHandler.sneakingForParrots) {
+        if (!ConfigHandler.MiscellaneousConfig.sneakingForParrots) {
 
             return;
         }
@@ -580,7 +572,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Inject(method = "addShoulderEntity", at = @At("HEAD"), cancellable = true)
     public void addShoulderEntity(NBTTagCompound p_192027_1_, CallbackInfoReturnable<Boolean> callbackInfo) {
 
-        if (ConfigHandler.sneakingForParrots && this.isSneaking()) {
+        if (ConfigHandler.MiscellaneousConfig.sneakingForParrots && this.isSneaking()) {
 
             callbackInfo.setReturnValue(false);
         }

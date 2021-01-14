@@ -11,7 +11,6 @@ public class IntegrationManager {
     private static boolean isArtemisLibLoaded;
     private static boolean isMorphLoaded;
     private static boolean isHatsLoaded;
-    private static boolean isBetterSprintingLoaded;
 
     public static void loadCompat() {
 
@@ -21,7 +20,6 @@ public class IntegrationManager {
         isArtemisLibLoaded = Loader.isModLoaded("artemislib");
         isMorphLoaded = Loader.isModLoaded("morph");
         isHatsLoaded = Loader.isModLoaded("hats");
-        isBetterSprintingLoaded = Loader.isModLoaded("bettersprinting");
     }
 
     public static boolean isRandomPatchesEnabled() {
@@ -52,11 +50,6 @@ public class IntegrationManager {
     public static boolean isHatsEnabled() {
 
         return isHatsLoaded && ConfigHandler.IntegrationConfig.hatsIntegration;
-    }
-
-    public static boolean isBetterSprintingEnabled() {
-
-        return isBetterSprintingLoaded && ConfigHandler.IntegrationConfig.betterSprintingIntegration;
     }
 
 }
