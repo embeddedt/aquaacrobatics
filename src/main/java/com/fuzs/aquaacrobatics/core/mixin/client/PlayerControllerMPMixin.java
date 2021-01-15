@@ -1,6 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
+import com.fuzs.aquaacrobatics.client.entity.IPlayerSPSwimming;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import org.spongepowered.asm.mixin.Mixin;

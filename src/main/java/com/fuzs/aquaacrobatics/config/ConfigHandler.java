@@ -11,9 +11,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class ConfigHandler {
 
-    @Config.Name("Exact Player Collisions")
-    @Config.Comment("Calculate player collisions with blocks exactly instead of merely estimating them based on full cubes as Minecraft 1.12 normally does. This is the default behavior in Minecraft 1.13+, but there might be a negative impact on client performance.")
-    public static boolean exactPlayerCollisions = false;
+    @Config.Name("Push Player Out Of Blocks")
+    @Config.Comment({"STANDARD - The player will occasionally be pushed out of certain spaces. Collisions are evaluated for full cubes only, non-full cubes are ignored. This is the default behavior up to Minecraft 1.12.", "APPROXIMATE - The player can move into more spaces, but will still be pushed out of some. Collisions are evaluated for full cubes only, non-full cubes are ignored.", "EXACT - The player can move into all spaces as expected. Collisions are evaluated for all types of cubes. This is the default behavior in Minecraft 1.13 and onwards."})
+    public static PlayerBlockCollisions playerBlockCollisions = PlayerBlockCollisions.APPROXIMATE;
 
     @SuppressWarnings("unused")
     @Config.Name("movement")
@@ -31,6 +31,10 @@ public class ConfigHandler {
     public static IntegrationConfig integrationConfig;
 
     public static class MovementConfig {
+
+        @Config.Name("Easy Elytra Takeoff")
+        @Config.Comment("Taking off with an elytra from the ground is now far easier like in Minecraft 1.15 and onwards.")
+        public static boolean easyElytraTakeoff = true;
 
         @Config.Name("No Double Tab Sprinting")
         @Config.Comment("Prevent sprinting from being triggered by double tapping the walk forward key.")
@@ -51,10 +55,6 @@ public class ConfigHandler {
         @Config.Name("Replenish Air Slowly")
         @Config.Comment("Replenish air slowly when out of water instead of immediately.")
         public static boolean slowAirReplenish = false;
-
-        @Config.Name("Easy Elytra Takeoff")
-        @Config.Comment("Taking off with an elytra from the ground is now far easier like in Minecraft 1.15+.")
-        public static boolean easyElytraTakeoff = true;
 
         @Config.Name("Sneaking Dismounts Parrots")
         @Config.Comment("Parrots no longer leave the players shoulders as easily, instead the player needs to press the sneak key.")
@@ -107,6 +107,12 @@ public class ConfigHandler {
 
             ConfigManager.sync(AquaAcrobatics.MODID, Config.Type.INSTANCE);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public enum PlayerBlockCollisions {
+
+        STANDARD, APPROXIMATE, EXACT
     }
 
 }

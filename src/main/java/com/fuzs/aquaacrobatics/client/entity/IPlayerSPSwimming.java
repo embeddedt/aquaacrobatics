@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.entity.player;
+package com.fuzs.aquaacrobatics.client.entity;
 
 public interface IPlayerSPSwimming {
 

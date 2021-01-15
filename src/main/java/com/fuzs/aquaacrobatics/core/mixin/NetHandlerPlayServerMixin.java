@@ -15,7 +15,7 @@ public abstract class NetHandlerPlayServerMixin {
     public double getElytraFlyingMotion(EntityPlayerMP player) {
 
         // 1.15 change for easier elytra takeoff
-        return ConfigHandler.MiscellaneousConfig.easyElytraTakeoff ? -1.0 : player.motionY;
+        return ConfigHandler.MovementConfig.easyElytraTakeoff ? -1.0 : player.motionY;
     }
 
 }

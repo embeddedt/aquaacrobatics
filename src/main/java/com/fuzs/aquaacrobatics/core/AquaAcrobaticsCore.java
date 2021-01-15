@@ -45,14 +45,14 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
             if (Class.forName("org.spongepowered.asm.launch.MixinTweaker") != null) {
 
                 isLoaded = true;
-                AquaAcrobaticsCore.LOGGER.info("Found valid mixin instance. Proceeding to load.");
+                AquaAcrobaticsCore.LOGGER.info("Found valid Mixin framework. Proceeding to load.");
                 return AquaAcrobaticsSetupHook.class.getName();
             }
         } catch (ClassNotFoundException ignored) {
 
         }
 
-        AquaAcrobaticsCore.LOGGER.error("No instance of mixins detected. Unable to proceed load.");
+        AquaAcrobaticsCore.LOGGER.error("No instance of Mixin framework detected. Unable to proceed load.");
         return null;
     }
 

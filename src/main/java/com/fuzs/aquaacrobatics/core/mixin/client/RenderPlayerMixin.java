@@ -2,7 +2,7 @@ package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
-import com.fuzs.aquaacrobatics.entity.player.IModelBipedSwimming;
+import com.fuzs.aquaacrobatics.client.model.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.math.MathHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;

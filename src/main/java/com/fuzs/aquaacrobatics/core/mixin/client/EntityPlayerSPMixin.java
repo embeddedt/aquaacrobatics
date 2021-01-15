@@ -3,7 +3,7 @@ package com.fuzs.aquaacrobatics.core.mixin.client;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
+import com.fuzs.aquaacrobatics.client.entity.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.util.PlayerOffsetMotion;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.mojang.authlib.GameProfile;
@@ -127,7 +127,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
     protected void pushOutOfBlocks(double x, double y, double z, CallbackInfoReturnable<Boolean> callbackInfo) {
 
-        if (!ConfigHandler.exactPlayerCollisions) {
+        if (ConfigHandler.playerBlockCollisions != ConfigHandler.PlayerBlockCollisions.EXACT) {
 
             return;
         }
@@ -137,13 +137,20 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             PlayerOffsetMotion.setPlayerOffsetMotion(this, x, z);
         }
 
+        // return value is never used
         callbackInfo.setReturnValue(false);
     }
 
     @Redirect(method = "pushOutOfBlocks", at = @At(value = "INVOKE", target = "Ljava/lang/Math;ceil(D)D"))
     private double ceil(double a) {
 
-        return Math.ceil(a - 0.65);
+        if (ConfigHandler.playerBlockCollisions == ConfigHandler.PlayerBlockCollisions.APPROXIMATE) {
+
+            a -= 0.65;
+        }
+
+        // make the player be able to sneak under full cubes with their new height of 1.5 blocks
+        return Math.ceil(a);
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
@@ -284,7 +291,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     private void handleElytraTakeoff() {
 
         // 1.15 change for easier elytra takeoff
-        if (ConfigHandler.MiscellaneousConfig.easyElytraTakeoff && this.movementInput.jump && !this.movementStorage.isStartingToFly && !this.movementStorage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder()) {
+        if (ConfigHandler.MovementConfig.easyElytraTakeoff && this.movementInput.jump && !this.movementStorage.isStartingToFly && !this.movementStorage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder()) {
 
             ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
             if (itemstack.getItem() == Items.ELYTRA && ItemElytra.isUsable(itemstack)) {

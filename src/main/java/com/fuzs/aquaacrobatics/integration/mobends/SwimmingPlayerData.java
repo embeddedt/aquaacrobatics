@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.integration.mobends;
 
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
-import com.fuzs.aquaacrobatics.entity.player.IPlayerSPSwimming;
+import com.fuzs.aquaacrobatics.client.entity.IPlayerSPSwimming;
 import goblinbob.mobends.standard.animation.controller.PlayerController;
 import goblinbob.mobends.standard.data.PlayerData;
 import net.minecraft.client.entity.AbstractClientPlayer;
