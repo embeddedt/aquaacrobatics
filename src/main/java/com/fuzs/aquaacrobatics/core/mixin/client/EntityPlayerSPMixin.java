@@ -1,23 +1,27 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
+import com.fuzs.aquaacrobatics.client.entity.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
-import com.fuzs.aquaacrobatics.client.entity.IPlayerSPSwimming;
-import com.fuzs.aquaacrobatics.util.PlayerOffsetMotion;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
+import com.fuzs.aquaacrobatics.util.math.AxisAlignedBBSpliterator;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +31,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @SuppressWarnings("unused")
 @Mixin(EntityPlayerSP.class)
@@ -134,11 +143,67 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         if (!this.noClip) {
 
-            PlayerOffsetMotion.setPlayerOffsetMotion(this, x, z);
+            this.setPlayerOffsetMotion(x, z);
         }
 
         // return value is never used
         callbackInfo.setReturnValue(false);
+    }
+
+    private void setPlayerOffsetMotion(double x, double z) {
+
+        BlockPos blockpos = new BlockPos(x, this.posY, z);
+        if (this.shouldBlockPushPlayer(blockpos)) {
+
+            double d0 = x - blockpos.getX();
+            double d1 = z - blockpos.getZ();
+            EnumFacing direction = null;
+            double d2 = Double.MAX_VALUE;
+            EnumFacing[] xzPlane = new EnumFacing[]{EnumFacing.WEST, EnumFacing.EAST, EnumFacing.NORTH, EnumFacing.SOUTH};
+
+            for (EnumFacing direction1 : xzPlane) {
+
+                EnumFacing.Axis axis = direction1.getAxis();
+                double d3 = axis == EnumFacing.Axis.X ? d0 : axis == EnumFacing.Axis.Z ? d1 : 0.0;
+                double d4 = direction1.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE ? 1.0 - d3 : d3;
+                if (d4 < d2 && !this.shouldBlockPushPlayer(blockpos.offset(direction1))) {
+
+                    d2 = d4;
+                    direction = direction1;
+                }
+            }
+
+            if (direction != null) {
+
+                if (direction.getAxis() == EnumFacing.Axis.X) {
+
+                    this.motionX = 0.1 * direction.getDirectionVec().getX();
+                } else {
+
+                    this.motionZ = 0.1 * direction.getDirectionVec().getZ();
+                }
+            }
+        }
+    }
+
+    private boolean shouldBlockPushPlayer(BlockPos pos) {
+
+        double minY = this.getEntityBoundingBox().minY;
+        double maxY = this.getEntityBoundingBox().maxY;
+        AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), minY, pos.getZ(), pos.getX() + 1.0, maxY, pos.getZ() + 1.0);
+
+        // don't use IBlockState#causesSuffocation as it works differently in newer versions
+        return !isAxisAlignedBBNotClear(this.world, this, aabb.shrink(1.0E-7));
+    }
+
+    private static boolean isAxisAlignedBBNotClear(World world, @Nullable Entity entity, AxisAlignedBB aabb) {
+
+        return createAxisAlignedBBStream(world, entity, aabb).allMatch(Objects::isNull);
+    }
+
+    private static Stream<AxisAlignedBB> createAxisAlignedBBStream(World world, @Nullable Entity entity, AxisAlignedBB aabb) {
+
+        return StreamSupport.stream(new AxisAlignedBBSpliterator(world, entity, aabb), false);
     }
 
     @Redirect(method = "pushOutOfBlocks", at = @At(value = "INVOKE", target = "Ljava/lang/Math;ceil(D)D"))
@@ -234,9 +299,9 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
         if ((!this.movementStorage.isFlying || !cantStand) && this.getTicksElytraFlying() <= 4) {
 
-            if (!((IPlayerResizeable) this).isSwimming() && (!this.isInWater() || this.onGround)) {
+            if (!((IPlayerResizeable) this).isSwimming() && (this.onGround || !this.isInWater())) {
 
-                if (((IPlayerResizeable) this).isPoseClear(Pose.CROUCHING)) {
+                if (!this.isOnLadder() && ((IPlayerResizeable) this).isPoseClear(Pose.CROUCHING)) {
 
                     return this.movementInput.sneak || ((IPlayerResizeable) this).isResizingAllowed() && !this.isPlayerSleeping() && !cantStand;
                 }

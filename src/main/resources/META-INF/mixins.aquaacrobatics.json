@@ -7,6 +7,8 @@
   "mixins": [
     "EntityPlayerMixin",
     "EntityPlayerMPMixin",
+    "EntityMixin",
+    "EntityLivingBaseMixin",
     "NetHandlerPlayServerMixin",
     "accessor.IEventBusAccessor"
   ],
