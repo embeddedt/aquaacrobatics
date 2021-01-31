@@ -21,7 +21,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         super(worldIn, gameProfileIn);
     }
 
-    @Inject(method = "onDeath", at = @At("TAIL"))
+    @Inject(method = "onDeath", at = @At("TAIL"), require = 0)
     public void onDeath(DamageSource cause, CallbackInfo callbackInfo) {
 
         // super method is never called where this is set in vanilla

@@ -581,13 +581,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Shadow
     protected abstract void spawnShoulderEntities();
 
-    @Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"))
+    @Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"), require = 0)
     public void setSizeTrySleep(EntityPlayer player, float width, float height) {
 
         this.setPose(Pose.SLEEPING);
     }
 
-    @Redirect(method = "wakeUpPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"))
+    @Redirect(method = "wakeUpPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"), require = 0)
     public void setSizeWakeUpPlayer(EntityPlayer player, float width, float height) {
 
         this.setPose(Pose.STANDING);
