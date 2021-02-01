@@ -259,8 +259,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
     }
 
-    // fix incompatibility with Thicc Entities as they patch the same method in the same place
-    @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true, require = 0)
+    @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
     public final void getEyeHeight(CallbackInfoReturnable<Float> callbackInfoReturnable) {
 
         callbackInfoReturnable.setReturnValue(this.playerEyeHeight);
@@ -582,7 +581,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Shadow
     protected abstract void spawnShoulderEntities();
 
-    // sponge compatibility, this is set in the updateSize method anyways in the next tick
     @Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"), require = 0)
     public void setSizeTrySleep(EntityPlayer player, float width, float height) {
 
