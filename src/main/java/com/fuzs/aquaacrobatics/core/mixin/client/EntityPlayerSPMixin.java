@@ -301,7 +301,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
 
             if (!((IPlayerResizeable) this).isSwimming() && (this.onGround || !this.isInWater())) {
 
-                if (!this.isOnLadder() && ((IPlayerResizeable) this).isPoseClear(Pose.CROUCHING)) {
+                if (!this.isOnLadder() && (((IPlayerResizeable) this).isPoseClear(Pose.CROUCHING) || this.noClip)) {
 
                     return this.movementInput.sneak || ((IPlayerResizeable) this).isResizingAllowed() && !this.isPlayerSleeping() && !cantStand;
                 }

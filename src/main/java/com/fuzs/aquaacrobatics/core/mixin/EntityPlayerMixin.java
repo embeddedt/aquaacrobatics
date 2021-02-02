@@ -340,7 +340,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             }
 
             Pose pose1;
-            if (!this.isSpectator() && !this.isRiding() && this.isResizingAllowed() && !this.isPoseClear(pose)) {
+            if (!this.noClip && !this.isRiding() && this.isResizingAllowed() && !this.isPoseClear(pose)) {
 
                 if (this.isPoseClear(Pose.CROUCHING)) {
 
@@ -581,17 +581,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Shadow
     protected abstract void spawnShoulderEntities();
 
-    @Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"), require = 0)
+    @Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"))
     public void setSizeTrySleep(EntityPlayer player, float width, float height) {
 
         this.setPose(Pose.SLEEPING);
     }
 
-    @Redirect(method = "wakeUpPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;setSize(FF)V"), require = 0)
-    public void setSizeWakeUpPlayer(EntityPlayer player, float width, float height) {
-
-        this.setPose(Pose.STANDING);
-    }
+    // removed wakeUpPlayer hook as it's not important and is conflicting with sponge forge (they're using overwrite for that method)
 
     private EntityPlayer getPlayer() {
 
