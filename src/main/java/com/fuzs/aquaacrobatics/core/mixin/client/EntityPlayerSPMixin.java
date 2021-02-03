@@ -98,6 +98,12 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     }
 
     @Override
+    public boolean isUsingSwimmingAnimation() {
+
+        return this.isUsingSwimmingAnimation(this.movementInput.moveForward, this.movementInput.moveStrafe);
+    }
+
+    @Override
     public boolean isUsingSwimmingAnimation(float moveForward, float moveStrafe) {
 
         if (this.canSwim()) {
@@ -316,7 +322,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         boolean wasSneaking = this.movementStorage.sneak;
         boolean wasSwimming = this.isUsingSwimmingAnimation(this.movementStorage.moveForward, this.movementStorage.moveStrafe);
         boolean isSprintingEnvironment = this.onGround || this.canSwim() || this.movementStorage.isFlying;
-        if (isSprintingEnvironment && !wasSneaking && !wasSwimming && this.isUsingSwimmingAnimation(this.movementInput.moveForward, this.movementInput.moveStrafe) && !this.isSprinting() && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
+        if (isSprintingEnvironment && !wasSneaking && !wasSwimming && this.isUsingSwimmingAnimation() && !this.isSprinting() && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS)) {
 
             if (this.movementStorage.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
 
@@ -327,7 +333,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             }
         }
 
-        if (!this.isSprinting() && (!this.isInWater() || this.canSwim()) && this.isUsingSwimmingAnimation(this.movementInput.moveForward, this.movementInput.moveStrafe) && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS) && this.mc.gameSettings.keyBindSprint.isKeyDown()) {
+        if (!this.isSprinting() && (!this.isInWater() || this.canSwim()) && this.isUsingSwimmingAnimation() && isSaturated && !this.isHandActive() && !this.isPotionActive(MobEffects.BLINDNESS) && this.mc.gameSettings.keyBindSprint.isKeyDown()) {
 
             this.setSprinting(true);
         }

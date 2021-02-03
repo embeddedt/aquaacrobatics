@@ -265,7 +265,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         callbackInfoReturnable.setReturnValue(this.playerEyeHeight);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     @Shadow
     public abstract boolean isSpectator();
 

@@ -83,6 +83,8 @@ public class AttachAttributesFix extends AttachAttributes {
                 boolean isWidthModified = !entity.getAttributeMap().getAttributeInstance(ArtemisLibAttributes.ENTITY_WIDTH).getModifiers().isEmpty();
                 boolean isHeightModified = !entity.getAttributeMap().getAttributeInstance(ArtemisLibAttributes.ENTITY_HEIGHT).getModifiers().isEmpty();
                 this.isResizingRequired = isWidthModified || isHeightModified;
+
+                return;
             }
         }
 
