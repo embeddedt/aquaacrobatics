@@ -226,8 +226,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         // is another mod interfering
         final float delta = 0.025F;
         AxisAlignedBB bb = this.getEntityBoundingBox();
+        // something is not right
+        if (this.width < delta || this.height < delta || bb.maxX - bb.minX < delta || bb.maxY - bb.minY < delta) {
+
+            return true;
+        }
+
         boolean sizeIsOk = Math.abs(this.width / this.getWidth() - 1.0F) < delta && Math.abs(this.height / this.getHeight() - 1.0F) < delta;
-        boolean boundingBoxIsOk = Math.abs(Math.abs(bb.maxX - bb.minX) / this.getWidth() - 1.0F) < delta && Math.abs(Math.abs(bb.maxY - bb.minY) / this.getHeight() - 1.0F) < delta;
+        boolean boundingBoxIsOk = Math.abs((bb.maxX - bb.minX) / this.getWidth() - 1.0F) < delta && Math.abs((bb.maxY - bb.minY) / this.getHeight() - 1.0F) < delta;
         return sizeIsOk && boundingBoxIsOk;
     }
 
