@@ -83,12 +83,12 @@ public class AxisAlignedBBSpliterator extends Spliterators.AbstractSpliterator<A
                 continue;
             }
 
-            // just needs to be non-null for our purpose
+            // check full blocks first as they're easier to handle
             AxisAlignedBB collisionBoundingBox = blockstate.getCollisionBoundingBox(this.reader, mutablePos);
-            if (blockstate.isFullCube()) {
+            if (collisionBoundingBox == Block.FULL_BLOCK_AABB && blockstate.isFullCube()) {
 
                 // second check probably not necessary
-                AxisAlignedBB aabbOffset = Block.FULL_BLOCK_AABB.offset(x, y, z);
+                AxisAlignedBB aabbOffset = collisionBoundingBox.offset(x, y, z);
                 if (!this.aabb.intersects(aabbOffset) || this.entity != null && !this.entity.getEntityBoundingBox().intersects(aabbOffset)) {
 
                     continue;
