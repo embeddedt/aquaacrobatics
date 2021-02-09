@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
-import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.client.model.IModelBipedSwimming;
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.math.MathHelper;
 import net.minecraft.client.model.ModelBase;
@@ -15,9 +15,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nonnull;
@@ -38,11 +39,12 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
     public ModelRenderer bipedRightLeg;
     @Shadow
     public ModelRenderer bipedLeftLeg;
-    
+
+    @Unique
     public float swimAnimation;
 
-    @ModifyVariable(method = "setRotationAngles", at = @At("HEAD"), ordinal = 4, argsOnly = true)
-    public float getHeadPitch(float f, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBiped;setRotationAngles(FFFFFFLnet/minecraft/entity/Entity;)V"))
+    public void setRotationAngles(ModelBiped modelBiped, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
 
         if (entityIn instanceof IPlayerResizeable) {
 
@@ -52,15 +54,15 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
 
                 if (flag1) {
 
-                    return this.rotLerpRad(this.swimAnimation, this.bipedHead.rotateAngleX, ((float) -Math.PI / 4F)) / 0.017453292F;
+                    headPitch = this.rotLerpRad(this.swimAnimation, this.bipedHead.rotateAngleX, ((float) -Math.PI / 4F)) / 0.017453292F;
                 } else {
 
-                    return this.rotLerpRad(this.swimAnimation, this.bipedHead.rotateAngleX, headPitch * ((float) Math.PI / 180F)) / 0.017453292F;
+                    headPitch = this.rotLerpRad(this.swimAnimation, this.bipedHead.rotateAngleX, headPitch * ((float) Math.PI / 180F)) / 0.017453292F;
                 }
             }
         }
 
-        return headPitch;
+        modelBiped.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
     }
 
     @Inject(method = "setRotationAngles", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/ModelBiped;swingProgress:F"))
@@ -157,6 +159,7 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
         return -65.0F * limbSwing + limbSwing * limbSwing;
     }
 
+    @Unique
     protected float rotLerpRad(float angleIn, float maxAngleIn, float mulIn) {
 
         float f = (mulIn - maxAngleIn) % ((float) Math.PI * 2F);

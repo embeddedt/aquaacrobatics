@@ -23,9 +23,17 @@ public abstract class EntityRendererMixin {
     private float eyeHeight;
     private float previousEyeHeight;
     private float entityEyeHeight;
+    private float partialTicks;
+
+    @Inject(method = "orientCamera", at = @At("HEAD"))
+    private void orientCamera(float partialTicks, CallbackInfo callbackInfo) {
+
+        // field for passing on partialTicks, workaround as @ModifyVariable is unable to handle method arguments in Mixin <0.8
+        this.partialTicks = partialTicks;
+    }
 
     @ModifyVariable(method = "orientCamera", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;prevPosX:D", ordinal = 0), ordinal = 1)
-    public float getEyeHeight(float eyeHeight, float partialTicks) {
+    public float getEyeHeight(float eyeHeight) {
 
         // random patches has this feature as well
         if (IntegrationManager.isRandomPatchesEnabled()) {
@@ -35,7 +43,7 @@ public abstract class EntityRendererMixin {
 
         // need to do it like this to prevent crash with wings mod
         this.entityEyeHeight = eyeHeight;
-        return MathHelper.lerp(partialTicks, this.previousEyeHeight, this.eyeHeight);
+        return MathHelper.lerp(this.partialTicks, this.previousEyeHeight, this.eyeHeight);
     }
 
     @Inject(method = "updateRenderer", at = @At("TAIL"))

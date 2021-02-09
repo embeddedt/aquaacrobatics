@@ -75,7 +75,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         super(worldIn);
     }
 
-    @Inject(method = "<init>", at = @At("TAIL"))
+    @Inject(method = "<init>", at = @At("RETURN"))
     private void onConstructed(CallbackInfo callbackInfo) {
 
         this.size = EntitySize.flexible(0.6F, 1.8F);
