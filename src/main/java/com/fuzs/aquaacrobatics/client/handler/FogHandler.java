@@ -104,10 +104,4 @@ public class FogHandler {
             event.setCanceled(true);
         }
     }
-
-    @SubscribeEvent
-    public static void onRegisterBlocksEvent(@Nonnull final RegistryEvent.Register<Block> event) {
-        Blocks.WATER.setLightOpacity(1);
-        AquaAcrobatics.LOGGER.info("Changed WATER light opacity to 1");
-    }
 }
