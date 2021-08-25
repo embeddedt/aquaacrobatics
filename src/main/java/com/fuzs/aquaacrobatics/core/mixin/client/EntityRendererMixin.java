@@ -58,6 +58,9 @@ public abstract class EntityRendererMixin {
         this.eyeHeight += (this.entityEyeHeight - this.eyeHeight) * 0.5F;
     }
 
+    /**
+     * This mixin is marked as not required, as some mods patch this themselves.
+     */
     @Redirect(
             method = "renderWorldPass",
             at = @At(
@@ -65,13 +68,12 @@ public abstract class EntityRendererMixin {
                     target = "Lnet/minecraft/entity/Entity;isInsideOfMaterial(Lnet/minecraft/block/material/Material;)Z",
                     ordinal = 0
             ),
-            slice = @Slice(
-                    from = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;objectMouseOver:Lnet/minecraft/util/math/RayTraceResult;")
-            )
+            require = 0
     )
     private boolean ignoreWater(Entity entity, Material material) {
         /* 1.13 removed this check */
-        return false;
+        if(material == Material.WATER)
+            return false;
+        return entity.isInsideOfMaterial(material);
     }
-
 }
