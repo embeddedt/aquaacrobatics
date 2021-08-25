@@ -1,21 +1,28 @@
 package com.fuzs.aquaacrobatics.client.handler;
 
-import com.fuzs.aquaacrobatics.AquaAcrobatics;
+import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
+import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import com.fuzs.aquaacrobatics.util.math.MathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Uses Forge events to adjust water rendering so it more closely approximates 1.13+.
@@ -28,6 +35,19 @@ public class FogHandler {
     private int prevFogColor = -1;
     private long fogAdjustTime = -1L;
 
+    @SubscribeEvent
+    public void registerBlockColors(ColorHandlerEvent.Block event){
+        if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
+            event.getBlockColors().registerBlockColorHandler(new IBlockColor()
+            {
+                public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex)
+                {
+                    return worldIn != null && pos != null ? BiomeColorHelper.getWaterColorAtPos(worldIn, pos) : -1;
+                }
+    
+            }, CommonProxy.BUBBLE_COLUMN);
+    }
+    
     @SubscribeEvent
     public void onRenderFogDensity(EntityViewRenderEvent.FogDensity event) {
         if(event.getState().getMaterial() == Material.WATER) {
@@ -46,15 +66,20 @@ public class FogHandler {
             event.setCanceled(true);
         }
     }
+    
+    @SubscribeEvent
+    public void onGetWaterColor(BiomeEvent.GetWaterColor event) {
+        BiomeWaterFogColors.getWaterColorForBiome(event);
+    }
 
     @SubscribeEvent
     public void onRenderFogColor(EntityViewRenderEvent.FogColors event) {
-        if(event.getState().getMaterial() == Material.WATER && event.getEntity() instanceof EntityPlayer) {
+        Block blockInside = event.getState().getBlock();
+        if((event.getState().getMaterial() == Material.WATER) && event.getEntity() instanceof EntityPlayer) {
             float fogRed, fogGreen, fogBlue;
             EntityPlayer playerEntity = (EntityPlayer) event.getEntity();
             long i = System.nanoTime() / 1000000L;
-            /* TODO: replace with proper water color derived from 1.12 water color values */
-            int j = 329011; //playerEntity.world.getBiome(new BlockPos(playerEntity.getPosition())).getWaterColor();
+            int j = BiomeWaterFogColors.getWaterFogColorForBiome(playerEntity.world.getBiome(playerEntity.getPosition()));
             if (fogAdjustTime < 0L) {
                 targetFogColor = j;
                 prevFogColor = j;
@@ -87,21 +112,13 @@ public class FogHandler {
             event.setRed(fogRed);
             event.setGreen(fogGreen);
             event.setBlue(fogBlue);
-        } else if(event.getState().getMaterial() == Material.LAVA) {
+        } else if((blockInside == Blocks.LAVA || blockInside == Blocks.FLOWING_LAVA)) {
             event.setRed(0.6f);
             event.setGreen(0.1f);
             event.setBlue(0.0f);
             fogAdjustTime = -1L;
-        }
-    }
-
-    /**
-     * The water overlay is pretty much invisible in 1.13+, and the 1.12 texture is very pixelated, so we simply hide it.
-     */
-    @SubscribeEvent
-    public void onRenderWaterOverlay(RenderBlockOverlayEvent event) {
-        if(event.getOverlayType() == RenderBlockOverlayEvent.OverlayType.WATER) {
-            event.setCanceled(true);
+        } else {
+            fogAdjustTime = -1L;
         }
     }
 }

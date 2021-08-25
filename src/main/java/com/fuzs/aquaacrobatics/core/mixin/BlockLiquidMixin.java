@@ -1,18 +1,19 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockStaticLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(BlockStaticLiquid.class)
-public abstract class BlockStaticLiquidMixin extends BlockLiquid {
-    protected BlockStaticLiquidMixin(Material materialIn) {
-        super(materialIn);
+@Mixin(BlockLiquid.class)
+public abstract class BlockLiquidMixin extends Block {
+    public BlockLiquidMixin(Material p_i45394_1_) {
+        super(p_i45394_1_);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getLightOpacity(IBlockState state) {
         if(state.getMaterial() == Material.WATER)
             return 1;

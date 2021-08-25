@@ -237,3 +237,8 @@ signing { sign publishing.publications.mavenJava }
 signMavenJavaPublication.dependsOn signSourceJar
 // jar is otherwise signed before reobfuscating
 build.finalizedBy signJar
+
+// needed to fix 1.12 assets not loading with FG 3
+sourceSets {
+    main { output.resourcesDir = output.classesDir }
+}

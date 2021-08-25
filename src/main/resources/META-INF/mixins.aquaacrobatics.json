@@ -5,17 +5,23 @@
   "package": "com.fuzs.aquaacrobatics.core.mixin",
   "refmap": "mixins.aquaacrobatics.refmap.json",
   "mixins": [
+    "EntityItemMixin",
     "EntityPlayerMixin",
     "EntityPlayerMPMixin",
     "EntityMixin",
     "EntityLivingBaseMixin",
     "NetHandlerPlayServerMixin",
-    "BlockStaticLiquidMixin",
+    "BlockGrassMixin",
+    "BlockLiquidMixin",
+    "BlockMagmaMixin",
+    "BlockMyceliumMixin",
+    "BlockSoulSandMixin",
     "accessor.IEventBusAccessor"
   ],
   "client": [
     "client.EntityPlayerSPMixin",
     "client.EntityRendererMixin",
+    "client.ItemRendererMixin",
     "client.ModelBipedMixin",
     "client.RenderPlayerMixin",
     "client.PlayerControllerMPMixin"

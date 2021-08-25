@@ -2,14 +2,14 @@ package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.util.math.MathHelper;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("unused")
@@ -56,6 +56,22 @@ public abstract class EntityRendererMixin {
 
         this.previousEyeHeight = this.eyeHeight;
         this.eyeHeight += (this.entityEyeHeight - this.eyeHeight) * 0.5F;
+    }
+
+    @Redirect(
+            method = "renderWorldPass",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/Entity;isInsideOfMaterial(Lnet/minecraft/block/material/Material;)Z",
+                    ordinal = 0
+            ),
+            slice = @Slice(
+                    from = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;objectMouseOver:Lnet/minecraft/util/math/RayTraceResult;")
+            )
+    )
+    private boolean ignoreWater(Entity entity, Material material) {
+        /* 1.13 removed this check */
+        return false;
     }
 
 }
