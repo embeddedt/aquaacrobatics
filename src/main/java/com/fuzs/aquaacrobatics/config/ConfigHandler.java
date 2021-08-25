@@ -63,7 +63,10 @@ public class ConfigHandler {
         @Config.Name("Eating Animation")
         @Config.Comment("Animate eating in third-person view.")
         public static boolean eatingAnimation = true;
-
+        
+        @Config.Name("Bubble Columns")
+        @Config.Comment("Enable bubble columns.")
+        public static boolean bubbleColumns = false;
     }
 
     public static class IntegrationConfig {
