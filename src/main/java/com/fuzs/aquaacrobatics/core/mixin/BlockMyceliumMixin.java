@@ -16,7 +16,7 @@ import java.util.Random;
 
 /* MC-130137 */
 @Mixin(BlockMycelium.class)
-public class BlockMyceliumMixin {
+public abstract class BlockMyceliumMixin {
     @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
     private void updateUnderwaterToDirt(World world, BlockPos pos, IBlockState state, Random rand, CallbackInfo ci) {
         UnderwaterGrassLikeHandler.handleUnderwaterGrassLikeBlock(world, pos, state, rand, ci);
