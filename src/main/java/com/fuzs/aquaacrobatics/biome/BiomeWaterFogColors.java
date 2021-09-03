@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 public abstract class BiomeWaterFogColors {
     private static final int DEFAULT_WATER_FOG_COLOR = 329011;
+    private static final int DEFAULT_WATER_COLOR = 4159204;
     private static final HashMap<ResourceLocation, Integer> fogColorMap = new HashMap<>();
     private static final HashMap<ResourceLocation, Integer> baseColorMap = new HashMap<>();
     public static int getWaterFogColorForBiome(Biome biome) {
@@ -22,6 +23,9 @@ public abstract class BiomeWaterFogColors {
             case "minecraft:swampland":
                 color = 2302743;
                 break;
+            case "integrateddynamics:biome_meneglin":
+                color = 5613789;
+                break;
             default:
                 color = DEFAULT_WATER_FOG_COLOR;
                 break;
@@ -30,9 +34,9 @@ public abstract class BiomeWaterFogColors {
         return color;
     }
     public static void getWaterColorForBiome(BiomeEvent.GetWaterColor event) {
-        int color112 = event.getNewColor();
         ResourceLocation location = event.getBiome().getRegistryName();
         if(location == null) {
+            event.setNewColor(DEFAULT_WATER_COLOR);
             return;
         }
         Integer color = baseColorMap.get(location);
@@ -56,10 +60,7 @@ public abstract class BiomeWaterFogColors {
                 color = 4020182;
                 break;
             default:
-                if(location.getResourceDomain().equals("minecraft"))
-                    color = 4159204;
-                else
-                    color = color112;
+                color = DEFAULT_WATER_COLOR; /* most mods won't be expecting 1.13 colors */
                 break;
         }
         baseColorMap.put(location, color);

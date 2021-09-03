@@ -4,13 +4,12 @@ buildscript {
 
         jcenter()
         mavenCentral()
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://repo.spongepowered.org/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
     }
 
     dependencies {
-
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
@@ -77,7 +76,7 @@ repositories {
     maven { url = "http://dogforce-games.com/maven/" }
     // yarn mappings
     maven { url = "https://maven.tterrag.com/" }
-    maven { url = "https://repo.spongepowered.org/maven" }
+    maven { url = "https://repo.spongepowered.org/repository/maven-public" }
 }
 
 dependencies {
@@ -94,6 +93,7 @@ dependencies {
         exclude module: "gson"
         exclude module: "commons-io"
     }
+    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
 mixin {

@@ -68,7 +68,8 @@ public abstract class EntityRendererMixin {
                     target = "Lnet/minecraft/entity/Entity;isInsideOfMaterial(Lnet/minecraft/block/material/Material;)Z",
                     ordinal = 0
             ),
-            require = 0
+            require = 0,
+            expect = 0
     )
     private boolean ignoreWater(Entity entity, Material material) {
         /* 1.13 removed this check */
