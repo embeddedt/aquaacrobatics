@@ -19,6 +19,7 @@
     "accessor.IEventBusAccessor"
   ],
   "client": [
+    "client.BlockFluidRendererMixin",
     "client.EntityPlayerSPMixin",
     "client.EntityRendererMixin",
     "client.ItemRendererMixin",
