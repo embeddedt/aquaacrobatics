@@ -101,7 +101,8 @@ public class BlockBubbleColumn extends BlockStaticLiquid {
       } else if (fromPos.down().equals(pos) && worldIn.getBlockState(fromPos).getBlock() != this && canHoldBubbleColumn(worldIn, fromPos)) {
          worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
       }
-      super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
+      if(fromPos.getX() != pos.getX() || fromPos.getZ() != pos.getZ())
+         super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
    }
 
    public boolean isValidPosition(World worldIn, BlockPos pos) {
