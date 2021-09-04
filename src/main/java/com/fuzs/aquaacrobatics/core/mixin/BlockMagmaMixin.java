@@ -21,7 +21,7 @@ public abstract class BlockMagmaMixin extends Block {
     @Override
     @SuppressWarnings("deprecation")
     public void neighborChanged(IBlockState state, World worldIn, BlockPos thisPos, Block blockIn, BlockPos fromPos) {
-        if(fromPos.down().equals(thisPos) && worldIn.getBlockState(fromPos).getMaterial() == Material.WATER) {
+        if(worldIn.getBlockState(thisPos.up()).getMaterial() == Material.WATER) {
             worldIn.scheduleUpdate(thisPos, this, this.tickRate(worldIn));
         }
     }
