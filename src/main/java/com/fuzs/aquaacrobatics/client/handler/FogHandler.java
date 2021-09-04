@@ -20,6 +20,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.terraingen.BiomeEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
@@ -72,7 +73,8 @@ public class FogHandler {
         BiomeWaterFogColors.getWaterColorForBiome(event);
     }
 
-    @SubscribeEvent
+    /* LOW to override mods like Biomes O' Plenty which force their own underwater fog color */
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderFogColor(EntityViewRenderEvent.FogColors event) {
         Block blockInside = event.getState().getBlock();
         if((event.getState().getMaterial() == Material.WATER) && event.getEntity() instanceof EntityPlayer) {
