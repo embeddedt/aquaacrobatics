@@ -1,13 +1,13 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
-import com.fuzs.aquaacrobatics.integration.IntegrationManager;
-import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
-import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
-import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
+import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
+import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
+import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelper;
 import com.google.common.collect.ImmutableMap;
@@ -70,6 +70,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private float swimAnimation;
     private float lastSwimAnimation;
     private float timeUnderwater;
+    
+    private boolean inBubbleColumn;
 
     public EntityPlayerMixin(World worldIn) {
 
@@ -103,13 +105,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public void onEntityUpdate() {
 
-        int air = this.getAir();
         super.onEntityUpdate();
-        if (ConfigHandler.MiscellaneousConfig.slowAirReplenish && air < this.getAir() && this.getAir() > 0) {
-
-            this.setAir(Math.min(air + 4, 300));
-        }
-
         if (this.isInWater()) {
             int i = this.isSpectator() ? 10 : 1;
             this.timeUnderwater = MathHelper.clamp(this.timeUnderwater + i, 0, 600);
