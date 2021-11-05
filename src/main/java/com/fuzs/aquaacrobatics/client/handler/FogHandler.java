@@ -68,7 +68,7 @@ public class FogHandler {
         }
     }
     
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onGetWaterColor(BiomeEvent.GetWaterColor event) {
         BiomeWaterFogColors.getWaterColorForBiome(event);
     }
