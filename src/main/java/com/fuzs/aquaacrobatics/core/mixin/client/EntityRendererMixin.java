@@ -1,7 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
-import com.fuzs.aquaacrobatics.util.math.MathHelper;
+import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -43,7 +43,7 @@ public abstract class EntityRendererMixin {
 
         // need to do it like this to prevent crash with wings mod
         this.entityEyeHeight = eyeHeight;
-        return MathHelper.lerp(this.partialTicks, this.previousEyeHeight, this.eyeHeight);
+        return MathHelperNew.lerp(this.partialTicks, this.previousEyeHeight, this.eyeHeight);
     }
 
     @Inject(method = "updateRenderer", at = @At("TAIL"))

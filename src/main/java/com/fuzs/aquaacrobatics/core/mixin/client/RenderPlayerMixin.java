@@ -4,7 +4,7 @@ import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import com.fuzs.aquaacrobatics.client.model.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
-import com.fuzs.aquaacrobatics.util.math.MathHelper;
+import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
@@ -50,7 +50,7 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
 
                 float f = ((IPlayerResizeable) entityLiving).getSwimAnimation(partialTicks);
                 float f3 = entityLiving.isInWater() ? -90.0F - entityLiving.rotationPitch : -90.0F;
-                float f4 = MathHelper.lerp(f, 0.0F, f3);
+                float f4 = MathHelperNew.lerp(f, 0.0F, f3);
                 GlStateManager.rotate(f4, 1.0F, 0.0F, 0.0F);
             }
 

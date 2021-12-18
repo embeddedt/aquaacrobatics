@@ -4,7 +4,7 @@ import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
-import com.fuzs.aquaacrobatics.util.math.MathHelper;
+import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -93,16 +93,16 @@ public class FogHandler {
             int j1 = prevFogColor >> 16 & 255;
             int k1 = prevFogColor >> 8 & 255;
             int l1 = prevFogColor & 255;
-            float f = MathHelper.clamp((float)(i - fogAdjustTime) / 5000.0F, 0.0F, 1.0F);
-            float f1 = MathHelper.lerp(f, (float)j1, (float)k);
-            float f2 = MathHelper.lerp(f, (float)k1, (float)l);
-            float f3 = MathHelper.lerp(f, (float)l1, (float)i1);
+            float f = MathHelperNew.clamp((float)(i - fogAdjustTime) / 5000.0F, 0.0F, 1.0F);
+            float f1 = MathHelperNew.lerp(f, (float)j1, (float)k);
+            float f2 = MathHelperNew.lerp(f, (float)k1, (float)l);
+            float f3 = MathHelperNew.lerp(f, (float)l1, (float)i1);
             fogRed = f1 / 255.0F;
             fogGreen = f2 / 255.0F;
             fogBlue = f3 / 255.0F;
             if (targetFogColor != j) {
                 targetFogColor = j;
-                prevFogColor = MathHelper.floor(f1) << 16 | MathHelper.floor(f2) << 8 | MathHelper.floor(f3);
+                prevFogColor = MathHelperNew.floor(f1) << 16 | MathHelperNew.floor(f2) << 8 | MathHelperNew.floor(f3);
                 fogAdjustTime = i;
             }
             float f6 = ((IPlayerResizeable)playerEntity).getWaterVision();
