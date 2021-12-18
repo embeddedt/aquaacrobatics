@@ -1,25 +1,27 @@
 buildscript {
 
     repositories {
-
-        jcenter()
-        mavenCentral()
         maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
+        mavenCentral()
     }
 
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
+            changing = true
+        }
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.6-SNAPSHOT'
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'java-library'
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven-publish'
-apply plugin: 'signing'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.spongepowered.mixin'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 version = "v${mod_version}-${forge_version.replaceAll("-.*", "")}"
 group = "${mod_group}"
@@ -33,57 +35,20 @@ ext.loader = "${loader_version.replaceAll("\\..*", "")}"
 ext.forge = "${loader_version}"
 ext.mc = "${mc_version}"
 
-// need this here so eclipse task generates correctly.
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-
 minecraft {
-
-    mappings channel: "${mcp_channel}", version: "${mcp_version}"
-//    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-
-        client {
-
-            workingDirectory project.file('run')
-            jvmArgs.addAll("-ea", "-Dfml.coreMods.load=" + project.group + ".core." + project.ext.name.replaceAll("\\s", "") + "Core")
-        }
-
-        server {
-
-            workingDirectory project.file('run')
-            jvmArgs.addAll("-ea", "-Dfml.coreMods.load=" + project.group + ".core." + project.ext.name.replaceAll("\\s", "") + "Core")
-        }
-    }
-
-}
-
-configurations.all {
-
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-
-        if (details.requested.group + ":" + details.requested.name == "org.lwjgl.lwjgl:lwjgl-platform") {
-
-            details.useVersion "2.9.4-nightly-20150209"
-        }
-    }
+    version = "${forge_version}"
+    runDir = "run"
+    useDepAts = true
+    mappings = "snapshot_20171003"
 }
 
 repositories {
-
     mavenLocal()
-    // unofficial mcp mappings
-    maven { url = "http://dogforce-games.com/maven/" }
-    // yarn mappings
-    maven { url = "https://maven.tterrag.com/" }
     maven { url = "https://repo.spongepowered.org/repository/maven-public" }
 }
 
 dependencies {
-
-    minecraft "net.minecraftforge:forge:${forge_version}"
-    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
-    implementation ("org.spongepowered:mixin:0.8.2") {
+    compile ("org.spongepowered:mixin:0.8.2") {
 
         exclude module: "asm-commons"
         exclude module: "asm-tree"
@@ -96,9 +61,10 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
-mixin {
-
-    add sourceSets.main, "mixins.${project.ext.id}.refmap.json"
+sourceSets {
+    main {
+        ext.refMap = "mixins.${project.ext.id}.refmap.json"
+    }
 }
 
 processResources {
@@ -116,6 +82,7 @@ processResources {
     inputs.property "forge_version", project.ext.forge
     inputs.property "mc_version", project.ext.mc
 
+    setDuplicatesStrategy(DuplicatesStrategy.WARN)
     // replace stuff in mods.toml and pack.mcmeta
     from(sourceSets.main.resources.srcDirs) {
 
@@ -144,79 +111,17 @@ processResources {
     }
 }
 
-ext.jarAttributes = [
-
-        "Specification-Title"           : project.id,
-        "Specification-Version"         : project.ext.version,
-        "Specification-Vendor"          : project.author.toLowerCase(),
-        "Implementation-Title"          : project.id,
-        "Implementation-Version"        : project.ext.version,
-        "Implementation-Vendor"         : project.author.toLowerCase(),
-        "Implementation-Vendor-Id"      : project.group,
-        "Implementation-URL"            : project.url,
-        "Implementation-Timestamp"      : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        "FMLCorePlugin"                 : project.group + ".core." + project.ext.name.replaceAll("\\s", "") + "Core",
-        "FMLCorePluginContainsFMLMod"   : true
-]
-
-def createJarTask(def name, def type, def sources) {
-
-    return tasks.create(name, Jar) {
-
-        from sources
-        classifier = type
-
-        manifest { attributes(project.jarAttributes) }
-        dependsOn classes
-        group 'jar'
-    }
-}
-
-def createSignJarTask(def name, def jarTask) {
-
-    return tasks.create(name, net.minecraftforge.gradle.common.task.SignJar) {
-
-        onlyIf {
-
-            project.hasProperty('keyStore')
-        }
-
-        keyStore = project.findProperty('keyStore')
-        alias = project.findProperty('keyStoreAlias')
-        storePass = project.findProperty('keyStorePass')
-        keyPass = project.findProperty('keyStoreKeyPass')
-        inputFile = jarTask.archivePath
-        outputFile = jarTask.archivePath
-        dependsOn jarTask
-        group 'jar'
-    }
-}
-
 jar {
-
-    from sourceSets.main.output.classesDirs
-    from sourceSets.main.output.resourcesDir
-
-    manifest { attributes(project.jarAttributes) }
-    group 'jar'
+    manifest {
+        attributes "FMLCorePlugin": project.group + ".core." + project.ext.name.replaceAll("\\s", "") + "Core"
+        attributes "FMLCorePluginContainsFMLMod": "true"
+        attributes "ForceLoadAsMod": "true"
+        attributes "TweakClass": "org.spongepowered.asm.launch.MixinTweaker"
+        attributes "TweakOrder": "0"
+    }
 }
 
-createJarTask("sourceJar", "sources", sourceSets.main.allSource)
-createJarTask("javadocJar", "javadoc", javadoc)
-
-createSignJarTask("signJar", jar)
-createSignJarTask("signSourceJar", sourceJar)
-createSignJarTask("signJavadocJar", javadocJar)
-
-// finalize all jar build tasks with a signing task
-def jarTasks = tasks.findAll { task -> !task.name.startsWith('sign') && task.name.toLowerCase().contains("jar")}
-jarTasks.each { task -> task.finalizedBy tasks.getByPath("sign" + task.name.substring(0, 1).toUpperCase() + task.name.substring(1))}
-
-artifacts {
-
-//    archives sourceJar
-//    archives javadocJar
-}
+jar.finalizedBy('reobfJar')
 
 publishing {
 
@@ -231,9 +136,4 @@ publishing {
     }
 }
 
-signing { sign publishing.publications.mavenJava }
-
-// general signing task runs before sources jar is signed otherwise
-signMavenJavaPublication.dependsOn signSourceJar
-// jar is otherwise signed before reobfuscating
-build.finalizedBy signJar
+idea { module { inheritOutputDirs = true } }
