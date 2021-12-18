@@ -4,6 +4,7 @@ import com.fuzs.aquaacrobatics.client.model.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
@@ -83,13 +84,13 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
             if (stack.getItemUseAction() == EnumAction.EAT || stack.getItemUseAction() == EnumAction.DRINK) {
 
                 boolean isRight = (hand == EnumHand.MAIN_HAND ? handSide : handSide.opposite()) == EnumHandSide.RIGHT;
-                float partialTicks = (float) MathHelperNew.frac(ageInTicks);
+                float partialTicks = (float) MathHelper.frac(ageInTicks);
                 float animationCount = inUseCount - partialTicks + 1.0F;
                 float useRatio = animationCount / (float) stack.getMaxItemUseDuration();
                 float f = 1.0F - (float) Math.pow(useRatio, 27.0D);
                 if (useRatio < 0.8F) {
 
-                    f += MathHelperNew.abs(MathHelperNew.cos(animationCount / 4.0F * (float)Math.PI) * 0.1F);
+                    f += MathHelper.abs(MathHelper.cos(animationCount / 4.0F * (float)Math.PI) * 0.1F);
                 }
 
                 ModelRenderer bipedArm = isRight ? this.bipedRightArm : this.bipedLeftArm;
@@ -136,8 +137,8 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
                 this.bipedRightArm.rotateAngleZ = MathHelperNew.lerp(f2, this.bipedRightArm.rotateAngleZ, (float) Math.PI);
             }
 
-            this.bipedLeftLeg.rotateAngleX = MathHelperNew.lerp(this.swimAnimation, this.bipedLeftLeg.rotateAngleX, 0.3F * MathHelperNew.cos(limbSwing * 0.33333334F + (float) Math.PI));
-            this.bipedRightLeg.rotateAngleX = MathHelperNew.lerp(this.swimAnimation, this.bipedRightLeg.rotateAngleX, 0.3F * MathHelperNew.cos(limbSwing * 0.33333334F));
+            this.bipedLeftLeg.rotateAngleX = MathHelperNew.lerp(this.swimAnimation, this.bipedLeftLeg.rotateAngleX, 0.3F * MathHelper.cos(limbSwing * 0.33333334F + (float) Math.PI));
+            this.bipedRightLeg.rotateAngleX = MathHelperNew.lerp(this.swimAnimation, this.bipedRightLeg.rotateAngleX, 0.3F * MathHelper.cos(limbSwing * 0.33333334F));
 
             // prevent Quark's emotes from being applied as they mess with arm rotations
             copyModelAngles(this.bipedHead, this.bipedHeadwear);

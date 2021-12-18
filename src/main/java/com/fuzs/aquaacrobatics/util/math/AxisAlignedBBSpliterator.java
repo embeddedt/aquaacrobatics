@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 
@@ -41,12 +42,12 @@ public class AxisAlignedBBSpliterator extends Spliterators.AbstractSpliterator<A
         this.entity = entity;
         this.aabb = aabb;
         this.statePositionPredicate = statePositionPredicate;
-        int startX = MathHelperNew.floor(aabb.minX - 1.0E-7D) - 1;
-        int endX = MathHelperNew.floor(aabb.maxX + 1.0E-7D) + 1;
-        int startY = MathHelperNew.floor(aabb.minY - 1.0E-7D) - 1;
-        int heightY = MathHelperNew.floor(aabb.maxY + 1.0E-7D) + 1;
-        int startZ = MathHelperNew.floor(aabb.minZ - 1.0E-7D) - 1;
-        int endZ = MathHelperNew.floor(aabb.maxZ + 1.0E-7D) + 1;
+        int startX = MathHelper.floor(aabb.minX - 1.0E-7D) - 1;
+        int endX = MathHelper.floor(aabb.maxX + 1.0E-7D) + 1;
+        int startY = MathHelper.floor(aabb.minY - 1.0E-7D) - 1;
+        int heightY = MathHelper.floor(aabb.maxY + 1.0E-7D) + 1;
+        int startZ = MathHelper.floor(aabb.minZ - 1.0E-7D) - 1;
+        int endZ = MathHelper.floor(aabb.maxZ + 1.0E-7D) + 1;
         this.cubeCoordinateIterator = new CubeCoordinateIterator(startX, startY, startZ, endX, heightY, endZ);
     }
 
@@ -145,10 +146,10 @@ public class AxisAlignedBBSpliterator extends Spliterators.AbstractSpliterator<A
 
     public static boolean isBoundingBoxWithinBorder(WorldBorder worldBorder, AxisAlignedBB entityBoundingBox) {
         
-        double minX = MathHelperNew.floor(worldBorder.minX());
-        double minZ = MathHelperNew.floor(worldBorder.minZ());
-        double maxX = MathHelperNew.ceil(worldBorder.maxX());
-        double maxZ = MathHelperNew.ceil(worldBorder.maxZ());
+        double minX = MathHelper.floor(worldBorder.minX());
+        double minZ = MathHelper.floor(worldBorder.minZ());
+        double maxX = MathHelper.ceil(worldBorder.maxX());
+        double maxZ = MathHelper.ceil(worldBorder.maxZ());
         return entityBoundingBox.minX > minX && entityBoundingBox.minX < maxX && entityBoundingBox.minZ > minZ && entityBoundingBox.minZ < maxZ && entityBoundingBox.maxX > minX && entityBoundingBox.maxX < maxX && entityBoundingBox.maxZ > minZ && entityBoundingBox.maxZ < maxZ;
     }
 

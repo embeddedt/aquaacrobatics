@@ -10,6 +10,7 @@ import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
+import net.minecraft.util.math.MathHelper;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -108,9 +109,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         super.onEntityUpdate();
         if (this.isInWater()) {
             int i = this.isSpectator() ? 10 : 1;
-            this.timeUnderwater = MathHelperNew.clamp(this.timeUnderwater + i, 0, 600);
+            this.timeUnderwater = MathHelper.clamp(this.timeUnderwater + i, 0, 600);
         } else if (this.timeUnderwater > 0) {
-            this.timeUnderwater = MathHelperNew.clamp(this.timeUnderwater - 10, 0, 600);
+            this.timeUnderwater = MathHelper.clamp(this.timeUnderwater - 10, 0, 600);
         }
 
         // updateAquatics
@@ -129,8 +130,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             if (this.timeUnderwater >= 600.0f) {
                 return 1.0f;
             } else {
-                float f2 = MathHelperNew.clamp(this.timeUnderwater / 100.0f, 0.0f, 1.0f);
-                float f3 = this.timeUnderwater < 100.0f ? 0.0f : MathHelperNew.clamp(((float)this.timeUnderwater - 100.0f) / 500.0f, 0.0f, 1.0f);
+                float f2 = MathHelper.clamp(this.timeUnderwater / 100.0f, 0.0f, 1.0f);
+                float f3 = this.timeUnderwater < 100.0f ? 0.0f : MathHelper.clamp(((float)this.timeUnderwater - 100.0f) / 500.0f, 0.0f, 1.0f);
                 return f2 * 0.6f + f3 * 0.39999998f;
             }
         }
@@ -556,7 +557,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         double d5 = this.posX - this.prevPosX;
         double d7 = this.posZ - this.prevPosZ;
         double d9 = this instanceof EntityFlying ? this.posY - this.prevPosY : 0.0;
-        float f10 = MathHelperNew.sqrt(d5 * d5 + d9 * d9 + d7 * d7) * 4.0F;
+        float f10 = MathHelper.sqrt(d5 * d5 + d9 * d9 + d7 * d7) * 4.0F;
 
         if (f10 > 1.0F) {
 
@@ -577,7 +578,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         float f = 0.0F;
         if (this.onGround && !this.getShouldBeDead() && !this.isSwimming()) {
 
-            f = Math.min(0.1F, MathHelperNew.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ));
+            f = Math.min(0.1F, MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ));
         }
 
         this.cameraYaw = this.prevCameraYaw + (f - this.prevCameraYaw) * 0.4F;

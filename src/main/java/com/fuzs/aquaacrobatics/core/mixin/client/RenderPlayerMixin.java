@@ -5,6 +5,7 @@ import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import com.fuzs.aquaacrobatics.client.model.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
