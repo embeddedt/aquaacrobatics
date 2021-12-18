@@ -5,5 +5,5 @@
   "version": "${mod_version}",
   "mcversion": "${mc_version}",
   "url": "${mod_url}",
-  "authorList": ["${mod_author}"]
+  "authorList": ["${mod_author}", "embeddedt"]
 }]
