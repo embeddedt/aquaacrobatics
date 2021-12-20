@@ -45,10 +45,23 @@ minecraft {
 repositories {
     mavenLocal()
     maven { url = "https://repo.spongepowered.org/repository/maven-public" }
+    maven { url "https://maven.mcmoddev.com/" }
+    maven {
+        url "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
-    compile ("org.spongepowered:mixin:0.8.2") {
+    deobfCompile "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
+    deobfCompile "net.ilexiconn:llibrary:1.7.9-1.12.2"
+    deobfCompile "curse.maven:artemislib-313590:2741812"
+    deobfCompile "curse.maven:ichunutil-229060:2801262"
+    deobfCompile "curse.maven:hats-229073:2960397"
+    deobfCompile "curse.maven:mobends-231347:3477335"
+    deobfCompile "curse.maven:morph-229080:2995522"
+    deobfCompile "curse.maven:wings-302584:2829351"
+
+    compile ("org.spongepowered:mixin:0.8.3") {
 
         exclude module: "asm-commons"
         exclude module: "asm-tree"
@@ -58,7 +71,6 @@ dependencies {
         exclude module: "gson"
         exclude module: "commons-io"
     }
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
 sourceSets {
@@ -66,6 +78,7 @@ sourceSets {
         ext.refMap = "mixins.${project.ext.id}.refmap.json"
     }
 }
+
 
 processResources {
 
@@ -82,7 +95,6 @@ processResources {
     inputs.property "forge_version", project.ext.forge
     inputs.property "mc_version", project.ext.mc
 
-    setDuplicatesStrategy(DuplicatesStrategy.WARN)
     // replace stuff in mods.toml and pack.mcmeta
     from(sourceSets.main.resources.srcDirs) {
 
