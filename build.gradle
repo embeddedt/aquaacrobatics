@@ -51,6 +51,7 @@ repositories {
     maven {
         url "https://www.cursemaven.com"
     }
+    maven { url 'https://jitpack.io' } /* Fluidlogged API */
 }
 
 dependencies {
@@ -63,6 +64,9 @@ dependencies {
     deobfProvided "curse.maven:mobends-231347:3477335"
     deobfProvided "curse.maven:morph-229080:2995522"
     deobfProvided "curse.maven:wings-302584:2829351"
+
+    provided 'com.github.jbredwards:Fluidlogged-API:a6298573387'
+    compile 'com.github.jbredwards:Fluidlogged-API:a6298573387'
 
     compile ("org.spongepowered:mixin:0.8.3") {
 
