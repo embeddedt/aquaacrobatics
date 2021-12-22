@@ -1,0 +1,12 @@
+# Blocks
+tile.aquaacrobatics.dried.kelp.block.name=Dried Kelp Block
+tile.aquaacrobatics.kelp.name=Kelp
+tile.aquaacrobatics.kelp.plant.name=Kelp
+tile.aquaacrobatics.seagrass.name=Seagrass
+
+# Items
+item.downgrade.aquatic.kelp.name=Kelp
+item.downgrade.aquatic.dried.kelp.name=Dried Kelp
+
+# Misc
+itemGroup.aquaacrobatics=Downgrade Aquatic

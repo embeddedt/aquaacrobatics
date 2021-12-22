@@ -77,6 +77,10 @@ public class ConfigHandler {
         @Config.Name("Bubble Columns")
         @Config.Comment("Enable bubble columns.")
         public static boolean bubbleColumns = false;
+
+        @Config.Name("1.13 Content")
+        @Config.Comment("Enable 1.13 content (blocks, items, etc.).")
+        public static boolean aquaticWorldContent = true;
     }
 
     public static class IntegrationConfig {

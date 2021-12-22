@@ -1,0 +1,11 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": [{
+      "model": "aquaacrobatics:kelp"
+    }],
+    "inventory": [{
+      "model": "aquaacrobatics:kelp_item"
+    }]
+  }
+}

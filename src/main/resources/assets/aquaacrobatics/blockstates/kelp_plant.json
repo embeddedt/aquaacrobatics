@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "aquaacrobatics:kelp_plant"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}

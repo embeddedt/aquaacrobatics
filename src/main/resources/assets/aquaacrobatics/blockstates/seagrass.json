@@ -1,0 +1,16 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "aquaacrobatics:seagrass"
+  },
+  "variants": {
+    "type": {
+      "single": {},
+      "lower": { "model": "aquaacrobatics:tall_seagrass_bottom" },
+      "upper": { "model": "aquaacrobatics:tall_seagrass_top" }
+    },
+    "inventory": [{
+      "model": "aquaacrobatics:seagrass_item"
+    }]
+  }
+}

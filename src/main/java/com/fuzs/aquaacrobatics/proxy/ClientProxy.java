@@ -32,6 +32,12 @@ public class ClientProxy extends CommonProxy {
     public static void registerModels(ModelRegistryEvent event) {
         if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
             ModelLoader.setCustomStateMapper(CommonProxy.BUBBLE_COLUMN, new StateMap.Builder().ignore(BlockLiquid.LEVEL, BlockBubbleColumn.DRAG).build());
+        if(ConfigHandler.MiscellaneousConfig.aquaticWorldContent) {
+            CommonProxy.blockKelp.initModelOverride();
+            CommonProxy.blockKelpPlant.initModelOverride();
+            CommonProxy.blockSeagrass.initModelOverride();
+        }
+        
     }
 
     @Override

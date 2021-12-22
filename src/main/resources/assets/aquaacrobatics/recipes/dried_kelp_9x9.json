@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"  ],
+  "key": {
+    "A": [
+      {
+        "item": "aquaacrobatics:dried_kelp",
+        "data": 0
+      }
+    ]
+  },
+  "result": {
+    "item": "aquaacrobatics:dried_kelp_block",
+    "data": 0
+  }
+}

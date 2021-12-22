@@ -2,8 +2,10 @@ package com.fuzs.aquaacrobatics;
 
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
+import net.darkhax.bookshelf.registry.RegistryHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +29,8 @@ public class AquaAcrobatics {
     private static final String CLIENT_PROXY = "com.fuzs." + MODID + ".proxy.ClientProxy";
     private static final String COMMON_PROXY = "com.fuzs." + MODID + ".proxy.CommonProxy";
 
+    public static final RegistryHelper REGISTRY = new RegistryHelper(MODID).enableAutoRegistration();
+
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = COMMON_PROXY)
     private static CommonProxy proxy;
 
@@ -39,6 +43,15 @@ public class AquaAcrobatics {
         }
     }
 
+    @Mod.EventHandler
+    public void onInit(final FMLInitializationEvent evt) {
+
+        if (AquaAcrobaticsCore.isLoaded()) {
+
+            proxy.onInit();
+        }
+    }
+    
     @Mod.EventHandler
     public void onPostInit(final FMLPostInitializationEvent evt) {
 

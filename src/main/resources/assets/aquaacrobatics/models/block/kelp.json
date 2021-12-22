@@ -1,0 +1,7 @@
+{
+  "parent": "block/tinted_cross",
+  "textures": {
+    "particle": "aquaacrobatics:block/kelp",
+    "cross": "aquaacrobatics:block/kelp"
+  }
+}

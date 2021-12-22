@@ -1,0 +1,6 @@
+{
+  "parent": "aquaacrobatics:block/template_seagrass",
+  "textures": {
+    "texture": "aquaacrobatics:block/tall_seagrass_top"
+  }
+}

@@ -57,6 +57,7 @@ dependencies {
     deobfProvided "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
     deobfProvided "net.ilexiconn:llibrary:1.7.9-1.12.2"
     deobfProvided "curse.maven:artemislib-313590:2741812"
+    deobfCompile "curse.maven:bookshelf-228525:2836960"
     deobfProvided "curse.maven:ichunutil-229060:2801262"
     deobfProvided "curse.maven:hats-229073:2960397"
     deobfProvided "curse.maven:mobends-231347:3477335"
