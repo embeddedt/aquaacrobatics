@@ -50,8 +50,9 @@ public abstract class EntityLivingBaseMixin extends Entity {
     
     @ModifyArg(method = "onEntityUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;setAir(I)V"), index = 0)
     private int getNewAirValue(int original) {
-        if(ConfigHandler.MiscellaneousConfig.slowAirReplenish && original == 300 && this.getAir() > 0 && !aqua$isLosingAir()) {
-            return Math.min(this.getAir() + 4, 300);
+        if(ConfigHandler.MiscellaneousConfig.slowAirReplenish && original == 300 && this.getAir() >= -20 && !aqua$isLosingAir()) {
+            int oldAirValue = Math.max(this.getAir(), 0);
+            return Math.min(oldAirValue + 4, 300);
         }
         return original;
     }
