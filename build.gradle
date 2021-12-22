@@ -25,7 +25,7 @@ apply plugin: 'org.spongepowered.mixin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = "v${mod_version}-${forge_version.replaceAll("-.*", "")}"
+version = mod_version
 group = "${mod_group}"
 ext.version = "${mod_version}"
 ext.id = "${mod_id}"
@@ -42,6 +42,9 @@ minecraft {
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20171003"
+    
+    replaceIn 'src/main/java/com/fuzs/aquaacrobatics/AquaAcrobatics.java'
+    replace '@version@', mod_version
 }
 
 repositories {
