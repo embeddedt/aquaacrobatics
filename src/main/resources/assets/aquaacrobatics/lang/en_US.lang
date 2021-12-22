@@ -5,8 +5,8 @@ tile.aquaacrobatics.kelp.plant.name=Kelp
 tile.aquaacrobatics.seagrass.name=Seagrass
 
 # Items
-item.downgrade.aquatic.kelp.name=Kelp
-item.downgrade.aquatic.dried.kelp.name=Dried Kelp
+item.aquaacrobatics.kelp.name=Kelp
+item.aquaacrobatics.dried.kelp.name=Dried Kelp
 
 # Misc
-itemGroup.aquaacrobatics=Downgrade Aquatic
+itemGroup.aquaacrobatics=Aqua Acrobatics
