@@ -14,9 +14,11 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'idea'
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 
 
@@ -52,14 +54,14 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
-    deobfCompile "net.ilexiconn:llibrary:1.7.9-1.12.2"
-    deobfCompile "curse.maven:artemislib-313590:2741812"
-    deobfCompile "curse.maven:ichunutil-229060:2801262"
-    deobfCompile "curse.maven:hats-229073:2960397"
-    deobfCompile "curse.maven:mobends-231347:3477335"
-    deobfCompile "curse.maven:morph-229080:2995522"
-    deobfCompile "curse.maven:wings-302584:2829351"
+    deobfProvided "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
+    deobfProvided "net.ilexiconn:llibrary:1.7.9-1.12.2"
+    deobfProvided "curse.maven:artemislib-313590:2741812"
+    deobfProvided "curse.maven:ichunutil-229060:2801262"
+    deobfProvided "curse.maven:hats-229073:2960397"
+    deobfProvided "curse.maven:mobends-231347:3477335"
+    deobfProvided "curse.maven:morph-229080:2995522"
+    deobfProvided "curse.maven:wings-302584:2829351"
 
     compile ("org.spongepowered:mixin:0.8.3") {
 
@@ -129,7 +131,6 @@ jar {
         attributes "FMLCorePluginContainsFMLMod": "true"
         attributes "ForceLoadAsMod": "true"
         attributes "TweakClass": "org.spongepowered.asm.launch.MixinTweaker"
-        attributes "TweakOrder": "0"
     }
 }
 
