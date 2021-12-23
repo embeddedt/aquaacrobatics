@@ -40,20 +40,6 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
         MixinBootstrap.init();
         Mixins.addConfiguration("META-INF/mixins." + AquaAcrobaticsCore.MODID + ".json");
         isLoaded = true;
-        
-        CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
-        if (codeSource != null) {
-            URL location = codeSource.getLocation();
-            try {
-                File file = new File(location.toURI());
-                if (file.isFile()) {
-                    CoreModManager.getReparseableCoremods().remove(file.getName());
-                }
-            } catch (URISyntaxException ignored) {}
-        } else {
-            AquaAcrobaticsCore.LOGGER.warn("No CodeSource, if this is not a development environment we might run into problems!");
-            AquaAcrobaticsCore.LOGGER.warn(this.getClass().getProtectionDomain());
-        }
     }
     @Override
     public String[] getASMTransformerClass() {
