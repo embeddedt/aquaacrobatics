@@ -124,6 +124,10 @@ public class ConfigHandler {
         @Config.RequiresMcRestart
         public static boolean hatsIntegration = true;
 
+        @Config.Name("Trinkets and Baubles Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean trinketsAndBaublesIntegration = true;
+
     }
 
     @SuppressWarnings("unused")

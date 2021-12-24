@@ -16,6 +16,7 @@ public class IntegrationManager {
     private static boolean isArtemisLibLoaded;
     private static boolean isMorphLoaded;
     private static boolean isHatsLoaded;
+    private static boolean isTrinketsAndBaublesLoaded;
     
     public static List<IElytraOpenHook> elytraOpenHooks = new LinkedList<>();
 
@@ -27,6 +28,7 @@ public class IntegrationManager {
         isArtemisLibLoaded = Loader.isModLoaded("artemislib");
         isMorphLoaded = Loader.isModLoaded("morph");
         isHatsLoaded = Loader.isModLoaded("hats");
+        isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
     }
 
     public static boolean isEnderIoEnabled() {
@@ -64,4 +66,8 @@ public class IntegrationManager {
         return isHatsLoaded && ConfigHandler.IntegrationConfig.hatsIntegration;
     }
 
+    public static boolean isTrinketsAndBaublesEnabled() {
+
+        return isTrinketsAndBaublesLoaded && ConfigHandler.IntegrationConfig.trinketsAndBaublesIntegration;
+    }
 }
