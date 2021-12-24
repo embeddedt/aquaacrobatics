@@ -40,6 +40,7 @@ public class CommonProxy {
             HatsIntegration.register();
         }
 
+        BiomeWaterFogColors.recomputeColors();
         // This code will print a warning if we don't have a color mapping for the biome
         /*
         for(Biome biome : Biome.REGISTRY) {
