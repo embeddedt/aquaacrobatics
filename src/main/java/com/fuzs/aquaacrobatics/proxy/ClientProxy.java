@@ -6,6 +6,7 @@ import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
+import com.fuzs.aquaacrobatics.integration.enderio.EnderIOIntegration;
 import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -46,6 +47,10 @@ public class ClientProxy extends CommonProxy {
         if (IntegrationManager.isArtemisLibEnabled()) {
 
             ArtemisLibIntegration.register();
+        }
+
+        if(IntegrationManager.isEnderIoEnabled()) {
+            EnderIOIntegration.register();
         }
     }
 

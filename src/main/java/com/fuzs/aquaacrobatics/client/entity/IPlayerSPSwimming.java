@@ -13,5 +13,7 @@ public interface IPlayerSPSwimming {
     boolean canSwim();
 
     boolean isMovingForward(float moveForward, float moveStrafe);
+    
+    boolean canPerformElytraTakeoff();
 
 }

@@ -92,6 +92,11 @@ public class ConfigHandler {
 
         private static final String COMPAT_DESCRIPTION = "Only applies when the mod is installed. Disable when there are issues with the mod.";
 
+        @Config.Name("Ender IO Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean enderIoIntegration = true;
+        
         @Config.Name("Random Patches Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean randomPatchesIntegration = true;

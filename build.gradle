@@ -66,6 +66,8 @@ dependencies {
     deobfProvided "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
     deobfProvided "net.ilexiconn:llibrary:1.7.9-1.12.2"
     deobfProvided "curse.maven:artemislib-313590:2741812"
+    deobfProvided "curse.maven:endercore-231868:2972849"
+    deobfProvided "curse.maven:enderio-64578:3328811"
     deobfProvided "curse.maven:ichunutil-229060:2801262"
     deobfProvided "curse.maven:hats-229073:2960397"
     deobfProvided "curse.maven:mobends-231347:3573346"
