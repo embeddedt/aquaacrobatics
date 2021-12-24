@@ -62,10 +62,4 @@ public class UnderwaterPlantBlock extends BlockFluidloggedClassic {
     public static boolean destroyBlockToWater(World world, BlockPos pos, boolean dropBlock) {
         return world.destroyBlock(pos, dropBlock);
     }
-
-    @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
-        Block b = worldIn.getBlockState(pos.up()).getBlock();
-        return super.canPlaceBlockAt(worldIn, pos) && (b == Blocks.WATER || b == Blocks.FLOWING_WATER);
-    }
 }

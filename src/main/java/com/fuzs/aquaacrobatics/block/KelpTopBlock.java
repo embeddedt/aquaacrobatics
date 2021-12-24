@@ -2,6 +2,8 @@ package com.fuzs.aquaacrobatics.block;
 
 import static net.minecraft.block.BlockLiquid.LEVEL;
 
+import git.jbredwards.fluidlogged_api.common.util.FluidState;
+import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.PropertyInteger;
@@ -22,6 +24,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import java.util.Random;
 
@@ -45,14 +48,17 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
         return getDefaultState().withProperty(AGE, rand.nextInt(15));
     }
 
+    /*
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return randomAge(world.rand);
     }
+    
+     */
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, LEVEL, AGE);
+    protected BlockStateContainer.Builder blockStateBuilder() {
+        return super.blockStateBuilder().add(AGE);
     }
 
     @Override
@@ -73,6 +79,7 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
 
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!this.isValidPosition(worldIn, pos)) {
+            System.out.println("NO LONGER VALID NEIGHBOR");
             UnderwaterPlantBlock.destroyBlockToWater(worldIn, pos, true);
             return;
         }
@@ -87,10 +94,8 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
     }
 
     public boolean isValidPosition(IBlockAccess worldIn, BlockPos pos) {
-        Block above = worldIn.getBlockState(pos.up()).getBlock();
-        if(above != Blocks.WATER && above != Blocks.AIR && above != Blocks.FLOWING_WATER && above != CommonProxy.blockKelpPlant && above != CommonProxy.blockKelp) {
+        if(FluidloggedUtils.getFluidAt(worldIn, pos, worldIn.getBlockState(pos)) != FluidRegistry.WATER)
             return false;
-        }
         BlockPos blockpos = pos.down();
         IBlockState iblockstate = worldIn.getBlockState(blockpos);
         Block block = iblockstate.getBlock();
@@ -109,13 +114,16 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
         if(worldIn.isRemote)
             return;
         if (!isValidPosition(worldIn, pos)) {
+            System.out.println("NOT VALID");
             UnderwaterPlantBlock.destroyBlockToWater(worldIn, pos, true);
         } else {
             if (state.getValue(AGE) < 14 && random.nextDouble() < 0.14D) {
+                System.out.println("AGING!");
                 worldIn.setBlockState(pos, state.withProperty(AGE,state.getValue(AGE) + 1));
             } else if(state.getValue(AGE) == 14) {
                 BlockPos above = pos.up();
                 if(isValidPosition(worldIn, above)) {
+                    System.out.println("GROWING!");
                     worldIn.setBlockState(above, state.withProperty(AGE, 0));
                     worldIn.setBlockState(pos, CommonProxy.blockKelpPlant.getDefaultState());
                 }
@@ -125,7 +133,7 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
 
     @Override
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
-        return super.canPlaceBlockAt(worldIn, pos) && isValidPosition(worldIn, pos);
+        return super.canPlaceBlockAt(worldIn, pos);
     }
 
     @Override
