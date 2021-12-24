@@ -47,6 +47,7 @@ public abstract class BiomeWaterFogColors {
             case "biomesoplenty:tropical_rainforest":
                 color = 0x02271A;
                 break;
+            case "biomesoplenty:quagmire":
             case "biomesoplenty:wasteland":
                 color = 0x0C0C03;
                 break;
@@ -104,6 +105,7 @@ public abstract class BiomeWaterFogColors {
             case "biomesoplenty:tropical_rainforest":
                 color = 0x1FA14A;
                 break;
+            case "biomesoplenty:quagmire":
             case "biomesoplenty:wasteland":
                 color = 0x433721;
                 break;
@@ -113,7 +115,6 @@ public abstract class BiomeWaterFogColors {
             /* The following biomes have been checked and use default colors */    
             case "biomesoplenty:bog":
             case "biomesoplenty:moor":
-            case "biomesoplenty:quagmire": /* doesn't exist post-1.13 */
                 color = DEFAULT_WATER_COLOR;
                 break;
             /* Warn about the remaining biomes */    
