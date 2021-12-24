@@ -139,7 +139,6 @@ jar {
         attributes "FMLCorePlugin": project.group + ".core." + project.ext.name.replaceAll("\\s", "") + "Core"
         attributes "FMLCorePluginContainsFMLMod": "true"
         attributes "ForceLoadAsMod": "true"
-        attributes "TweakClass": "org.spongepowered.asm.launch.MixinTweaker"
     }
 }
 
