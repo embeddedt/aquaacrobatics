@@ -12,6 +12,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -40,6 +41,7 @@ public class CommonProxy {
             HatsIntegration.register();
         }
 
+        FluidRegistry.WATER.setColor(BiomeWaterFogColors.DEFAULT_WATER_COLOR);
         BiomeWaterFogColors.recomputeColors();
         // This code will print a warning if we don't have a color mapping for the biome
         /*

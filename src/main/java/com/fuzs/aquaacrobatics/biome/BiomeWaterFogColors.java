@@ -9,8 +9,8 @@ import net.minecraftforge.event.terraingen.BiomeEvent;
 import java.util.HashMap;
 
 public abstract class BiomeWaterFogColors {
-    private static final int DEFAULT_WATER_FOG_COLOR = 329011;
-    private static final int DEFAULT_WATER_COLOR = 4159204;
+    public static final int DEFAULT_WATER_FOG_COLOR = 329011;
+    public static final int DEFAULT_WATER_COLOR = 4159204;
 
     private static final int DEFAULT_WATER_COLOR_112 = 16777215;
     private static final HashMap<String, Integer> fogColorMap = new HashMap<>();
