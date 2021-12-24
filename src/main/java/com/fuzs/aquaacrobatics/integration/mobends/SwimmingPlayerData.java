@@ -43,7 +43,6 @@ public class SwimmingPlayerData extends PlayerData {
                         this.layerBase.perform(data, actions);
                         this.layerSneak.perform(data, actions);
                         this.layerTorch.perform(data, actions);
-                        this.layerAction.perform(data, actions);
                         this.layerCape.perform(data, actions);
 
                         return actions;

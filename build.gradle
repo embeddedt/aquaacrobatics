@@ -68,7 +68,7 @@ dependencies {
     deobfProvided "curse.maven:artemislib-313590:2741812"
     deobfProvided "curse.maven:ichunutil-229060:2801262"
     deobfProvided "curse.maven:hats-229073:2960397"
-    deobfCompile "curse.maven:mobends-231347:3477335"
+    deobfProvided "curse.maven:mobends-231347:3573346"
     deobfProvided "curse.maven:morph-229080:2995522"
     deobfProvided "curse.maven:wings-302584:2829351"
 
