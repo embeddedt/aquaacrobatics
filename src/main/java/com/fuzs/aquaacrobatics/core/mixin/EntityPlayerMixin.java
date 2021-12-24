@@ -375,8 +375,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
                     pose1 = Pose.CROUCHING;
                 } else {
-
-                    pose1 = Pose.SWIMMING;
+                    if(ConfigHandler.MovementConfig.enableCrawling)
+                        pose1 = Pose.SWIMMING;
+                    else
+                        pose1 = Pose.STANDING;
                 }
             } else {
 

@@ -53,6 +53,10 @@ public class ConfigHandler {
         @Config.Comment("Enables swimming to the left and right.")
         public static boolean sidewaysSwimming = false;
 
+        @Config.Name("Enable Crawling")
+        @Config.Comment("Enables crawling to prevent suffocation. Note that if you disable this there will probably be behavioral differences from 1.13.")
+        public static boolean enableCrawling = true;
+
     }
 
     public static class BlocksConfig {
