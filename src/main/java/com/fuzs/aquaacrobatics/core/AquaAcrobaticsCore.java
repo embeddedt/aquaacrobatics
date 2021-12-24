@@ -29,6 +29,7 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
     public static final Logger LOGGER = LogManager.getLogger(AquaAcrobaticsCore.NAME);
 
     private static boolean isLoaded;
+    public static boolean isModCompatLoaded;
     private static boolean isScreenRegistered;
     
     public AquaAcrobaticsCore() {
@@ -94,7 +95,7 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
 
     public static boolean isLoaded() {
 
-        if (!isLoaded && !isScreenRegistered) {
+        if (!isScreenRegistered) {
 
             isScreenRegistered = true;
             MinecraftForge.EVENT_BUS.register(new NoMixinHandler());

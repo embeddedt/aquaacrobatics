@@ -1,8 +1,10 @@
 package com.fuzs.aquaacrobatics.proxy;
 
+import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
+import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import net.minecraft.block.Block;
@@ -40,6 +42,9 @@ public class CommonProxy {
 
             HatsIntegration.register();
         }
+        
+        if(!AquaAcrobaticsCore.isModCompatLoaded)
+            AquaAcrobatics.LOGGER.error("Please consider installing MixinBooter to ensure compatibility with more mods");
 
         FluidRegistry.WATER.setColor(BiomeWaterFogColors.DEFAULT_WATER_COLOR);
         BiomeWaterFogColors.recomputeColors();
