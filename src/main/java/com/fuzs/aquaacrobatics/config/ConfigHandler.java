@@ -1,6 +1,7 @@
 package com.fuzs.aquaacrobatics.config;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
+import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -81,6 +82,11 @@ public class ConfigHandler {
         @Config.Name("1.13 Content")
         @Config.Comment("Enable 1.13 content (blocks, items, etc.).")
         public static boolean aquaticWorldContent = true;
+
+
+        @Config.Name("Custom Biome Water Colors")
+        @Config.Comment("Allows overriding the water and fog colors for a biome. Specify each entry like this (without quotes) - 'modname:biome,color,fogcolor'")
+        public static String[] customBiomeWaterColors = new String[] {};
     }
 
     public static class IntegrationConfig {
@@ -124,6 +130,7 @@ public class ConfigHandler {
 
             ConfigManager.sync(AquaAcrobatics.MODID, Config.Type.INSTANCE);
         }
+        BiomeWaterFogColors.recomputeColors();
     }
 
     @SuppressWarnings("unused")

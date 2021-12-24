@@ -5,6 +5,9 @@ import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -52,11 +55,14 @@ public class FogHandler {
     
     @SubscribeEvent
     public void onRenderFogDensity(EntityViewRenderEvent.FogDensity event) {
+        Entity eventEntity = event.getEntity();
+        if(eventEntity instanceof EntityLivingBase && ((EntityLivingBase)eventEntity).isPotionActive(MobEffects.BLINDNESS))
+            return;
         if(event.getState().getMaterial() == Material.WATER) {
             GlStateManager.setFog(GlStateManager.FogMode.EXP2);
             float density = 0.05f;
-            if(event.getEntity() instanceof EntityPlayer) {
-                EntityPlayer playerEntity = (EntityPlayer)event.getEntity();
+            if(eventEntity instanceof EntityPlayer) {
+                EntityPlayer playerEntity = (EntityPlayer)eventEntity;
                 float waterVision = ((IPlayerResizeable)playerEntity).getWaterVision();
                 density -= waterVision * waterVision * 0.03F;
                 Biome biome = playerEntity.world.getBiome(playerEntity.getPosition());
@@ -111,6 +117,27 @@ public class FogHandler {
             fogRed = fogRed * (1.0F - f6) + fogRed * f9 * f6;
             fogGreen = fogGreen * (1.0F - f6) + fogGreen * f9 * f6;
             fogBlue = fogBlue * (1.0F - f6) + fogBlue * f9 * f6;
+
+            double blindnessFactor = 1.0;
+            if (playerEntity.isPotionActive(MobEffects.BLINDNESS)) {
+                int potionDuration = playerEntity.getActivePotionEffect(MobEffects.BLINDNESS).getDuration();
+                if (potionDuration < 20) {
+                    blindnessFactor *= (1.0F - (float)i / 20.0F);
+                } else {
+                    blindnessFactor = 0.0D;
+                }
+            }
+
+            if (blindnessFactor < 1.0D) {
+                if (blindnessFactor < 0.0D) {
+                    blindnessFactor = 0.0D;
+                }
+
+                blindnessFactor = blindnessFactor * blindnessFactor;
+                fogRed = (float)((double)fogRed * blindnessFactor);
+                fogGreen = (float)((double)fogGreen * blindnessFactor);
+                fogBlue = (float)((double)fogBlue * blindnessFactor);
+            }
 
             event.setRed(fogRed);
             event.setGreen(fogGreen);

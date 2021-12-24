@@ -2,6 +2,7 @@ package com.fuzs.aquaacrobatics.core;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.client.handler.NoMixinHandler;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.CoreModManager;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
@@ -40,20 +41,25 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
         MixinBootstrap.init();
         Mixins.addConfiguration("META-INF/mixins." + AquaAcrobaticsCore.MODID + ".json");
         isLoaded = true;
-        
-        CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
-        if (codeSource != null) {
-            URL location = codeSource.getLocation();
-            try {
-                File file = new File(location.toURI());
-                if (file.isFile()) {
-                    CoreModManager.getReparseableCoremods().remove(file.getName());
-                }
-            } catch (URISyntaxException ignored) {}
+        if("true".equals(System.getProperty("aquaacrobatics.fghack"))) {
+            AquaAcrobaticsCore.LOGGER.info("Running in userdev, proceeding to apply workaround to ensure mod is loaded");
+            CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
+            if (codeSource != null) {
+                URL location = codeSource.getLocation();
+                try {
+                    File file = new File(location.toURI());
+                    if (file.isFile()) {
+                        CoreModManager.getReparseableCoremods().remove(file.getName());
+                    }
+                } catch (URISyntaxException ignored) {}
+            } else {
+                AquaAcrobaticsCore.LOGGER.warn("No CodeSource, if this is not a development environment we might run into problems!");
+                AquaAcrobaticsCore.LOGGER.warn(this.getClass().getProtectionDomain());
+            }
         } else {
-            AquaAcrobaticsCore.LOGGER.warn("No CodeSource, if this is not a development environment we might run into problems!");
-            AquaAcrobaticsCore.LOGGER.warn(this.getClass().getProtectionDomain());
+            AquaAcrobaticsCore.LOGGER.info("Running in obf, thanks for playing with the mod!");
         }
+        
     }
     @Override
     public String[] getASMTransformerClass() {

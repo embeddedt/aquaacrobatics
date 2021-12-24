@@ -2,6 +2,7 @@ package com.fuzs.aquaacrobatics.proxy;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.block.*;
+import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
@@ -10,7 +11,10 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -71,6 +75,14 @@ public class CommonProxy {
 
             HatsIntegration.register();
         }
+
+        BiomeWaterFogColors.recomputeColors();
+        // This code will print a warning if we don't have a color mapping for the biome
+        /*
+        for(Biome biome : Biome.REGISTRY) {
+            biome.getWaterColor();
+        }
+         */
     }
 
 }

@@ -25,7 +25,7 @@ apply plugin: 'org.spongepowered.mixin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = "v${mod_version}-${forge_version.replaceAll("-.*", "")}"
+version = mod_version
 group = "${mod_group}"
 ext.version = "${mod_version}"
 ext.id = "${mod_id}"
@@ -42,6 +42,15 @@ minecraft {
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20171003"
+    
+    replaceIn 'src/main/java/com/fuzs/aquaacrobatics/AquaAcrobatics.java'
+    replace '@version@', mod_version
+    
+    /* This workaround is needed to make dev work properly */
+    def extraArgs = "-Daquaacrobatics.fghack=true"
+    
+    clientJvmArgs += extraArgs
+    serverJvmArgs += extraArgs
 }
 
 repositories {
@@ -61,7 +70,7 @@ dependencies {
     deobfCompile "curse.maven:bookshelf-228525:2836960"
     deobfProvided "curse.maven:ichunutil-229060:2801262"
     deobfProvided "curse.maven:hats-229073:2960397"
-    deobfProvided "curse.maven:mobends-231347:3477335"
+    deobfProvided "curse.maven:mobends-231347:3573346"
     deobfProvided "curse.maven:morph-229080:2995522"
     deobfProvided "curse.maven:wings-302584:2829351"
 
