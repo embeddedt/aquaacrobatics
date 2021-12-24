@@ -13,8 +13,8 @@ public abstract class BiomeWaterFogColors {
     public static final int DEFAULT_WATER_COLOR = 4159204;
 
     private static final int DEFAULT_WATER_COLOR_112 = 16777215;
-    private static final HashMap<String, Integer> fogColorMap = new HashMap<>();
-    private static final HashMap<String, Integer> baseColorMap = new HashMap<>();
+    private static final HashMap<ResourceLocation, Integer> fogColorMap = new HashMap<>();
+    private static final HashMap<ResourceLocation, Integer> baseColorMap = new HashMap<>();
    
     private static final String[] DEFAULT_COLORS = {
             "minecraft:mutated_swampland,6388580,2302743",
@@ -44,19 +44,20 @@ public abstract class BiomeWaterFogColors {
             AquaAcrobatics.LOGGER.error("Incorrect syntax for '" + colorEntry + "'. Should be modname:biome,color,fogcolor (color and fogcolor may be empty)");
             return;
         }
+        ResourceLocation location = new ResourceLocation(fields[0]);
         try {
             int mainColor = Integer.decode(fields[1]);
-            baseColorMap.put(fields[0], mainColor);
+            baseColorMap.put(location, mainColor);
         } catch (NumberFormatException e) {
-            if(!baseColorMap.containsKey(fields[0]))
-                baseColorMap.put(fields[0], DEFAULT_WATER_COLOR);
+            if(!baseColorMap.containsKey(location))
+                baseColorMap.put(location, DEFAULT_WATER_COLOR);
         }
         try {
             int fogColor = Integer.decode(fields[2]);
-            fogColorMap.put(fields[0], fogColor);
+            fogColorMap.put(location, fogColor);
         } catch (NumberFormatException e) {
-            if(!fogColorMap.containsKey(fields[0]))
-                fogColorMap.put(fields[0], DEFAULT_WATER_FOG_COLOR);
+            if(!fogColorMap.containsKey(location))
+                fogColorMap.put(location, DEFAULT_WATER_FOG_COLOR);
         }
     }
     public static void recomputeColors() {
@@ -74,25 +75,23 @@ public abstract class BiomeWaterFogColors {
         ResourceLocation location = biome.getRegistryName();
         if(location == null)
             return DEFAULT_WATER_FOG_COLOR;
-        Integer color = fogColorMap.get(location.toString());
+        Integer color = fogColorMap.get(location);
         if(color != null)
             return color;
         return DEFAULT_WATER_FOG_COLOR;
     }
-    public static void getWaterColorForBiome(BiomeEvent.GetWaterColor event) {
-        ResourceLocation location = event.getBiome().getRegistryName();
+    public static int getWaterColorForBiome(Biome biome) {
+        ResourceLocation location = biome.getRegistryName();
         if(location == null) {
-            event.setNewColor(DEFAULT_WATER_COLOR);
-            return;
+            return DEFAULT_WATER_COLOR;
         }
-        Integer color = baseColorMap.get(location.toString());
+        Integer color = baseColorMap.get(location);
         if(color != null) {
-            event.setNewColor(color);
-            return;
+            return color;
         }
-        if(event.getNewColor() != DEFAULT_WATER_COLOR_112)
+        if(biome.getWaterColorMultiplier() != DEFAULT_WATER_COLOR_112)
             AquaAcrobatics.LOGGER.info("Potentially missing water color mapping for " + location);
-        baseColorMap.put(location.toString(), DEFAULT_WATER_COLOR);
-        event.setNewColor(DEFAULT_WATER_COLOR);
+        baseColorMap.put(location, DEFAULT_WATER_COLOR);
+        return DEFAULT_WATER_COLOR;
     }
 }
