@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.fuzs.aquaacrobatics.core.galacticraft.mixin",
+  "refmap": "mixins.aquaacrobatics.refmap.json",
+  "mixins": [
+    "GCEntityClientPlayerMPMixin",
+    "GalacticraftCoreMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

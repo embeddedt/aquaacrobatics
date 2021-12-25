@@ -4,6 +4,7 @@ import com.fuzs.aquaacrobatics.client.entity.IPlayerSPSwimming;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
+import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.fuzs.aquaacrobatics.util.math.AxisAlignedBBSpliterator;
 import com.mojang.authlib.GameProfile;
@@ -34,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -358,16 +360,21 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
             }
         }
     }
+    
+    @Override
+    public boolean canPerformElytraTakeoff() {
+        return (ConfigHandler.MovementConfig.easyElytraTakeoff && this.movementInput.jump && !this.movementStorage.isStartingToFly && !this.movementStorage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder());
+    }
 
     private void handleElytraTakeoff() {
-
         // 1.15 change for easier elytra takeoff
-        if (ConfigHandler.MovementConfig.easyElytraTakeoff && this.movementInput.jump && !this.movementStorage.isStartingToFly && !this.movementStorage.jump && this.motionY >= 0.0 && !this.capabilities.isFlying && !this.isRiding() && !this.isOnLadder()) {
+        if (canPerformElytraTakeoff()) {
 
             ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
             if (itemstack.getItem() == Items.ELYTRA && ItemElytra.isUsable(itemstack)) {
-
                 this.connection.sendPacket(new CPacketEntityAction(this, CPacketEntityAction.Action.START_FALL_FLYING));
+            } else {
+                IntegrationManager.elytraOpenHooks.forEach(hook -> hook.openElytra((EntityPlayerSP) (Object)this));
             }
         }
     }

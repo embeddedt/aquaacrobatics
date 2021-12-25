@@ -29,13 +29,15 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
     public static final Logger LOGGER = LogManager.getLogger(AquaAcrobaticsCore.NAME);
 
     private static boolean isLoaded;
+    public static boolean isModCompatLoaded;
     private static boolean isScreenRegistered;
     
     public AquaAcrobaticsCore() {
         try {
             Class.forName("org.spongepowered.asm.launch.MixinTweaker");
         } catch(ClassNotFoundException e) {
-            throw new RuntimeException("No instance of Mixin framework detected. Unable to proceed load.", e);
+            AquaAcrobaticsCore.LOGGER.error("No instance of Mixin framework detected. Unable to proceed load.", e);
+            return;
         }
         
         MixinBootstrap.init();
@@ -93,7 +95,7 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
 
     public static boolean isLoaded() {
 
-        if (!isLoaded && !isScreenRegistered) {
+        if (!isScreenRegistered) {
 
             isScreenRegistered = true;
             MinecraftForge.EVENT_BUS.register(new NoMixinHandler());

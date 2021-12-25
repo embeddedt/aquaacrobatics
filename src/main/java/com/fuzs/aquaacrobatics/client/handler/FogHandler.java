@@ -74,11 +74,6 @@ public class FogHandler {
             event.setCanceled(true);
         }
     }
-    
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onGetWaterColor(BiomeEvent.GetWaterColor event) {
-        BiomeWaterFogColors.getWaterColorForBiome(event);
-    }
 
     /* LOW to override mods like Biomes O' Plenty which force their own underwater fog color */
     @SubscribeEvent(priority = EventPriority.LOW)

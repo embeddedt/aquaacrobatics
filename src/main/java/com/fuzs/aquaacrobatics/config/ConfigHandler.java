@@ -53,6 +53,10 @@ public class ConfigHandler {
         @Config.Comment("Enables swimming to the left and right.")
         public static boolean sidewaysSwimming = false;
 
+        @Config.Name("Enable Crawling")
+        @Config.Comment("Enables crawling to prevent suffocation. Note that if you disable this there will probably be behavioral differences from 1.13.")
+        public static boolean enableCrawling = true;
+
     }
 
     public static class BlocksConfig {
@@ -93,6 +97,11 @@ public class ConfigHandler {
 
         private static final String COMPAT_DESCRIPTION = "Only applies when the mod is installed. Disable when there are issues with the mod.";
 
+        @Config.Name("Ender IO Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean enderIoIntegration = true;
+        
         @Config.Name("Random Patches Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean randomPatchesIntegration = true;
@@ -119,6 +128,10 @@ public class ConfigHandler {
         @Config.Comment(COMPAT_DESCRIPTION)
         @Config.RequiresMcRestart
         public static boolean hatsIntegration = true;
+
+        @Config.Name("Trinkets and Baubles Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean trinketsAndBaublesIntegration = true;
 
     }
 

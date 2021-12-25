@@ -7,6 +7,7 @@ import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
 import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
+import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaublesIntegration;
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
@@ -243,7 +244,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public boolean isResizingAllowed() {
 
         if (IntegrationManager.isMorphEnabled() && MorphIntegration.isMorphing(this.getPlayer())) {
-
+            return false;
+        }
+        
+        if(IntegrationManager.isTrinketsAndBaublesEnabled() && TrinketsAndBaublesIntegration.hasResized(this.getPlayer())) {
             return false;
         }
 
@@ -375,8 +379,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
                     pose1 = Pose.CROUCHING;
                 } else {
-
-                    pose1 = Pose.SWIMMING;
+                    if(ConfigHandler.MovementConfig.enableCrawling)
+                        pose1 = Pose.SWIMMING;
+                    else
+                        pose1 = Pose.STANDING;
                 }
             } else {
 
