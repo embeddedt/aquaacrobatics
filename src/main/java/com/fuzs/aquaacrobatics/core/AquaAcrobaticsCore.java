@@ -4,8 +4,10 @@ import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.client.handler.NoMixinHandler;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.CoreModManager;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
@@ -98,7 +100,11 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
         if (!isScreenRegistered) {
 
             isScreenRegistered = true;
-            MinecraftForge.EVENT_BUS.register(new NoMixinHandler());
+            if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
+                MinecraftForge.EVENT_BUS.register(new NoMixinHandler());
+            else if(!isLoaded) {
+                throw new RuntimeException("Mixin framework is missing, please install it.");
+            }
         }
 
         return isLoaded;
