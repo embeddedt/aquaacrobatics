@@ -56,15 +56,15 @@ minecraft {
 repositories {
     mavenLocal()
     maven { url = "https://repo.spongepowered.org/repository/maven-public" }
-    maven { url "https://maven.mcmoddev.com/" }
+    //maven { url "https://maven.mcmoddev.com/" }
     maven {
         url "https://www.cursemaven.com"
     }
 }
 
 dependencies {
-    deobfProvided "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
-    deobfProvided "net.ilexiconn:llibrary:1.7.9-1.12.2"
+    //deobfProvided "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
+    //deobfProvided "net.ilexiconn:llibrary:1.7.9-1.12.2"
     deobfProvided "curse.maven:artemislib-313590:2741812"
     deobfCompile "curse.maven:baubles-227083:2518667"
     deobfProvided "curse.maven:endercore-231868:2972849"
