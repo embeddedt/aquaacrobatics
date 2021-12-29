@@ -29,25 +29,34 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
     public static final String NAME = AquaAcrobatics.NAME + " Transformer";
     public static final String VERSION = AquaAcrobatics.VERSION;
     public static final Logger LOGGER = LogManager.getLogger(AquaAcrobaticsCore.NAME);
+    private static AquaAcrobaticsCore SELF;
 
     private static boolean isLoaded;
     public static boolean isModCompatLoaded;
+    public static boolean isFgDev;
     private static boolean isScreenRegistered;
     
     public AquaAcrobaticsCore() {
+        SELF = this;
+
+        isFgDev = "true".equals(System.getProperty("aquaacrobatics.fghack"));
+        if(isFgDev)
+            setupMixins();
+    }
+    
+    static void setupMixins() {
         try {
             Class.forName("org.spongepowered.asm.launch.MixinTweaker");
         } catch(ClassNotFoundException e) {
             AquaAcrobaticsCore.LOGGER.error("No instance of Mixin framework detected. Unable to proceed load.", e);
             return;
         }
-        
         MixinBootstrap.init();
         Mixins.addConfiguration("META-INF/mixins." + AquaAcrobaticsCore.MODID + ".json");
         isLoaded = true;
-        if("true".equals(System.getProperty("aquaacrobatics.fghack"))) {
+        if(isFgDev) {
             AquaAcrobaticsCore.LOGGER.info("Running in userdev, proceeding to apply workaround to ensure mod is loaded");
-            CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
+            CodeSource codeSource = SELF.getClass().getProtectionDomain().getCodeSource();
             if (codeSource != null) {
                 URL location = codeSource.getLocation();
                 try {
@@ -58,13 +67,13 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
                 } catch (URISyntaxException ignored) {}
             } else {
                 AquaAcrobaticsCore.LOGGER.warn("No CodeSource, if this is not a development environment we might run into problems!");
-                AquaAcrobaticsCore.LOGGER.warn(this.getClass().getProtectionDomain());
+                AquaAcrobaticsCore.LOGGER.warn(SELF.getClass().getProtectionDomain());
             }
         } else {
             AquaAcrobaticsCore.LOGGER.info("Running in obf, thanks for playing with the mod!");
         }
-        
     }
+    
     @Override
     public String[] getASMTransformerClass() {
 
@@ -77,11 +86,10 @@ public class AquaAcrobaticsCore implements IFMLLoadingPlugin {
         return null;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Nullable
     @Override
     public String getSetupClass() {
-        return null;
+        return "com.fuzs.aquaacrobatics.core.AquaAcrobaticsSetupHook";
     }
 
     @Override
