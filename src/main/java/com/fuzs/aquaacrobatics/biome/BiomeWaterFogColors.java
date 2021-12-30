@@ -80,7 +80,7 @@ public abstract class BiomeWaterFogColors {
             return color;
         return DEFAULT_WATER_FOG_COLOR;
     }
-    public static int getWaterColorForBiome(Biome biome) {
+    public static int getWaterColorForBiome(Biome biome, int oldColor) {
         ResourceLocation location = biome.getRegistryName();
         if(location == null) {
             return DEFAULT_WATER_COLOR;
@@ -89,7 +89,7 @@ public abstract class BiomeWaterFogColors {
         if(color != null) {
             return color;
         }
-        if(biome.getWaterColorMultiplier() != DEFAULT_WATER_COLOR_112)
+        if(oldColor != DEFAULT_WATER_COLOR_112)
             AquaAcrobatics.LOGGER.info("Potentially missing water color mapping for " + location);
         baseColorMap.put(location, DEFAULT_WATER_COLOR);
         return DEFAULT_WATER_COLOR;

@@ -13,6 +13,7 @@
     "EntityMixin",
     "EntityLivingBaseMixin",
     "NetHandlerPlayServerMixin",
+    "BiomeMixin",
     "BlockGrassMixin",
     "BlockLiquidMixin",
     "BlockMagmaMixin",
@@ -21,7 +22,6 @@
     "accessor.IEventBusAccessor"
   ],
   "client": [
-    "client.BiomeMixin",
     "client.BlockFluidRendererMixin",
     "client.EntityPlayerSPMixin",
     "client.EntityRendererMixin",
