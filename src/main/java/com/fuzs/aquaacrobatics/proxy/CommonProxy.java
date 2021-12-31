@@ -5,12 +5,14 @@ import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
+import com.fuzs.aquaacrobatics.core.mixin.accessor.FluidAccessor;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent;
@@ -47,6 +49,8 @@ public class CommonProxy {
             AquaAcrobatics.LOGGER.error("Please consider installing MixinBooter to ensure compatibility with more mods");
 
         FluidRegistry.WATER.setColor(BiomeWaterFogColors.DEFAULT_WATER_COLOR);
+        ((FluidAccessor)FluidRegistry.WATER).setStillTexture(new ResourceLocation("aquaacrobatics:blocks/water_still"));
+        ((FluidAccessor)FluidRegistry.WATER).setFlowingTexture(new ResourceLocation("aquaacrobatics:blocks/water_flow"));
         BiomeWaterFogColors.recomputeColors();
         // This code will print a warning if we don't have a color mapping for the biome
         /*

@@ -10,7 +10,10 @@ import com.fuzs.aquaacrobatics.integration.enderio.EnderIOIntegration;
 import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -33,6 +36,13 @@ public class ClientProxy extends CommonProxy {
     public static void registerModels(ModelRegistryEvent event) {
         if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
             ModelLoader.setCustomStateMapper(CommonProxy.BUBBLE_COLUMN, new StateMap.Builder().ignore(BlockLiquid.LEVEL, BlockBubbleColumn.DRAG).build());
+    }
+    
+    @SubscribeEvent
+    public static void registerTextures(TextureStitchEvent.Pre event) {
+        TextureMap map = event.getMap();
+        map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_still"));
+        map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_flow"));
     }
 
     @Override

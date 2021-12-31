@@ -10,14 +10,30 @@ import net.minecraft.world.IBlockAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(BlockFluidRenderer.class)
 public class BlockFluidRendererMixin {
     @Shadow @Final private BlockColors blockColors;
+    
+    
+    @ModifyConstant(
+            method = "initAtlasSprites",
+            constant = @Constant(stringValue = "minecraft:blocks/water_still")
+    )
+    private String getWaterStillTexture(String old) {
+        return "aquaacrobatics:blocks/water_still";
+    }
+
+    @ModifyConstant(
+            method = "initAtlasSprites",
+            constant = @Constant(stringValue = "minecraft:blocks/water_flow")
+    )
+    private String getWaterFlowTexture(String old) {
+        return "aquaacrobatics:blocks/water_flow";
+    }
+    
 
     @ModifyArgs(
             method = "renderFluid", at = @At(
