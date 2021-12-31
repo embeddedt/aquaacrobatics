@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
         name = AquaAcrobatics.NAME,
         version = AquaAcrobatics.VERSION,
         acceptedMinecraftVersions = "[1.12.2]",
+        acceptableRemoteVersions = "*",
         dependencies = "before:mobends@(0.24,)"
 )
 public class AquaAcrobatics {
