@@ -48,9 +48,6 @@ public class CommonProxy {
         if(!AquaAcrobaticsCore.isModCompatLoaded)
             AquaAcrobatics.LOGGER.error("Please consider installing MixinBooter to ensure compatibility with more mods");
 
-        FluidRegistry.WATER.setColor(BiomeWaterFogColors.DEFAULT_WATER_COLOR | (0xff000000)); /* add alpha */
-        ((FluidAccessor)FluidRegistry.WATER).setStillTexture(new ResourceLocation("aquaacrobatics:blocks/water_still"));
-        ((FluidAccessor)FluidRegistry.WATER).setFlowingTexture(new ResourceLocation("aquaacrobatics:blocks/water_flow"));
         BiomeWaterFogColors.recomputeColors();
         // This code will print a warning if we don't have a color mapping for the biome
         /*
