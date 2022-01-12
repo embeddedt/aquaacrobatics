@@ -28,6 +28,7 @@
     "client.EntityRendererMixin",
     "client.ItemRendererMixin",
     "client.ModelBipedMixin",
+    "client.ModelFluidMixin",
     "client.RenderBoatMixin",
     "client.RenderPlayerMixin",
     "client.PlayerControllerMPMixin"
