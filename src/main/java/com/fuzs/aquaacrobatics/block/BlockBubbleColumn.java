@@ -24,7 +24,10 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.BlockFluidBase;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,7 +44,10 @@ public class BlockBubbleColumn extends BlockStaticLiquid {
    @Override
    protected BlockStateContainer createBlockState()
    {
-      return new BlockStateContainer(this, LEVEL, DRAG);
+      BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this).add(LEVEL, DRAG);
+      if(Loader.isModLoaded("fluidlogged_api"))
+         builder = builder.add(BlockFluidBase.FLUID_RENDER_PROPS.toArray(new IUnlistedProperty<?>[0]));
+      return builder.build();
    }
    
 
