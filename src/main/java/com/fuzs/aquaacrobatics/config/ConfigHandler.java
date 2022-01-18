@@ -16,6 +16,7 @@ public class ConfigHandler {
     @Config.Comment({"STANDARD - The player will occasionally be pushed out of certain spaces. Collisions are evaluated for full cubes only, non-full cubes are ignored. This is the default behavior up to Minecraft 1.12.", "APPROXIMATE - The player can move into more spaces, but will still be pushed out of some. Collisions are evaluated for full cubes only, non-full cubes are ignored.", "EXACT - The player can move into all spaces as expected. Collisions are evaluated for all types of cubes. This is the default behavior in Minecraft 1.13 and onwards."})
     public static PlayerBlockCollisions playerBlockCollisions = PlayerBlockCollisions.APPROXIMATE;
 
+    @SuppressWarnings("unused")
     @Config.Name("blocks")
     @Config.Comment("Block-related config options (must match server).")
     public static BlocksConfig blocksConfig;
@@ -63,6 +64,10 @@ public class ConfigHandler {
         @Config.Name("Seagrass")
         @Config.Comment("Allow seagrass to generate in the world.")
         public static boolean seagrass = false;
+
+        @Config.Name("Brighter Water")
+        @Config.Comment("Make water only reduce light level by 1 per Y-level, instead of 3.")
+        public static boolean brighterWater = true;
     }
 
     public static class MiscellaneousConfig {

@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -15,7 +16,7 @@ public abstract class BlockLiquidMixin extends Block {
     @Override
     @SuppressWarnings("deprecation")
     public int getLightOpacity(IBlockState state) {
-        if(state.getMaterial() == Material.WATER)
+        if(ConfigHandler.BlocksConfig.brighterWater && state.getMaterial() == Material.WATER)
             return 1;
         else
             return super.getLightOpacity(state);
