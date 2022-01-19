@@ -23,7 +23,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew --no-daemon -Pnet.minecraftforge.gradle.disableUpdateChecker=true setupCiWorkspace build
+      run: ./gradlew --no-daemon -Pnet.minecraftforge.gradle.disableUpdateChecker=true --refresh-dependencies setupCiWorkspace build
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
