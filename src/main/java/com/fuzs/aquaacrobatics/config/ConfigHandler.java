@@ -2,6 +2,7 @@ package com.fuzs.aquaacrobatics.config;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
+import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -91,6 +92,10 @@ public class ConfigHandler {
         @Config.Name("Custom Biome Water Colors")
         @Config.Comment("Allows overriding the water and fog colors for a biome. Specify each entry like this (without quotes) - 'modname:biome,color,fogcolor'")
         public static String[] customBiomeWaterColors = new String[] {};
+
+        @Config.Name("WorldProvider Fog Blacklist")
+        @Config.Comment("List of WorldProviders in which fog should be disabled.")
+        public static String[] providerFogBlacklist = new String[] { "thebetweenlands.common.world.WorldProviderBetweenlands" };
     }
 
     public static class IntegrationConfig {
@@ -144,6 +149,7 @@ public class ConfigHandler {
             ConfigManager.sync(AquaAcrobatics.MODID, Config.Type.INSTANCE);
         }
         BiomeWaterFogColors.recomputeColors();
+        FogHandler.recomputeBlacklist();
     }
 
     @SuppressWarnings("unused")
