@@ -35,7 +35,17 @@ public abstract class BiomeWaterFogColors {
             "biomesoplenty:quagmire,0x433721,0x0C0C03",
             "biomesoplenty:wetland,0x272179,0x0C031B",
             "biomesoplenty:bog,,",
-            "biomesoplenty:moor,,"
+            "biomesoplenty:moor,,",
+            "thebetweenlands:swamplands,1589792,1589792",
+            "thebetweenlands:swamplands_clearing,1589792,1589792",
+            "thebetweenlands:coarse_islands,1784132,1784132",
+            "thebetweenlands:deep_waters,1784132,1784132",
+            "thebetweenlands:marsh_0,4742680,4742680",
+            "thebetweenlands:marsh_1,4742680,4742680",
+            "thebetweenlands:patchy_islands,1589792,1589792",
+            "thebetweenlands:raised_isles,1784132,1784132",
+            "thebetweenlands:sludge_plains,3813131,3813131",
+            "thebetweenlands:sludge_plains_clearing,3813131,3813131",
     };
     
     private static void processStringColor(String colorEntry) {
