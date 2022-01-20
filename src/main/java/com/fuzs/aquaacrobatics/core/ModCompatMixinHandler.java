@@ -11,6 +11,9 @@ public class ModCompatMixinHandler {
         if(Loader.isModLoaded("galacticraftcore")) {
             Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.galacticraft.json");
         }
+        if(Loader.isModLoaded("thebetweenlands")) {
+            Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.betweenlands.json");
+        }
         AquaAcrobaticsCore.isModCompatLoaded = true;
     }
 }
