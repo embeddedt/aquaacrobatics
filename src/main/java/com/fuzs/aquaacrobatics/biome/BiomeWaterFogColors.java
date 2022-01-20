@@ -13,6 +13,7 @@ public abstract class BiomeWaterFogColors {
     public static final int DEFAULT_WATER_COLOR = 4159204;
 
     private static final int DEFAULT_WATER_COLOR_112 = 16777215;
+    private static final int PERCEIVED_WATER_COLOR_112 = 0x2b3bf4;
     private static final HashMap<ResourceLocation, Integer> fogColorMap = new HashMap<>();
     private static final HashMap<ResourceLocation, Integer> baseColorMap = new HashMap<>();
    
@@ -47,6 +48,19 @@ public abstract class BiomeWaterFogColors {
             "thebetweenlands:sludge_plains,3813131,3813131",
             "thebetweenlands:sludge_plains_clearing,3813131,3813131",
     };
+    
+    private static int emulateLegacyColor(int modColor) {
+        int modR = (modColor & 0xff0000);
+        int modG = (modColor & 0x00ff00);
+        int modB = (modColor & 0x0000ff);
+        int legacyR = (PERCEIVED_WATER_COLOR_112 & 0xff0000);
+        int legacyG = (PERCEIVED_WATER_COLOR_112 & 0x00ff00);
+        int legacyB = (PERCEIVED_WATER_COLOR_112 & 0xff0000);
+        int displayedR = (modR * legacyR) / 255;
+        int displayedG = (modG * legacyG) / 255;
+        int displayedB = (modB * legacyB) / 255;
+        return (displayedR << 16) | (displayedG << 8) | displayedB;
+    }
     
     private static void processStringColor(String colorEntry) {
         String[] fields = colorEntry.split(",", -1);
@@ -99,9 +113,12 @@ public abstract class BiomeWaterFogColors {
         if(color != null) {
             return color;
         }
-        if(oldColor != DEFAULT_WATER_COLOR_112)
-            AquaAcrobatics.LOGGER.info("Potentially missing water color mapping for " + location);
-        baseColorMap.put(location, DEFAULT_WATER_COLOR);
-        return DEFAULT_WATER_COLOR;
+        if(oldColor != DEFAULT_WATER_COLOR_112) {
+            AquaAcrobatics.LOGGER.info("Potentially missing water color mapping for " + location + ", attempting to fake old appearance");
+            color = emulateLegacyColor(oldColor);
+        } else
+            color = DEFAULT_WATER_COLOR;
+        baseColorMap.put(location, color);
+        return color;
     }
 }
