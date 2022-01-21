@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 
 public class IntegrationManager {
 
+    private static boolean isBetweenlandsLoaded;
     private static boolean isEnderIoLoaded;
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;
@@ -21,6 +22,7 @@ public class IntegrationManager {
     public static List<IElytraOpenHook> elytraOpenHooks = new LinkedList<>();
 
     public static void loadCompat() {
+        isBetweenlandsLoaded = Loader.isModLoaded("thebetweenlands");
         isEnderIoLoaded = Loader.isModLoaded("enderio");
         isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
         isMoBendsLoaded = Loader.isModLoaded("mobends");
@@ -29,6 +31,11 @@ public class IntegrationManager {
         isMorphLoaded = Loader.isModLoaded("morph");
         isHatsLoaded = Loader.isModLoaded("hats");
         isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
+    }
+
+    public static boolean isBetweenlandsEnabled() {
+
+        return isBetweenlandsLoaded && ConfigHandler.IntegrationConfig.betweenlandsIntegration;
     }
 
     public static boolean isEnderIoEnabled() {

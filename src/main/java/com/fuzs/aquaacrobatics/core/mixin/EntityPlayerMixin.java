@@ -6,6 +6,7 @@ import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
+import com.fuzs.aquaacrobatics.integration.betweenlands.BetweenlandsIntegration;
 import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
 import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaublesIntegration;
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
@@ -316,7 +317,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Override
     public boolean isPoseClear(Pose poseIn) {
-
+        if(poseIn == Pose.CROUCHING && IntegrationManager.isBetweenlandsEnabled() && BetweenlandsIntegration.couldPlayerPhase((EntityPlayer)(Object)this))
+            return true;
         return this.world.getCollisionBoxes(this, this.getBoundingBox(poseIn)).isEmpty();
     }
 

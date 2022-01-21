@@ -102,6 +102,11 @@ public class ConfigHandler {
 
         private static final String COMPAT_DESCRIPTION = "Only applies when the mod is installed. Disable when there are issues with the mod.";
 
+        @Config.Name("Betweenlands Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean betweenlandsIntegration = true;
+
         @Config.Name("Ender IO Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         @Config.RequiresMcRestart
