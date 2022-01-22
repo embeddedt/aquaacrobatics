@@ -50,12 +50,12 @@ public abstract class BiomeWaterFogColors {
     };
     
     private static int emulateLegacyColor(int modColor) {
-        int modR = (modColor & 0xff0000);
-        int modG = (modColor & 0x00ff00);
+        int modR = (modColor & 0xff0000) >> 16;
+        int modG = (modColor & 0x00ff00) >> 8;
         int modB = (modColor & 0x0000ff);
-        int legacyR = (PERCEIVED_WATER_COLOR_112 & 0xff0000);
-        int legacyG = (PERCEIVED_WATER_COLOR_112 & 0x00ff00);
-        int legacyB = (PERCEIVED_WATER_COLOR_112 & 0xff0000);
+        int legacyR = (PERCEIVED_WATER_COLOR_112 & 0xff0000) >> 16;
+        int legacyG = (PERCEIVED_WATER_COLOR_112 & 0x00ff00) >> 8;
+        int legacyB = (PERCEIVED_WATER_COLOR_112 & 0x0000ff);
         int displayedR = (modR * legacyR) / 255;
         int displayedG = (modG * legacyG) / 255;
         int displayedB = (modB * legacyB) / 255;
