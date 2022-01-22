@@ -49,6 +49,7 @@ public class ClientProxy extends CommonProxy {
     public void onPostInit() {
 
         super.onPostInit();
+        FogHandler.recomputeBlacklist();
         if (IntegrationManager.isMoBendsEnabled()) {
 
             MoBendsIntegration.register();

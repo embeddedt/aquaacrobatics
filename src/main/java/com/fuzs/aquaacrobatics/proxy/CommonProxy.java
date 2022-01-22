@@ -3,7 +3,6 @@ package com.fuzs.aquaacrobatics.proxy;
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
-import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.core.mixin.accessor.FluidAccessor;
@@ -50,7 +49,6 @@ public class CommonProxy {
             AquaAcrobatics.LOGGER.error("Please consider installing MixinBooter to ensure compatibility with more mods");
 
         BiomeWaterFogColors.recomputeColors();
-        FogHandler.recomputeBlacklist();
         // This code will print a warning if we don't have a color mapping for the biome
         /*
         for(Biome biome : Biome.REGISTRY) {
