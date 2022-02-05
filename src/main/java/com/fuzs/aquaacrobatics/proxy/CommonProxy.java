@@ -8,6 +8,7 @@ import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.core.mixin.accessor.FluidAccessor;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
+import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -24,11 +25,20 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @Mod.EventBusSubscriber
 public class CommonProxy {
     @GameRegistry.ObjectHolder("aquaacrobatics:bubble_column")
-    public static BlockBubbleColumn BUBBLE_COLUMN; 
+    public static BlockBubbleColumn BUBBLE_COLUMN;
+
+    private boolean needNetworking() {
+        return ConfigHandler.MovementConfig.enableToggleCrawling;
+    }
 
     public void onPreInit() {
-
         IntegrationManager.loadCompat();
+        if(needNetworking())
+            NetworkHandler.registerMessages(AquaAcrobatics.MODID);
+    }
+
+    public void onInit() {
+
     }
 
     @SubscribeEvent

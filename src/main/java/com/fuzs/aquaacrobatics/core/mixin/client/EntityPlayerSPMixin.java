@@ -5,6 +5,7 @@ import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
+import com.fuzs.aquaacrobatics.util.Keybindings;
 import com.fuzs.aquaacrobatics.util.MovementInputStorage;
 import com.fuzs.aquaacrobatics.util.math.AxisAlignedBBSpliterator;
 import com.mojang.authlib.GameProfile;

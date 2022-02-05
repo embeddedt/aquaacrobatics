@@ -59,6 +59,10 @@ public class ConfigHandler {
         @Config.Comment("Enables crawling to prevent suffocation. Note that if you disable this there will probably be behavioral differences from 1.13.")
         public static boolean enableCrawling = true;
 
+        @Config.Name("Enable Toggle Crawling")
+        @Config.Comment("Enables a keybind to toggle crawling.")
+        public static boolean enableToggleCrawling = false;
+
     }
 
     public static class BlocksConfig {

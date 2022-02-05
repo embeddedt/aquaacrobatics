@@ -12,6 +12,7 @@ import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaubles
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.MathHelper;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockLiquid;
@@ -53,6 +54,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private static final EntitySize STANDING_SIZE = EntitySize.flexible(0.6F, 1.8F);
     private static final Map<Pose, EntitySize> SIZE_BY_POSE = ImmutableMap.<Pose, EntitySize>builder().put(Pose.STANDING, STANDING_SIZE).put(Pose.SLEEPING, EntitySize.fixed(0.2F, 0.2F)).put(Pose.FALL_FLYING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SWIMMING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SPIN_ATTACK, EntitySize.flexible(0.6F, 0.6F)).put(Pose.CROUCHING, EntitySize.flexible(0.6F, 1.5F)).put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F)).build();
     private static final DataParameter<Pose> POSE = EntityDataManager.createKey(EntityPlayer.class, PoseSerializer.POSE);
+    private static final DataParameter<Boolean> TOGGLED_CRAWLING = EntityDataManager.createKey(EntityPlayer.class, DataSerializers.BOOLEAN);
 
     @Shadow
     public PlayerCapabilities capabilities;
@@ -87,6 +89,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         this.size = EntitySize.flexible(0.6F, 1.8F);
         this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
         this.dataManager.register(POSE, Pose.STANDING);
+        if (ConfigHandler.MovementConfig.enableToggleCrawling) {
+            this.dataManager.register(TOGGLED_CRAWLING, false);
+        }
     }
 
     @Override
@@ -139,6 +144,22 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
     }
 
+    @Override
+    public boolean canForceCrawling() {
+        return ConfigHandler.MovementConfig.enableToggleCrawling && !this.isRiding() && !this.capabilities.isFlying && !this.isOnLadder();
+    }
+
+    @Override
+    public boolean isForcingCrawling() {
+        return this.canForceCrawling() && this.dataManager.get(TOGGLED_CRAWLING);
+    }
+
+    @Override
+    public void setForcingCrawling(boolean flag) {
+        if(!this.canForceCrawling())
+            return;
+        this.dataManager.set(TOGGLED_CRAWLING, flag);
+    }
 
     @Override
     public boolean canSwim() {
@@ -362,7 +383,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             if (IntegrationManager.isWingsEnabled() ? WingsIntegration.onFlightCheck(this.getPlayer(), this.isElytraFlying()) : this.isElytraFlying()) {
 
                 pose = Pose.FALL_FLYING;
-            } else if (this.isSwimming()) {
+            } else if (this.isForcingCrawling() || this.isSwimming()) {
 
                 pose = Pose.SWIMMING;
                 // otherwise unable to sneak on client when there is not enough space for the pose, but actual player size is smaller
