@@ -78,6 +78,7 @@ dependencies {
     deobfProvided "curse.maven:thaumicaugmentation-319441:3536155:"
     deobfProvided "curse.maven:trinketsandbaubles-279900:3575174:"
     deobfProvided "curse.maven:wings-302584:2829351:"
+    deobfProvided "curse.maven:xaerosminimap-263420:3630494:"
     deobfCompile "curse.maven:mixinbooter-419286:3575119:"
     compileOnly files('deps/GalacticraftCore-1.12.2-4.0.2.280-deobf.jar')
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')

@@ -14,6 +14,9 @@ public class ModCompatMixinHandler {
         if(Loader.isModLoaded("journeymap")) {
             Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.journeymap.json");
         }
+        if(Loader.isModLoaded("xaerominimap")) {
+            Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.xaerosminimap.json");
+        }
         AquaAcrobaticsCore.isModCompatLoaded = true;
     }
 }
