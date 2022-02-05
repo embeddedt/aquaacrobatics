@@ -11,6 +11,9 @@ public class ModCompatMixinHandler {
         if(Loader.isModLoaded("galacticraftcore")) {
             Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.galacticraft.json");
         }
+        if(Loader.isModLoaded("journeymap")) {
+            Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.journeymap.json");
+        }
         AquaAcrobaticsCore.isModCompatLoaded = true;
     }
 }
