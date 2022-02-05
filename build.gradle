@@ -74,6 +74,7 @@ dependencies {
     deobfProvided "curse.maven:hats-229073:2960397:"
     deobfProvided "curse.maven:mobends-231347:3573346:"
     deobfProvided "curse.maven:morph-229080:2995522:"
+    deobfProvided "curse.maven:thaumicaugmentation-319441:3536155:"
     deobfProvided "curse.maven:trinketsandbaubles-279900:3575174:"
     deobfProvided "curse.maven:wings-302584:2829351:"
     deobfCompile "curse.maven:mixinbooter-419286:3575119:"

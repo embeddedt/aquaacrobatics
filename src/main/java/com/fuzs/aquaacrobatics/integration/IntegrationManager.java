@@ -17,6 +17,7 @@ public class IntegrationManager {
     private static boolean isArtemisLibLoaded;
     private static boolean isMorphLoaded;
     private static boolean isHatsLoaded;
+    private static boolean isThaumicAugmentationLoaded;
     private static boolean isTrinketsAndBaublesLoaded;
     
     public static List<IElytraOpenHook> elytraOpenHooks = new LinkedList<>();
@@ -30,6 +31,7 @@ public class IntegrationManager {
         isArtemisLibLoaded = Loader.isModLoaded("artemislib");
         isMorphLoaded = Loader.isModLoaded("morph");
         isHatsLoaded = Loader.isModLoaded("hats");
+        isThaumicAugmentationLoaded = Loader.isModLoaded("thaumicaugmentation");
         isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
     }
 
@@ -71,6 +73,11 @@ public class IntegrationManager {
     public static boolean isHatsEnabled() {
 
         return isHatsLoaded && ConfigHandler.IntegrationConfig.hatsIntegration;
+    }
+
+    public static boolean isThaumicAugmentationEnabled() {
+
+        return isThaumicAugmentationLoaded && ConfigHandler.IntegrationConfig.thaumicAugmentationIntegration;
     }
 
     public static boolean isTrinketsAndBaublesEnabled() {

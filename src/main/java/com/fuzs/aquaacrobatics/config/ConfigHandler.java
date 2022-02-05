@@ -139,6 +139,10 @@ public class ConfigHandler {
         @Config.RequiresMcRestart
         public static boolean hatsIntegration = true;
 
+        @Config.Name("Thaumic Augmentation Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean thaumicAugmentationIntegration = true;
+
         @Config.Name("Trinkets and Baubles Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean trinketsAndBaublesIntegration = true;
