@@ -7,11 +7,13 @@ import org.lwjgl.input.Keyboard;
 
 public class Keybindings
 {
-    public static KeyBinding forceCrawling = new KeyBinding("key.aquaacrobatics.toggle_crawling", Keyboard.KEY_C, "key.aquaacrobatics.category");
+    public static KeyBinding forceCrawling = null;
 
     public static void register()
     {
-        if(ConfigHandler.MovementConfig.enableToggleCrawling)
+        if(ConfigHandler.MovementConfig.enableToggleCrawling) {
+            forceCrawling = new KeyBinding("key.aquaacrobatics.toggle_crawling", Keyboard.KEY_C, "key.aquaacrobatics.category");
             ClientRegistry.registerKeyBinding(forceCrawling);
+        }
     }
 }
