@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.xaerosminimap.mixin.client;
 
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -16,7 +17,7 @@ public class MinimapWriterMixin {
     @Redirect(method = "loadBlockColourFromTexture", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockModelShapes;getTexture(Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"))
     private TextureAtlasSprite useWaterTexture(BlockModelShapes instance, IBlockState state) {
         Block block = state.getBlock();
-        if(block == Blocks.WATER || block == Blocks.FLOWING_WATER)
+        if(ConfigHandler.BlocksConfig.newWaterColors && (block == Blocks.WATER || block == Blocks.FLOWING_WATER))
             return FMLClientHandler.instance().getClient().getTextureMapBlocks().getAtlasSprite("aquaacrobatics:blocks/water_still");
         else
             return instance.getTexture(state);

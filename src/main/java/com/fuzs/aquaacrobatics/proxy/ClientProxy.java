@@ -17,6 +17,7 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -54,9 +55,19 @@ public class ClientProxy extends CommonProxy {
     
     @SubscribeEvent
     public static void registerTextures(TextureStitchEvent.Pre event) {
-        TextureMap map = event.getMap();
-        map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_still"));
-        map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_flow"));
+        if(ConfigHandler.BlocksConfig.newWaterColors) {
+            TextureMap map = event.getMap();
+            /* Register the custom 1.13-style texture used by most in-world renderers */
+            map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_still"));
+            map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_flow"));
+            /* Register the compatibility sprites provided for mods which expect a blue texture */
+            TextureAtlasSprite blueStill = map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_still_blue"));
+            TextureAtlasSprite blueFlow = map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_flow_blue"));
+            TextureAtlasSprite newOverlay = map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_overlay"));
+            map.mapRegisteredSprites.put("minecraft:blocks/water_still", blueStill);
+            map.mapRegisteredSprites.put("minecraft:blocks/water_flow", blueFlow);
+            map.mapRegisteredSprites.put("minecraft:blocks/water_overlay", newOverlay);
+        }
     }
 
     @SubscribeEvent

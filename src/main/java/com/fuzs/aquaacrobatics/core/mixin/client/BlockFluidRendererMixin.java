@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BlockFluidRenderer;
@@ -23,7 +24,11 @@ public class BlockFluidRendererMixin {
             constant = @Constant(stringValue = "minecraft:blocks/water_still")
     )
     private String getWaterStillTexture(String old) {
-        return "aquaacrobatics:blocks/water_still";
+        System.out.println(ConfigHandler.BlocksConfig.newWaterColors);
+        if(ConfigHandler.BlocksConfig.newWaterColors)
+            return "aquaacrobatics:blocks/water_still";
+        else
+            return old;
     }
 
     @ModifyConstant(
@@ -31,7 +36,10 @@ public class BlockFluidRendererMixin {
             constant = @Constant(stringValue = "minecraft:blocks/water_flow")
     )
     private String getWaterFlowTexture(String old) {
-        return "aquaacrobatics:blocks/water_flow";
+        if(ConfigHandler.BlocksConfig.newWaterColors)
+            return "aquaacrobatics:blocks/water_flow";
+        else
+            return old;
     }
     
 

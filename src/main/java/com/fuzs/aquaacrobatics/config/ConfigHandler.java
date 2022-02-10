@@ -73,6 +73,14 @@ public class ConfigHandler {
         @Config.Name("Brighter Water")
         @Config.Comment("Make water only reduce light level by 1 per Y-level, instead of 3.")
         public static boolean brighterWater = true;
+
+        @Config.Name("New Water")
+        @Config.Comment("Use the new water rendering in 1.13+.")
+        public static boolean newWaterColors = true;
+
+        @Config.Name("New Water Fog")
+        @Config.Comment("Use the new fog rendering in 1.13+.")
+        public static boolean newWaterFog = true;
     }
 
     public static class MiscellaneousConfig {

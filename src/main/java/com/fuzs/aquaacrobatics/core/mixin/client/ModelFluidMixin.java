@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.mixin.client;
 
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelFluid;
 import net.minecraftforge.fluids.Fluid;
@@ -11,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ModelFluid.class)
 public class ModelFluidMixin {
     private ResourceLocation aqua$getRealStill(Fluid fluid) {
-        if(fluid == FluidRegistry.WATER)
+        if(ConfigHandler.BlocksConfig.newWaterColors && fluid == FluidRegistry.WATER)
             return new ResourceLocation("aquaacrobatics:blocks/water_still");
         else
             return fluid.getStill();
     }
 
     private ResourceLocation aqua$getRealFlowing(Fluid fluid) {
-        if(fluid == FluidRegistry.WATER)
+        if(ConfigHandler.BlocksConfig.newWaterColors && fluid == FluidRegistry.WATER)
             return new ResourceLocation("aquaacrobatics:blocks/water_flow");
         else
             return fluid.getFlowing();

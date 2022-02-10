@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.core.journeymap.mixin.client;
 
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import journeymap.client.cartography.color.ColoredSprite;
 import journeymap.client.mod.vanilla.VanillaBlockSpriteProxy;
 import journeymap.client.model.BlockMD;
@@ -27,7 +28,7 @@ public class VanillaBlockSpriteProxyMixin {
     )
     private void getSprites(BlockMD blockMD, ChunkMD facing, BlockPos state, CallbackInfoReturnable<Collection<ColoredSprite>> cir) {
         Block block = blockMD.getBlockState().getBlock();
-        if(block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
+        if(ConfigHandler.BlocksConfig.newWaterColors && (block == Blocks.WATER || block == Blocks.FLOWING_WATER)) {
             TextureAtlasSprite tas = FMLClientHandler.instance().getClient().getTextureMapBlocks().getAtlasSprite("aquaacrobatics:blocks/water_still");
             cir.setReturnValue(Collections.singletonList(new ColoredSprite(tas, null)));
         }

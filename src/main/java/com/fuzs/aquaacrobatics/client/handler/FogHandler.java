@@ -51,6 +51,8 @@ public class FogHandler {
     }
     
     private boolean shouldSkipFogOverride(World world) {
+        if(!ConfigHandler.BlocksConfig.newWaterFog)
+            return true;
         return worldProviderClassNames.contains(world.provider.getClass().getName());
     }
 
@@ -92,6 +94,8 @@ public class FogHandler {
     /* LOW to override mods like Biomes O' Plenty which force their own underwater fog color */
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderFogColor(EntityViewRenderEvent.FogColors event) {
+        if(!ConfigHandler.BlocksConfig.newWaterColors)
+            return;
         Block blockInside = event.getState().getBlock();
         if((event.getState().getMaterial() == Material.WATER) && event.getEntity() instanceof EntityPlayer && !shouldSkipFogOverride(event.getEntity().getEntityWorld())) {
             float fogRed, fogGreen, fogBlue;
