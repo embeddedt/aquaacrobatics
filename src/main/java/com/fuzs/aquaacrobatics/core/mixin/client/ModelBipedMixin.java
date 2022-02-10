@@ -43,9 +43,6 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
 
     @Unique
     public float swimAnimation;
-    
-    @Unique
-    private int startingUseCount;
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBiped;setRotationAngles(FFFFFFLnet/minecraft/entity/Entity;)V"))
     public void setRotationAngles(ModelBiped modelBiped, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
@@ -80,8 +77,7 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
         EntityLivingBase livingEntityIn = (EntityLivingBase) entityIn;
         int inUseCount = livingEntityIn.getItemInUseCount();
         if (livingEntityIn.isHandActive() && inUseCount > 0) {
-            if(startingUseCount == 0)
-                startingUseCount = inUseCount;
+
             EnumHand hand = livingEntityIn.getActiveHand();
             ItemStack stack = livingEntityIn.getHeldItem(hand);
             EnumHandSide handSide = livingEntityIn.getPrimaryHand();
@@ -90,7 +86,7 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
                 boolean isRight = (hand == EnumHand.MAIN_HAND ? handSide : handSide.opposite()) == EnumHandSide.RIGHT;
                 float partialTicks = (float) MathHelper.frac(ageInTicks);
                 float animationCount = inUseCount - partialTicks + 1.0F;
-                float useRatio = animationCount / (float) startingUseCount;
+                float useRatio = animationCount / (float) stack.getMaxItemUseDuration();
                 float f = 1.0F - (float) Math.pow(useRatio, 27.0D);
                 if (useRatio < 0.8F) {
 
@@ -101,8 +97,7 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
                 bipedArm.rotateAngleX = f * (bipedArm.rotateAngleX * 0.5F - ((float) Math.PI * 4.0F / 10.0F));
                 bipedArm.rotateAngleY = f * (float) Math.PI / 6F * (isRight ? -1.0F : 1.0F);
             }
-        } else
-            startingUseCount = 0;
+        }
     }
 
     @Inject(method = "setRotationAngles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBiped;copyModelAngles(Lnet/minecraft/client/model/ModelRenderer;Lnet/minecraft/client/model/ModelRenderer;)V"), cancellable = true)
