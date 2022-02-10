@@ -24,7 +24,6 @@ public class BlockFluidRendererMixin {
             constant = @Constant(stringValue = "minecraft:blocks/water_still")
     )
     private String getWaterStillTexture(String old) {
-        System.out.println(ConfigHandler.BlocksConfig.newWaterColors);
         if(ConfigHandler.BlocksConfig.newWaterColors)
             return "aquaacrobatics:blocks/water_still";
         else
