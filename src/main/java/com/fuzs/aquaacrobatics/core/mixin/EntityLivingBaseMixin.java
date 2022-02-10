@@ -1,21 +1,32 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
+import com.fuzs.aquaacrobatics.entity.IEntityLivingBaseHelper;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("unused")
 @Mixin(EntityLivingBase.class)
-public abstract class EntityLivingBaseMixin extends Entity {
+public abstract class EntityLivingBaseMixin extends Entity implements IEntityLivingBaseHelper {
+
+    @Shadow public int activeItemStackUseCount;
+
+    @Unique private float aqua$trueUseDuration;
 
     public EntityLivingBaseMixin(World worldIn) {
 
@@ -55,5 +66,15 @@ public abstract class EntityLivingBaseMixin extends Entity {
             return Math.min(oldAirValue + 4, 300);
         }
         return original;
+    }
+
+    @Inject(method = "setActiveHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/entity/EntityLivingBase;activeItemStackUseCount:I", shift = At.Shift.AFTER))
+    private void storeTrueUseDuration(EnumHand duration, CallbackInfo ci) {
+        aqua$trueUseDuration = this.activeItemStackUseCount;
+    }
+
+    @Override
+    public float getTrueMaxItemUseDuration() {
+        return aqua$trueUseDuration;
     }
 }

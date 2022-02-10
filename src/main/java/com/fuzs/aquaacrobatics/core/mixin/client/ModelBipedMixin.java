@@ -2,6 +2,7 @@ package com.fuzs.aquaacrobatics.core.mixin.client;
 
 import com.fuzs.aquaacrobatics.client.model.IModelBipedSwimming;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
+import com.fuzs.aquaacrobatics.entity.IEntityLivingBaseHelper;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
 import net.minecraft.util.math.MathHelper;
@@ -86,7 +87,10 @@ public abstract class ModelBipedMixin extends ModelBase implements IModelBipedSw
                 boolean isRight = (hand == EnumHand.MAIN_HAND ? handSide : handSide.opposite()) == EnumHandSide.RIGHT;
                 float partialTicks = (float) MathHelper.frac(ageInTicks);
                 float animationCount = inUseCount - partialTicks + 1.0F;
-                float useRatio = animationCount / (float) stack.getMaxItemUseDuration();
+                float maxDuration = Math.max(0, ((IEntityLivingBaseHelper)livingEntityIn).getTrueMaxItemUseDuration());
+                while(animationCount > maxDuration)
+                    animationCount -= maxDuration;
+                float useRatio = animationCount / maxDuration;
                 float f = 1.0F - (float) Math.pow(useRatio, 27.0D);
                 if (useRatio < 0.8F) {
 
