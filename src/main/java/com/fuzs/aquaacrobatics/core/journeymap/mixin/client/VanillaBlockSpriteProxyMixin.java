@@ -24,7 +24,8 @@ public class VanillaBlockSpriteProxyMixin {
             method = "getSprites(Ljourneymap/client/model/BlockMD;Ljourneymap/client/model/ChunkMD;Lnet/minecraft/util/math/BlockPos;)Ljava/util/Collection;",
             at = @At("HEAD"),
             cancellable = true,
-            remap = false
+            remap = false,
+            require = 0 /* not all JourneyMaps have this method */
     )
     private void getSprites(BlockMD blockMD, ChunkMD facing, BlockPos state, CallbackInfoReturnable<Collection<ColoredSprite>> cir) {
         Block block = blockMD.getBlockState().getBlock();
