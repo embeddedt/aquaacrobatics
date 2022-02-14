@@ -1,4 +1,4 @@
-package com.fuzs.aquaacrobatics.core.journeymap.mixin.client;
+package com.fuzs.aquaacrobatics.core.journeymap57.mixin.client;
 
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import journeymap.client.cartography.color.ColoredSprite;
