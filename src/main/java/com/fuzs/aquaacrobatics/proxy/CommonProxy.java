@@ -19,6 +19,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -31,7 +32,7 @@ public class CommonProxy {
         return ConfigHandler.MovementConfig.enableToggleCrawling;
     }
 
-    public void onPreInit() {
+    public void onPreInit(FMLPreInitializationEvent event) {
         IntegrationManager.loadCompat();
         if(needNetworking())
             NetworkHandler.registerMessages(AquaAcrobatics.MODID);

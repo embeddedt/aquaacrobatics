@@ -3,6 +3,7 @@ package com.fuzs.aquaacrobatics.proxy;
 import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
 import com.fuzs.aquaacrobatics.client.handler.AirMeterHandler;
 import com.fuzs.aquaacrobatics.client.handler.FogHandler;
+import com.fuzs.aquaacrobatics.client.model.WaterResourcePack;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
@@ -17,20 +18,24 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -38,11 +43,17 @@ import java.util.Map;
 public class ClientProxy extends CommonProxy {
 
     @Override
-    public void onPreInit() {
+    public void onPreInit(FMLPreInitializationEvent event) {
 
-        super.onPreInit();
+        super.onPreInit(event);
         MinecraftForge.EVENT_BUS.register(new AirMeterHandler());
         MinecraftForge.EVENT_BUS.register(new FogHandler());
+
+        if(ConfigHandler.BlocksConfig.newWaterColors) {
+            List<IResourcePack> packs = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "field_110449_ao");
+            packs.add(new WaterResourcePack(event.getSourceFile()));
+            FMLClientHandler.instance().refreshResources(VanillaResourceType.TEXTURES);
+        }
     }
 
     @Override
@@ -63,14 +74,6 @@ public class ClientProxy extends CommonProxy {
             /* Register the custom 1.13-style texture used by most in-world renderers */
             map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_still"));
             map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_flow"));
-            /* Register the compatibility sprites provided for mods which expect a blue texture */
-            TextureAtlasSprite blueStill = map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_still_blue"));
-            TextureAtlasSprite blueFlow = map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_flow_blue"));
-            TextureAtlasSprite newOverlay = map.registerSprite(new ResourceLocation("aquaacrobatics:blocks/water_overlay"));
-            Map<String, TextureAtlasSprite> mapRegisteredSprites = ObfuscationReflectionHelper.getPrivateValue(TextureMap.class, map, "field_110574_e");
-            mapRegisteredSprites.put("minecraft:blocks/water_still", blueStill);
-            mapRegisteredSprites.put("minecraft:blocks/water_flow", blueFlow);
-            mapRegisteredSprites.put("minecraft:blocks/water_overlay", newOverlay);
         }
     }
 

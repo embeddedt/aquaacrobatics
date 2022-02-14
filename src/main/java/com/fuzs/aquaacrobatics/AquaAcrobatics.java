@@ -37,7 +37,7 @@ public class AquaAcrobatics {
 
         if (AquaAcrobaticsCore.isLoaded()) {
 
-            proxy.onPreInit();
+            proxy.onPreInit(evt);
         }
     }
 
