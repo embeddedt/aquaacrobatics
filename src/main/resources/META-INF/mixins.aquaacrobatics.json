@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "package": "com.fuzs.aquaacrobatics.core.mixin",
   "refmap": "mixins.aquaacrobatics.refmap.json",
+  "plugin": "com.fuzs.aquaacrobatics.core.AquaAcrobaticsMixinPlugin",
   "mixins": [
     "EntityBoatMixin",
     "EntityItemMixin",
@@ -12,6 +13,7 @@
     "EntityMixin",
     "EntityLivingBaseMixin",
     "NetHandlerPlayServerMixin",
+    "BiomeMixin",
     "BlockGrassMixin",
     "BlockLiquidMixin",
     "BlockMagmaMixin",
@@ -20,12 +22,12 @@
     "accessor.IEventBusAccessor"
   ],
   "client": [
-    "client.BiomeMixin",
     "client.BlockFluidRendererMixin",
     "client.EntityPlayerSPMixin",
     "client.EntityRendererMixin",
     "client.ItemRendererMixin",
     "client.ModelBipedMixin",
+    "client.ModelFluidMixin",
     "client.RenderBoatMixin",
     "client.RenderPlayerMixin",
     "client.PlayerControllerMPMixin"

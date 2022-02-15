@@ -18,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -28,6 +29,8 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Uses Forge events to adjust water rendering so it more closely approximates 1.13+.
@@ -39,6 +42,19 @@ public class FogHandler {
     private int targetFogColor = -1;
     private int prevFogColor = -1;
     private long fogAdjustTime = -1L;
+    
+    private static HashSet<String> worldProviderClassNames = null;
+    
+    public static void recomputeBlacklist() {
+        worldProviderClassNames = new HashSet<>();
+        worldProviderClassNames.addAll(Arrays.asList(ConfigHandler.MiscellaneousConfig.providerFogBlacklist));
+    }
+    
+    private boolean shouldSkipFogOverride(World world) {
+        if(!ConfigHandler.BlocksConfig.newWaterFog)
+            return true;
+        return worldProviderClassNames.contains(world.provider.getClass().getName());
+    }
 
     @SubscribeEvent
     public void registerBlockColors(ColorHandlerEvent.Block event){
@@ -58,7 +74,7 @@ public class FogHandler {
         Entity eventEntity = event.getEntity();
         if(eventEntity instanceof EntityLivingBase && ((EntityLivingBase)eventEntity).isPotionActive(MobEffects.BLINDNESS))
             return;
-        if(event.getState().getMaterial() == Material.WATER) {
+        if(event.getState().getMaterial() == Material.WATER && !shouldSkipFogOverride(eventEntity.getEntityWorld())) {
             GlStateManager.setFog(GlStateManager.FogMode.EXP2);
             float density = 0.05f;
             if(eventEntity instanceof EntityPlayer) {
@@ -78,8 +94,10 @@ public class FogHandler {
     /* LOW to override mods like Biomes O' Plenty which force their own underwater fog color */
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderFogColor(EntityViewRenderEvent.FogColors event) {
+        if(!ConfigHandler.BlocksConfig.newWaterColors)
+            return;
         Block blockInside = event.getState().getBlock();
-        if((event.getState().getMaterial() == Material.WATER) && event.getEntity() instanceof EntityPlayer) {
+        if((event.getState().getMaterial() == Material.WATER) && event.getEntity() instanceof EntityPlayer && !shouldSkipFogOverride(event.getEntity().getEntityWorld())) {
             float fogRed, fogGreen, fogBlue;
             EntityPlayer playerEntity = (EntityPlayer) event.getEntity();
             long i = System.nanoTime() / 1000000L;

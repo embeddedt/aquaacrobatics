@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
         name = AquaAcrobatics.NAME,
         version = AquaAcrobatics.VERSION,
         acceptedMinecraftVersions = "[1.12.2]",
+        acceptableRemoteVersions = "*",
         dependencies = "before:mobends@(0.24,)"
 )
 public class AquaAcrobatics {
@@ -39,13 +40,12 @@ public class AquaAcrobatics {
 
         if (AquaAcrobaticsCore.isLoaded()) {
 
-            proxy.onPreInit();
+            proxy.onPreInit(evt);
         }
     }
 
     @Mod.EventHandler
     public void onInit(final FMLInitializationEvent evt) {
-
         if (AquaAcrobaticsCore.isLoaded()) {
 
             proxy.onInit();

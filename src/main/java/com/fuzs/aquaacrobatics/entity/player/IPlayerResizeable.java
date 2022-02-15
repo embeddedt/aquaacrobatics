@@ -48,4 +48,10 @@ public interface IPlayerResizeable {
 
     float getSwimAnimation(float partialTicks);
 
+    boolean canForceCrawling();
+
+    boolean isForcingCrawling();
+
+    void setForcingCrawling(boolean flag);
+
 }

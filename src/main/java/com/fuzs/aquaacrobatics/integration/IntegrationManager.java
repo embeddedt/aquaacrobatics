@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 
 public class IntegrationManager {
 
+    private static boolean isBetweenlandsLoaded;
     private static boolean isEnderIoLoaded;
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;
@@ -16,11 +17,13 @@ public class IntegrationManager {
     private static boolean isArtemisLibLoaded;
     private static boolean isMorphLoaded;
     private static boolean isHatsLoaded;
+    private static boolean isThaumicAugmentationLoaded;
     private static boolean isTrinketsAndBaublesLoaded;
     
     public static List<IElytraOpenHook> elytraOpenHooks = new LinkedList<>();
 
     public static void loadCompat() {
+        isBetweenlandsLoaded = Loader.isModLoaded("thebetweenlands");
         isEnderIoLoaded = Loader.isModLoaded("enderio");
         isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
         isMoBendsLoaded = Loader.isModLoaded("mobends");
@@ -28,7 +31,13 @@ public class IntegrationManager {
         isArtemisLibLoaded = Loader.isModLoaded("artemislib");
         isMorphLoaded = Loader.isModLoaded("morph");
         isHatsLoaded = Loader.isModLoaded("hats");
+        isThaumicAugmentationLoaded = Loader.isModLoaded("thaumicaugmentation");
         isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
+    }
+
+    public static boolean isBetweenlandsEnabled() {
+
+        return isBetweenlandsLoaded && ConfigHandler.IntegrationConfig.betweenlandsIntegration;
     }
 
     public static boolean isEnderIoEnabled() {
@@ -64,6 +73,11 @@ public class IntegrationManager {
     public static boolean isHatsEnabled() {
 
         return isHatsLoaded && ConfigHandler.IntegrationConfig.hatsIntegration;
+    }
+
+    public static boolean isThaumicAugmentationEnabled() {
+
+        return isThaumicAugmentationLoaded && ConfigHandler.IntegrationConfig.thaumicAugmentationIntegration;
     }
 
     public static boolean isTrinketsAndBaublesEnabled() {

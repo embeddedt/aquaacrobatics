@@ -2,6 +2,7 @@ package com.fuzs.aquaacrobatics.config;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
+import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -16,6 +17,7 @@ public class ConfigHandler {
     @Config.Comment({"STANDARD - The player will occasionally be pushed out of certain spaces. Collisions are evaluated for full cubes only, non-full cubes are ignored. This is the default behavior up to Minecraft 1.12.", "APPROXIMATE - The player can move into more spaces, but will still be pushed out of some. Collisions are evaluated for full cubes only, non-full cubes are ignored.", "EXACT - The player can move into all spaces as expected. Collisions are evaluated for all types of cubes. This is the default behavior in Minecraft 1.13 and onwards."})
     public static PlayerBlockCollisions playerBlockCollisions = PlayerBlockCollisions.APPROXIMATE;
 
+    @SuppressWarnings("unused")
     @Config.Name("blocks")
     @Config.Comment("Block-related config options (must match server).")
     public static BlocksConfig blocksConfig;
@@ -57,12 +59,28 @@ public class ConfigHandler {
         @Config.Comment("Enables crawling to prevent suffocation. Note that if you disable this there will probably be behavioral differences from 1.13.")
         public static boolean enableCrawling = true;
 
+        @Config.Name("Enable Toggle Crawling")
+        @Config.Comment("Enables a keybind to toggle crawling.")
+        public static boolean enableToggleCrawling = false;
+
     }
 
     public static class BlocksConfig {
         @Config.Name("Seagrass")
         @Config.Comment("Allow seagrass to generate in the world.")
         public static boolean seagrass = false;
+
+        @Config.Name("Brighter Water")
+        @Config.Comment("Make water only reduce light level by 1 per Y-level, instead of 3.")
+        public static boolean brighterWater = true;
+
+        @Config.Name("New Water")
+        @Config.Comment("Use the new water rendering in 1.13+.")
+        public static boolean newWaterColors = true;
+
+        @Config.Name("New Water Fog")
+        @Config.Comment("Use the new fog rendering in 1.13+.")
+        public static boolean newWaterFog = true;
     }
 
     public static class MiscellaneousConfig {
@@ -91,11 +109,20 @@ public class ConfigHandler {
         @Config.Name("Custom Biome Water Colors")
         @Config.Comment("Allows overriding the water and fog colors for a biome. Specify each entry like this (without quotes) - 'modname:biome,color,fogcolor'")
         public static String[] customBiomeWaterColors = new String[] {};
+
+        @Config.Name("WorldProvider Fog Blacklist")
+        @Config.Comment("List of WorldProviders in which fog should be disabled.")
+        public static String[] providerFogBlacklist = new String[] { "thebetweenlands.common.world.WorldProviderBetweenlands" };
     }
 
     public static class IntegrationConfig {
 
         private static final String COMPAT_DESCRIPTION = "Only applies when the mod is installed. Disable when there are issues with the mod.";
+
+        @Config.Name("Betweenlands Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean betweenlandsIntegration = true;
 
         @Config.Name("Ender IO Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
@@ -129,6 +156,10 @@ public class ConfigHandler {
         @Config.RequiresMcRestart
         public static boolean hatsIntegration = true;
 
+        @Config.Name("Thaumic Augmentation Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean thaumicAugmentationIntegration = true;
+
         @Config.Name("Trinkets and Baubles Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean trinketsAndBaublesIntegration = true;
@@ -144,6 +175,7 @@ public class ConfigHandler {
             ConfigManager.sync(AquaAcrobatics.MODID, Config.Type.INSTANCE);
         }
         BiomeWaterFogColors.recomputeColors();
+        FogHandler.recomputeBlacklist();
     }
 
     @SuppressWarnings("unused")

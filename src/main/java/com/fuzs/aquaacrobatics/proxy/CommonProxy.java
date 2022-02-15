@@ -8,16 +8,14 @@ import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import com.fuzs.aquaacrobatics.item.DriedKelpItem;
+import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.terraingen.BiomeEvent;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -36,8 +34,14 @@ public class CommonProxy {
     public static ItemBlock itemSeagrass;
     public static Item itemDriedKelp;
 
-    public void onPreInit() {
+    private boolean needNetworking() {
+        return ConfigHandler.MovementConfig.enableToggleCrawling;
+    }
+
+    public void onPreInit(FMLPreInitializationEvent event) {
         IntegrationManager.loadCompat();
+        if(needNetworking())
+            NetworkHandler.registerMessages(AquaAcrobatics.MODID);
         if(ConfigHandler.MiscellaneousConfig.aquaticWorldContent) {
             blockDriedKelp = new DriedKelpBlock();
             itemDriedKelpBlock = new DriedKelpItemBlock();
@@ -59,6 +63,7 @@ public class CommonProxy {
     }
     
     public void onInit() {
+
         if(ConfigHandler.MiscellaneousConfig.aquaticWorldContent) {
             GameRegistry.addSmelting(itemKelp, new ItemStack(itemDriedKelp), 0.1f);
         }
@@ -81,7 +86,6 @@ public class CommonProxy {
         if(!AquaAcrobaticsCore.isModCompatLoaded)
             AquaAcrobatics.LOGGER.error("Please consider installing MixinBooter to ensure compatibility with more mods");
 
-        FluidRegistry.WATER.setColor(BiomeWaterFogColors.DEFAULT_WATER_COLOR);
         BiomeWaterFogColors.recomputeColors();
         // This code will print a warning if we don't have a color mapping for the biome
         /*

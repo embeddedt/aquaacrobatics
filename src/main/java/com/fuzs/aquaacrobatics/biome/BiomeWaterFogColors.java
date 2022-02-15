@@ -13,6 +13,7 @@ public abstract class BiomeWaterFogColors {
     public static final int DEFAULT_WATER_COLOR = 4159204;
 
     private static final int DEFAULT_WATER_COLOR_112 = 16777215;
+    private static final int PERCEIVED_WATER_COLOR_112 = 0x2b3bf4;
     private static final HashMap<ResourceLocation, Integer> fogColorMap = new HashMap<>();
     private static final HashMap<ResourceLocation, Integer> baseColorMap = new HashMap<>();
    
@@ -35,8 +36,31 @@ public abstract class BiomeWaterFogColors {
             "biomesoplenty:quagmire,0x433721,0x0C0C03",
             "biomesoplenty:wetland,0x272179,0x0C031B",
             "biomesoplenty:bog,,",
-            "biomesoplenty:moor,,"
+            "biomesoplenty:moor,,",
+            "thebetweenlands:swamplands,1589792,1589792",
+            "thebetweenlands:swamplands_clearing,1589792,1589792",
+            "thebetweenlands:coarse_islands,1784132,1784132",
+            "thebetweenlands:deep_waters,1784132,1784132",
+            "thebetweenlands:marsh_0,4742680,4742680",
+            "thebetweenlands:marsh_1,4742680,4742680",
+            "thebetweenlands:patchy_islands,1589792,1589792",
+            "thebetweenlands:raised_isles,1784132,1784132",
+            "thebetweenlands:sludge_plains,3813131,3813131",
+            "thebetweenlands:sludge_plains_clearing,3813131,3813131",
     };
+    
+    private static int emulateLegacyColor(int modColor) {
+        int modR = (modColor & 0xff0000) >> 16;
+        int modG = (modColor & 0x00ff00) >> 8;
+        int modB = (modColor & 0x0000ff);
+        int legacyR = (PERCEIVED_WATER_COLOR_112 & 0xff0000) >> 16;
+        int legacyG = (PERCEIVED_WATER_COLOR_112 & 0x00ff00) >> 8;
+        int legacyB = (PERCEIVED_WATER_COLOR_112 & 0x0000ff);
+        int displayedR = (modR * legacyR) / 255;
+        int displayedG = (modG * legacyG) / 255;
+        int displayedB = (modB * legacyB) / 255;
+        return (displayedR << 16) | (displayedG << 8) | displayedB;
+    }
     
     private static void processStringColor(String colorEntry) {
         String[] fields = colorEntry.split(",", -1);
@@ -80,7 +104,7 @@ public abstract class BiomeWaterFogColors {
             return color;
         return DEFAULT_WATER_FOG_COLOR;
     }
-    public static int getWaterColorForBiome(Biome biome) {
+    public static int getWaterColorForBiome(Biome biome, int oldColor) {
         ResourceLocation location = biome.getRegistryName();
         if(location == null) {
             return DEFAULT_WATER_COLOR;
@@ -89,9 +113,12 @@ public abstract class BiomeWaterFogColors {
         if(color != null) {
             return color;
         }
-        if(biome.getWaterColorMultiplier() != DEFAULT_WATER_COLOR_112)
-            AquaAcrobatics.LOGGER.info("Potentially missing water color mapping for " + location);
-        baseColorMap.put(location, DEFAULT_WATER_COLOR);
-        return DEFAULT_WATER_COLOR;
+        if(oldColor != DEFAULT_WATER_COLOR_112) {
+            AquaAcrobatics.LOGGER.info("Potentially missing water color mapping for " + location + ", attempting to fake old appearance");
+            color = emulateLegacyColor(oldColor);
+        } else
+            color = DEFAULT_WATER_COLOR;
+        baseColorMap.put(location, color);
+        return color;
     }
 }

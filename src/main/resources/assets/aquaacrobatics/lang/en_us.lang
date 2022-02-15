@@ -10,3 +10,10 @@ item.aquaacrobatics.dried.kelp.name=Dried Kelp
 
 # Misc
 itemGroup.aquaacrobatics=Aqua Acrobatics
+
+# Chat
+chat.aquaacrobatics.cannot_toggle_crawling=Cannot toggle crawling right now!
+
+# Keybinds
+key.aquaacrobatics.category=Aqua Acrobatics
+key.aquaacrobatics.toggle_crawling=Toggle Crawling
