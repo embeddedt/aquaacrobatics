@@ -76,6 +76,7 @@ dependencies {
     deobfProvided "curse.maven:journeymap-32274:2916002:"
     deobfProvided "curse.maven:mobends-231347:3573346:"
     deobfProvided "curse.maven:morph-229080:2995522:"
+    runtimeOnly "curse.maven:naturescompass-252848:2893527:"
     deobfProvided "curse.maven:thaumicaugmentation-319441:3536155:"
     deobfProvided "curse.maven:trinketsandbaubles-279900:3575174:"
     deobfProvided "curse.maven:wings-302584:2829351:"
