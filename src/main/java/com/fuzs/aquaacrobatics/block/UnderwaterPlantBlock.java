@@ -1,6 +1,6 @@
 package com.fuzs.aquaacrobatics.block;
 
-import git.jbredwards.fluidlogged_api.common.block.BlockFluidloggedClassic;
+import git.jbredwards.fluidlogged_api.common.block.IFluidloggable;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -18,15 +18,22 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 import static net.minecraft.block.BlockLiquid.LEVEL;
 
-public class UnderwaterPlantBlock extends BlockFluidloggedClassic {
+public class UnderwaterPlantBlock extends Block implements IFluidloggable {
     protected UnderwaterPlantBlock() {
-        super(FluidRegistry.WATER, Material.PLANTS);
-        this.setDefaultState(this.getDefaultState().withProperty(LEVEL, 15));
+        super(Material.PLANTS);
         this.setHardness(0.0F);
         this.setSoundType(SoundType.PLANT);
     }
+
+    @Override
+    public boolean isFluidValid(@Nonnull IBlockState state, @Nonnull Fluid fluid) {
+        return fluid == FluidRegistry.WATER;
+    }
+
     // not opaque
     @Override
     public boolean isOpaqueCube(IBlockState state)

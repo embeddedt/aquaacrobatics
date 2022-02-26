@@ -57,8 +57,8 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
      */
 
     @Override
-    protected BlockStateContainer.Builder blockStateBuilder() {
-        return super.blockStateBuilder().add(AGE);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer.Builder(this).add(AGE).build();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
     }
 
     public boolean isValidPosition(IBlockAccess worldIn, BlockPos pos) {
-        if(FluidloggedUtils.getFluidAt(worldIn, pos, worldIn.getBlockState(pos)) != FluidRegistry.WATER)
+        if(FluidloggedUtils.getFluidState(worldIn, pos).getFluid() != FluidRegistry.WATER)
             return false;
         BlockPos blockpos = pos.down();
         IBlockState iblockstate = worldIn.getBlockState(blockpos);

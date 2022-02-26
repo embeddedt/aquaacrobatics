@@ -88,8 +88,7 @@ dependencies {
     compileOnly files('deps/GalacticraftCore-1.12.2-4.0.2.280-deobf.jar')
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')
 
-    provided 'com.github.jbredwards:Fluidlogged-API:a6298573387'
-    compile 'com.github.jbredwards:Fluidlogged-API:a6298573387'
+    compile files('deps/Fluidlogged-API-v1.7-mc1.12.2.jar')
 
     compile ("org.spongepowered:mixin:0.8.3") {
 
