@@ -28,39 +28,43 @@ import java.util.List;
 import java.util.Random;
 
 public class BuriedTreasureStructure extends MapGenStructure {
-    public final List<Biome> allowedBiomes;
-
     public BuriedTreasureStructure() {
-        allowedBiomes = new ArrayList<>(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
     }
 
+    @Override
     public String getStructureName()
     {
         return "Buried_Treasure";
     }
 
+    @Override
     protected boolean canSpawnStructureAtCoords(int chunkPosX, int chunkPosZ)
     {
-        Biome biome = world.getBiomeProvider().getBiome(new BlockPos((chunkPosX << 4) + 9, 0, (chunkPosZ << 4) + 9), (Biome)null);
-        if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN)) {
-            Random random = this.world.setRandomSeed(chunkPosX, chunkPosZ, 10387320);
-            return random.nextFloat() < 0.5f;
-        } else {
-            return false;
+        Random random = this.world.setRandomSeed(chunkPosX, chunkPosZ, 10387320);
+        if(random.nextFloat() < 0.01f) {
+            Biome biome = world.getBiomeProvider().getBiome(new BlockPos((chunkPosX << 4) + 9, 0, (chunkPosZ << 4) + 9), (Biome) null);
+            return BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN);
         }
+        return false;
     }
 
+    @Override
     public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored)
     {
-        return findNearestStructurePosBySpacing(worldIn,
+        this.world = worldIn;
+        BlockPos result = findNearestStructurePosBySpacing(worldIn,
                 this,
                 pos,
-                16,
                 1,
+                0,
                 10387320,
                 false,
                 1000,
                 findUnexplored);
+        if(result == null)
+            return result;
+        else
+            return new BlockPos(result.getX() + 1, result.getY(), result.getZ() + 1);
     }
 
     public static class Start extends StructureStart {
