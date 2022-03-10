@@ -56,7 +56,7 @@ public class UnderwaterPlantBlock extends Block implements IFluidloggable {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

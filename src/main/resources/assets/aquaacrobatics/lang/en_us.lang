@@ -1,6 +1,7 @@
 # Blocks
 tile.aquaacrobatics.dried.kelp.block.name=Dried Kelp Block
 tile.aquaacrobatics.kelp.name=Kelp
+tile.aquaacrobatics.bubble.column.name=Bubble Column
 tile.aquaacrobatics.kelp.plant.name=Kelp
 tile.aquaacrobatics.seagrass.name=Seagrass
 

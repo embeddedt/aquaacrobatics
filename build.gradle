@@ -41,7 +41,7 @@ minecraft {
     version = "${forge_version}"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20171003"
+    mappings = "stable_39"
     
     replaceIn 'src/main/java/com/fuzs/aquaacrobatics/AquaAcrobatics.java'
     replace '@version@', mod_version
@@ -88,7 +88,9 @@ dependencies {
     compileOnly files('deps/GalacticraftCore-1.12.2-4.0.2.280-deobf.jar')
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')
 
-    compile files('deps/Fluidlogged-API-v1.7-mc1.12.2.jar')
+    /* use ./gradlew publishToMavenLocal on Fluidlogged API first */
+    /* using commit fcc9e269ff4a32ad6b556ce08291c74f78697dae */
+    deobfCompile "git.jbredwards.fluidlogged_api:Fluidlogged-API:v1.7-mc1.12.2"
 
     compile ("org.spongepowered:mixin:0.8.3") {
 

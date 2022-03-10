@@ -26,7 +26,7 @@ public class AirMeterHandler {
         assert playerIn != null;
         if (!playerIn.isInsideOfMaterial(Material.WATER) && playerIn.getAir() < 300) {
 
-            this.mc.mcProfiler.startSection("air");
+            this.mc.profiler.startSection("air");
             GlStateManager.enableBlend();
             int left = evt.getResolution().getScaledWidth() / 2 + 91;
             int top = evt.getResolution().getScaledHeight() - GuiIngameForge.right_height;
@@ -40,7 +40,7 @@ public class AirMeterHandler {
 
             GuiIngameForge.right_height += 10;
             GlStateManager.disableBlend();
-            this.mc.mcProfiler.endSection();
+            this.mc.profiler.endSection();
         }
     }
 

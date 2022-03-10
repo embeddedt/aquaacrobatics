@@ -37,7 +37,7 @@ public class BlockBubbleColumn extends BlockStaticLiquid {
    public BlockBubbleColumn() {
       super(Material.WATER);
       this.setRegistryName("bubble_column");
-      this.setUnlocalizedName("Bubble Column"); /* not translating this as no one should see it */
+      this.setTranslationKey("tile.aquaacrobatics.bubble.column.name");
       this.setDefaultState(this.blockState.getBaseState().withProperty(LEVEL, 0).withProperty(DRAG, false));
    }
 
