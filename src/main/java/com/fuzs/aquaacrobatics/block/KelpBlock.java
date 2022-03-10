@@ -32,7 +32,7 @@ public class KelpBlock extends UnderwaterPlantBlock {
 
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!this.isValidPosition(worldIn, pos)) {
-            UnderwaterPlantBlock.destroyBlockToWater(worldIn, pos, true);
+            worldIn.destroyBlock(pos, true);
             return;
         }
         Block above = worldIn.getBlockState(pos.up()).getBlock();

@@ -1,6 +1,8 @@
 package com.fuzs.aquaacrobatics.block;
 
 import git.jbredwards.fluidlogged_api.common.block.IFluidloggable;
+import git.jbredwards.fluidlogged_api.common.util.FluidState;
+import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -32,6 +34,12 @@ public class UnderwaterPlantBlock extends Block implements IFluidloggable {
     @Override
     public boolean isFluidValid(@Nonnull IBlockState state, @Nonnull Fluid fluid) {
         return fluid == FluidRegistry.WATER;
+    }
+
+    @Override
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        super.onBlockAdded(worldIn, pos, state);
+        FluidloggedUtils.setFluidState(worldIn, pos, state, FluidState.of(FluidRegistry.WATER), true);
     }
 
     // not opaque
@@ -66,6 +74,12 @@ public class UnderwaterPlantBlock extends Block implements IFluidloggable {
         return false;
     }
 
+    @Override
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+        return super.canPlaceBlockAt(worldIn, pos) && FluidloggedUtils.getFluidState(worldIn, pos).getFluid() == FluidRegistry.WATER;
+    }
+
+    @Deprecated
     public static boolean destroyBlockToWater(World world, BlockPos pos, boolean dropBlock) {
         return world.destroyBlock(pos, dropBlock);
     }

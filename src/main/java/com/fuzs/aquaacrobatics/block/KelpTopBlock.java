@@ -79,8 +79,7 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
 
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!this.isValidPosition(worldIn, pos)) {
-            System.out.println("NO LONGER VALID NEIGHBOR");
-            UnderwaterPlantBlock.destroyBlockToWater(worldIn, pos, true);
+            worldIn.destroyBlock(pos, true);
             return;
         }
         if(worldIn.getBlockState(pos.up()).getBlock() == CommonProxy.blockKelp) {
