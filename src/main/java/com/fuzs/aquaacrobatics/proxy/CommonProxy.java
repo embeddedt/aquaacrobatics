@@ -8,11 +8,19 @@ import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import com.fuzs.aquaacrobatics.item.DriedKelpItem;
+import com.fuzs.aquaacrobatics.item.ExplorerMapItem;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
+import com.fuzs.aquaacrobatics.world.gen.WorldGenHandler;
+import com.fuzs.aquaacrobatics.world.structure.BuriedTreasurePieces;
+import com.fuzs.aquaacrobatics.world.structure.BuriedTreasureStructure;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -33,6 +41,8 @@ public class CommonProxy {
     public static ItemBlock itemKelp;
     public static ItemBlock itemSeagrass;
     public static Item itemDriedKelp;
+
+    public static Item itemBuriedTreasureMap;
 
     private boolean needNetworking() {
         return ConfigHandler.MovementConfig.enableToggleCrawling;
@@ -59,13 +69,18 @@ public class CommonProxy {
             AquaAcrobatics.REGISTRY.registerBlock(blockSeagrass, itemSeagrass, "seagrass");
 
             itemDriedKelp = AquaAcrobatics.REGISTRY.registerItem(new DriedKelpItem(), "dried_kelp");
+
+            itemBuriedTreasureMap = AquaAcrobatics.REGISTRY.registerItem(new ExplorerMapItem("Buried_Treasure"), "buried_treasure_map");
+            MinecraftForge.EVENT_BUS.register(new WorldGenHandler());
         }
     }
     
     public void onInit() {
-
         if(ConfigHandler.MiscellaneousConfig.aquaticWorldContent) {
             GameRegistry.addSmelting(itemKelp, new ItemStack(itemDriedKelp), 0.1f);
+            LootTableList.register(new ResourceLocation(AquaAcrobatics.MODID, "chests/buried_treasure"));
+            MapGenStructureIO.registerStructure(BuriedTreasureStructure.Start.class, "Buried_Treasure");
+            BuriedTreasurePieces.registerBuriedTreasurePieces();
         }
     }
 

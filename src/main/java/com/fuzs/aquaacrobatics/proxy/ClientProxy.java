@@ -58,6 +58,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void onInit() {
+        super.onInit();
         Keybindings.register();
     }
 

@@ -7,6 +7,8 @@ tile.aquaacrobatics.seagrass.name=Seagrass
 # Items
 item.aquaacrobatics.kelp.name=Kelp
 item.aquaacrobatics.dried.kelp.name=Dried Kelp
+item.aquaacrobatics.buried.treasure.map.name=Buried Treasure Map
+filled_map.buried_treasure=Buried Treasure Map
 
 # Misc
 itemGroup.aquaacrobatics=Aqua Acrobatics

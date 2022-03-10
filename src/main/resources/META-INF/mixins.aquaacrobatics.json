@@ -6,6 +6,7 @@
   "refmap": "mixins.aquaacrobatics.refmap.json",
   "plugin": "com.fuzs.aquaacrobatics.core.AquaAcrobaticsMixinPlugin",
   "mixins": [
+    "ChunkGeneratorOverworldMixin",
     "EntityBoatMixin",
     "EntityItemMixin",
     "EntityPlayerMixin",

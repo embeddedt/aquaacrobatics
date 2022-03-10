@@ -66,10 +66,6 @@ public class ConfigHandler {
     }
 
     public static class BlocksConfig {
-        @Config.Name("Seagrass")
-        @Config.Comment("Allow seagrass to generate in the world.")
-        public static boolean seagrass = false;
-
         @Config.Name("Brighter Water")
         @Config.Comment("Make water only reduce light level by 1 per Y-level, instead of 3.")
         public static boolean brighterWater = true;
