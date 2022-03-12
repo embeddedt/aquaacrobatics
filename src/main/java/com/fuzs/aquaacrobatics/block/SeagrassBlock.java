@@ -6,6 +6,7 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -52,6 +53,7 @@ public class SeagrassBlock extends UnderwaterPlantBlock {
     public SeagrassBlock() {
         super();
         this.setDefaultState(this.getDefaultState().withProperty(TYPE, SeagrassType.SINGLE));
+        this.setCreativeTab(CreativeTabs.DECORATIONS);
     }
 
     @Override

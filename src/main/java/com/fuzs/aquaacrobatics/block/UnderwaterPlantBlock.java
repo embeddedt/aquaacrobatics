@@ -27,7 +27,7 @@ import static net.minecraft.block.BlockLiquid.LEVEL;
 
 public class UnderwaterPlantBlock extends Block implements IFluidloggable {
     protected UnderwaterPlantBlock() {
-        super(Material.PLANTS);
+        super(Material.GROUND);
         this.setHardness(0.0F);
         this.setSoundType(SoundType.PLANT);
     }
@@ -76,6 +76,6 @@ public class UnderwaterPlantBlock extends Block implements IFluidloggable {
 
     @Override
     public boolean canFluidFlow(@Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull IBlockState here, @Nonnull EnumFacing side) {
-        return false;
+        return true;
     }
 }

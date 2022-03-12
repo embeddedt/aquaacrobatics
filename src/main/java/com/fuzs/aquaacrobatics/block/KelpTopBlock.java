@@ -81,8 +81,7 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
 
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!this.isValidPosition(worldIn, pos)) {
-            System.out.println("top block not valid " + pos + " " + worldIn.getBlockState(pos.down()).getBlock());
-            //worldIn.destroyBlock(pos, false);
+            worldIn.destroyBlock(pos, true);
             return;
         }
         if(worldIn.getBlockState(pos.up()).getBlock() == CommonProxy.blockKelp) {
@@ -106,19 +105,16 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
     }
 
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
-        if(true || worldIn.isRemote)
+        if(worldIn.isRemote)
             return;
         if (!isValidPosition(worldIn, pos)) {
-            System.out.println("NOT VALID");
-            worldIn.destroyBlock(pos, false);
+            worldIn.destroyBlock(pos, true);
         } else {
             if (state.getValue(AGE) < 14 && random.nextDouble() < 0.14D) {
-                System.out.println("AGING! " + pos);
                 worldIn.setBlockState(pos, state.withProperty(AGE,state.getValue(AGE) + 1));
             } else if(state.getValue(AGE) == 14) {
                 BlockPos above = pos.up();
                 if(isValidPosition(worldIn, above)) {
-                    System.out.println("GROWING!");
                     worldIn.setBlockState(above, state.withProperty(AGE, 0));
                     worldIn.setBlockState(pos, CommonProxy.blockKelpPlant.getDefaultState());
                 }

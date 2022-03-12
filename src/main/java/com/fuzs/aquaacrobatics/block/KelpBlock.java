@@ -33,16 +33,12 @@ public class KelpBlock extends UnderwaterPlantBlock {
 
 
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if(true)
-            return;
         if (!this.isValidPosition(worldIn, pos)) {
-            System.out.println("stem block not valid");
-            worldIn.destroyBlock(pos, false);
+            worldIn.destroyBlock(pos, true);
             return;
         }
         Block above = worldIn.getBlockState(pos.up()).getBlock();
         if(above != CommonProxy.blockKelp && above != CommonProxy.blockKelpPlant) {
-            System.out.println("Changing myself to be a top plant, above me " + pos.up() + " is " + above.toString());
             worldIn.setBlockState(pos, CommonProxy.blockKelp.randomAge(worldIn.rand));
         }
     }

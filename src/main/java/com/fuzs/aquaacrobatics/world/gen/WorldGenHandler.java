@@ -7,23 +7,16 @@ import com.fuzs.aquaacrobatics.world.structure.BuriedTreasureStructure;
 import git.jbredwards.fluidlogged_api.common.block.IFluidloggable;
 import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFalling;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.ChunkGeneratorOverworld;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Random;
@@ -47,7 +40,7 @@ public class WorldGenHandler {
         Random rand = e.getRand();
         World world = e.getWorld();
         /* Kelp */
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 40; i++) {
             int seaLevel = Math.max(world.getSeaLevel() - 1, 1);
             BlockPos pos = new BlockPos(rand.nextInt(16) + e.getChunkX() * 16 + 8, seaLevel, rand.nextInt(16) + e.getChunkZ() * 16 + 8);
             Biome biome = world.getBiomeProvider().getBiome(pos);
@@ -57,10 +50,10 @@ public class WorldGenHandler {
                 this.attemptGenerateKelp(world, rand, pos);
             }
         }
-        /*
+
         for (int i = 0; i < 48; i++) {
             int seaLevel = Math.max(world.getSeaLevel() - 1, 1);
-            BlockPos pos = new BlockPos(rand.nextInt(16) + chunk.x * 16 + 8, seaLevel, rand.nextInt(16) + chunk.z * 16 + 8);
+            BlockPos pos = new BlockPos(rand.nextInt(16) + e.getChunkX() * 16 + 8, seaLevel, rand.nextInt(16) + e.getChunkZ() * 16 + 8);
             Biome biome = world.getBiomeProvider().getBiome(pos);
 
             if (this.canGenerateSeagrassInBiome(biome)) {
@@ -68,7 +61,6 @@ public class WorldGenHandler {
                 this.attemptGenerateSeagrass(world, rand, pos);
             }
         }
-         */
     }
 
     private boolean isTrueWater(World world, BlockPos pos) {
@@ -78,25 +70,25 @@ public class WorldGenHandler {
 
     private void attemptGenerateKelp(World world, Random rand, BlockPos startPosition) {
         Block below = world.getBlockState(startPosition.down()).getBlock();
-        if(below instanceof IFluidloggable || (below instanceof BlockFalling && BlockFalling.canFallThrough(world.getBlockState(startPosition.down().down())))) {
+        if(below instanceof IFluidloggable) {
             /* TODO revisit this and find a better way of not putting plants on top of plants */
             return;
         }
-        int blocksToGenerate = rand.nextInt(6) + 1;
+        int blocksToGenerate = rand.nextInt(10) + 1;
         IBlockState topState = CommonProxy.blockKelp.getDefaultState().withProperty(KelpTopBlock.AGE, 15);
         BlockPos.MutableBlockPos currentPosition = new BlockPos.MutableBlockPos(startPosition);
         boolean placedOneKelp = false;
         for(int i = 0; i < blocksToGenerate; i++) {
-            if(!isTrueWater(world, currentPosition))
+            if(!isTrueWater(world, currentPosition) || world.isAirBlock(currentPosition.up()))
                 break;
-            world.setBlockState(currentPosition, CommonProxy.blockKelpPlant.getDefaultState(), 2);
+            world.setBlockState(currentPosition, CommonProxy.blockKelpPlant.getDefaultState());
             currentPosition.setY(currentPosition.getY() + 1);
             placedOneKelp = true;
         }
 
         if(placedOneKelp) {
             currentPosition.setY(currentPosition.getY() - 1);
-            world.setBlockState(currentPosition, topState, 2);
+            world.setBlockState(currentPosition, topState);
         }
     }
 
