@@ -11,6 +11,7 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -37,6 +38,7 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
         this.setSoundType(SoundType.SAND);
         this.setDefaultState(this.getDefaultState().withProperty(AGE, 0));
         this.setTickRandomly(true);
+        this.setCreativeTab(CreativeTabs.DECORATIONS);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
@@ -79,7 +81,8 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
 
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!this.isValidPosition(worldIn, pos)) {
-            worldIn.destroyBlock(pos, true);
+            System.out.println("top block not valid " + pos + " " + worldIn.getBlockState(pos.down()).getBlock());
+            //worldIn.destroyBlock(pos, false);
             return;
         }
         if(worldIn.getBlockState(pos.up()).getBlock() == CommonProxy.blockKelp) {
@@ -87,14 +90,7 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
         }
     }
 
-    @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-        super.onBlockAdded(worldIn, pos, state);
-    }
-
     public boolean isValidPosition(IBlockAccess worldIn, BlockPos pos) {
-        if(FluidloggedUtils.getFluidState(worldIn, pos).getFluid() != FluidRegistry.WATER)
-            return false;
         BlockPos blockpos = pos.down();
         IBlockState iblockstate = worldIn.getBlockState(blockpos);
         Block block = iblockstate.getBlock();
@@ -110,14 +106,14 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
     }
 
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
-        if(worldIn.isRemote)
+        if(true || worldIn.isRemote)
             return;
         if (!isValidPosition(worldIn, pos)) {
             System.out.println("NOT VALID");
-            UnderwaterPlantBlock.destroyBlockToWater(worldIn, pos, true);
+            worldIn.destroyBlock(pos, false);
         } else {
             if (state.getValue(AGE) < 14 && random.nextDouble() < 0.14D) {
-                System.out.println("AGING!");
+                System.out.println("AGING! " + pos);
                 worldIn.setBlockState(pos, state.withProperty(AGE,state.getValue(AGE) + 1));
             } else if(state.getValue(AGE) == 14) {
                 BlockPos above = pos.up();
@@ -128,11 +124,6 @@ public class KelpTopBlock extends UnderwaterPlantBlock {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
-        return super.canPlaceBlockAt(worldIn, pos);
     }
 
     @Override

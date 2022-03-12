@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.block;
 
+import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
@@ -15,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import java.util.Random;
 
@@ -31,12 +33,16 @@ public class KelpBlock extends UnderwaterPlantBlock {
 
 
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        if(true)
+            return;
         if (!this.isValidPosition(worldIn, pos)) {
-            worldIn.destroyBlock(pos, true);
+            System.out.println("stem block not valid");
+            worldIn.destroyBlock(pos, false);
             return;
         }
         Block above = worldIn.getBlockState(pos.up()).getBlock();
         if(above != CommonProxy.blockKelp && above != CommonProxy.blockKelpPlant) {
+            System.out.println("Changing myself to be a top plant, above me " + pos.up() + " is " + above.toString());
             worldIn.setBlockState(pos, CommonProxy.blockKelp.randomAge(worldIn.rand));
         }
     }

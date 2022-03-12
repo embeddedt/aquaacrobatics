@@ -11,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -34,12 +35,6 @@ public class UnderwaterPlantBlock extends Block implements IFluidloggable {
     @Override
     public boolean isFluidValid(@Nonnull IBlockState state, @Nonnull Fluid fluid) {
         return fluid == FluidRegistry.WATER;
-    }
-
-    @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-        super.onBlockAdded(worldIn, pos, state);
-        FluidloggedUtils.setFluidState(worldIn, pos, state, FluidState.of(FluidRegistry.WATER), true);
     }
 
     // not opaque
@@ -79,8 +74,8 @@ public class UnderwaterPlantBlock extends Block implements IFluidloggable {
         return super.canPlaceBlockAt(worldIn, pos) && FluidloggedUtils.getFluidState(worldIn, pos).getFluid() == FluidRegistry.WATER;
     }
 
-    @Deprecated
-    public static boolean destroyBlockToWater(World world, BlockPos pos, boolean dropBlock) {
-        return world.destroyBlock(pos, dropBlock);
+    @Override
+    public boolean canFluidFlow(@Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull IBlockState here, @Nonnull EnumFacing side) {
+        return false;
     }
 }

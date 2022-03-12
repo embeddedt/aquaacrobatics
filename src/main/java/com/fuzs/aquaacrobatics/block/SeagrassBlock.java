@@ -78,7 +78,7 @@ public class SeagrassBlock extends UnderwaterPlantBlock {
     
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!isValidPosition(worldIn, pos)) {
-            UnderwaterPlantBlock.destroyBlockToWater(worldIn, pos, true);
+            worldIn.destroyBlock(pos, true);
             return;
         }
         if(state.getValue(TYPE) != SeagrassType.UPPER) {
