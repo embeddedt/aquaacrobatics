@@ -5,6 +5,7 @@ import com.fuzs.aquaacrobatics.block.*;
 import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
+import com.fuzs.aquaacrobatics.entity.EntityDrowned;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import com.fuzs.aquaacrobatics.item.DriedKelpItem;
@@ -14,6 +15,9 @@ import com.fuzs.aquaacrobatics.world.gen.WorldGenHandler;
 import com.fuzs.aquaacrobatics.world.structure.BuriedTreasurePieces;
 import com.fuzs.aquaacrobatics.world.structure.BuriedTreasureStructure;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.init.Biomes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -25,6 +29,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod.EventBusSubscriber
@@ -41,6 +46,7 @@ public class CommonProxy {
     public static ItemBlock itemKelp;
     public static ItemBlock itemSeagrass;
     public static Item itemDriedKelp;
+    public static Item itemSeaHeart;
 
     public static Item itemBuriedTreasureMap;
 
@@ -70,7 +76,13 @@ public class CommonProxy {
 
             itemDriedKelp = AquaAcrobatics.REGISTRY.registerItem(new DriedKelpItem(), "dried_kelp");
 
+            itemSeaHeart = AquaAcrobatics.REGISTRY.registerItem(new Item().setCreativeTab(CreativeTabs.MATERIALS), "heart_of_the_sea");
+
             itemBuriedTreasureMap = AquaAcrobatics.REGISTRY.registerItem(new ExplorerMapItem("Buried_Treasure"), "buried_treasure_map");
+
+            int entityNetworkId = 1;
+            AquaAcrobatics.REGISTRY.registerMob(EntityDrowned.class, "drowned", entityNetworkId++, 9433559, 7969893);
+            EntityRegistry.addSpawn(EntityDrowned.class, 100, 3, 5, EnumCreatureType.MONSTER, Biomes.OCEAN, Biomes.DEEP_OCEAN, Biomes.FROZEN_OCEAN, Biomes.RIVER, Biomes.FROZEN_RIVER);
             MinecraftForge.EVENT_BUS.register(new WorldGenHandler());
         }
     }

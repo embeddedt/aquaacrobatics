@@ -20,7 +20,9 @@
     "BlockMagmaMixin",
     "BlockMyceliumMixin",
     "BlockSoulSandMixin",
-    "accessor.IEventBusAccessor"
+    "accessor.EntityAccessor",
+    "accessor.IEventBusAccessor",
+    "content.EntityZombieMixin"
   ],
   "client": [
     "client.BlockFluidRendererMixin",

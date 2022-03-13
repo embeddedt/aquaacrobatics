@@ -1,6 +1,7 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.entity.IBubbleColumnInteractable;
+import com.fuzs.aquaacrobatics.entity.IEntitySwimmer;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("unused")
 @Mixin(Entity.class)
@@ -28,7 +30,7 @@ public abstract class EntityMixin implements IBubbleColumnInteractable {
     public float fallDistance;
 
     @Shadow public World world;
-    
+
     @Redirect(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isSneaking()Z"))
     public boolean isSneaking(Entity entity) {
 
@@ -39,6 +41,13 @@ public abstract class EntityMixin implements IBubbleColumnInteractable {
         }
 
         return this.isSneaking();
+    }
+
+    @Inject(method = "onEntityUpdate", at = @At("RETURN"))
+    private void handleUpdateSwimming(CallbackInfo ci) {
+        if(this instanceof IEntitySwimmer) {
+            ((IEntitySwimmer)(Object)this).updateSwimming();
+        }
     }
 
     @Override

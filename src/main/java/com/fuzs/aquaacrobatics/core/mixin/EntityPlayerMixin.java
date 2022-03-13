@@ -1,7 +1,9 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
+import com.fuzs.aquaacrobatics.entity.DefaultEntitySwimming;
 import com.fuzs.aquaacrobatics.entity.EntitySize;
+import com.fuzs.aquaacrobatics.entity.IEntitySwimmer;
 import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
@@ -12,6 +14,7 @@ import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaubles
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.MathHelper;
 import com.google.common.collect.ImmutableMap;
@@ -123,7 +126,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         // updateAquatics
         this.updateEyesInWater();
-        this.updateSwimming();
     }
 
     // based on 1.16
@@ -163,22 +165,25 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Override
     public boolean canSwim() {
-
         return this.eyesInWater && this.isInWater();
     }
 
     @Override
+    public boolean isSwimming() {
+        return !this.capabilities.isFlying && !this.isSpectator() && DefaultEntitySwimming.defaultIsSwimming((Entity)(Object)this);
+    }
+
+    @Override
+    public void setSwimming(boolean flag) {
+        DefaultEntitySwimming.defaultSetSwimming((Entity)(Object)this, flag);
+    }
+
+    @Override
     public void updateSwimming() {
-
         if (this.capabilities.isFlying) {
-
             this.setSwimming(false);
-        } else if (this.isSwimming()) {
-
-            this.setSwimming(this.isSprinting() && this.isInWater() && !this.isRiding());
         } else {
-
-            this.setSwimming(this.isSprinting() && this.canSwim() && !this.isRiding());
+            DefaultEntitySwimming.defaultUpdateSwimming((Entity)(Object)this);
         }
     }
 
@@ -438,12 +443,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
 
     @Override
-    public boolean isSwimming() {
-
-        return !this.capabilities.isFlying && !this.isSpectator() && this.getFlag(4);
-    }
-
-    @Override
     public boolean isActuallySwimming() {
 
         boolean isFallFlying = !this.isElytraFlying() && this.getPose() == Pose.FALL_FLYING;
@@ -455,12 +454,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public boolean isVisuallySwimming() {
 
         return this.isActuallySwimming() && !this.isInWater();
-    }
-
-    @Override
-    public void setSwimming(boolean flag) {
-
-        this.setFlag(4, flag);
     }
 
     @Override

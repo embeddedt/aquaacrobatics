@@ -5,7 +5,11 @@ tile.aquaacrobatics.bubble.column.name=Bubble Column
 tile.aquaacrobatics.kelp.plant.name=Kelp
 tile.aquaacrobatics.seagrass.name=Seagrass
 
+# Entitites
+entity.aquaacrobatics.drowned.name=Drowned
+
 # Items
+item.aquaacrobatics.heart.of.the.sea.name=Heart of the Sea
 item.aquaacrobatics.kelp.name=Kelp
 item.aquaacrobatics.dried.kelp.name=Dried Kelp
 item.aquaacrobatics.buried.treasure.map.name=Buried Treasure Map

@@ -1,6 +1,16 @@
 {
   "pools": [
     {
+      "name": "sea_heart",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "aquaacrobatics:heart_of_the_sea"
+        }
+      ]
+    },
+    {
       "name": "ingots_and_tnt",
       "rolls": {
         "min": 5.0,

@@ -1,10 +1,13 @@
 package com.fuzs.aquaacrobatics.proxy;
 
+import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
 import com.fuzs.aquaacrobatics.client.handler.AirMeterHandler;
 import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import com.fuzs.aquaacrobatics.client.model.WaterResourcePack;
+import com.fuzs.aquaacrobatics.client.render.RenderDrowned;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
+import com.fuzs.aquaacrobatics.entity.EntityDrowned;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
@@ -28,6 +31,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -70,6 +74,7 @@ public class ClientProxy extends CommonProxy {
             CommonProxy.blockKelp.initModelOverride();
             CommonProxy.blockKelpPlant.initModelOverride();
             CommonProxy.blockSeagrass.initModelOverride();
+            RenderingRegistry.registerEntityRenderingHandler(EntityDrowned.class, RenderDrowned.FACTORY);
         }
         
     }
