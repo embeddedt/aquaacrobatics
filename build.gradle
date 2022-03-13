@@ -41,7 +41,7 @@ minecraft {
     version = "${forge_version}"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20171003"
+    mappings = "stable_39"
     
     replaceIn 'src/main/java/com/fuzs/aquaacrobatics/AquaAcrobatics.java'
     replace '@version@', mod_version
