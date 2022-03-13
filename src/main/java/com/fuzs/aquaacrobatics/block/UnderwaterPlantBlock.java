@@ -18,6 +18,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 
 import static net.minecraft.block.BlockLiquid.LEVEL;
 
+@Optional.Interface(iface = "git.jbredwards.fluidlogged_api.common.block.IFluidloggable", modid = "fluidlogged_api")
 public class UnderwaterPlantBlock extends Block implements IFluidloggable {
     protected UnderwaterPlantBlock() {
         super(Material.GROUND);

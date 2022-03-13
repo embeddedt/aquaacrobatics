@@ -39,7 +39,7 @@ public class KelpBlock extends UnderwaterPlantBlock {
         }
         Block above = worldIn.getBlockState(pos.up()).getBlock();
         if(above != CommonProxy.blockKelp && above != CommonProxy.blockKelpPlant) {
-            worldIn.setBlockState(pos, CommonProxy.blockKelp.randomAge(worldIn.rand));
+            worldIn.setBlockState(pos, ((KelpTopBlock)CommonProxy.blockKelp).randomAge(worldIn.rand));
         }
     }
     

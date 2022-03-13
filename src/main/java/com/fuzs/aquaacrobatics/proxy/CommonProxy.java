@@ -38,8 +38,8 @@ public class CommonProxy {
     public static BlockBubbleColumn BUBBLE_COLUMN;
 
     public static Block blockDriedKelp;
-    public static KelpTopBlock blockKelp;
-    public static KelpBlock blockKelpPlant;
+    public static Block blockKelp;
+    public static Block blockKelpPlant;
     public static SeagrassBlock blockSeagrass;
 
     public static ItemBlock itemDriedKelpBlock;

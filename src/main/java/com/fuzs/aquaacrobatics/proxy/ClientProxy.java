@@ -2,6 +2,8 @@ package com.fuzs.aquaacrobatics.proxy;
 
 import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
+import com.fuzs.aquaacrobatics.block.KelpBlock;
+import com.fuzs.aquaacrobatics.block.KelpTopBlock;
 import com.fuzs.aquaacrobatics.client.handler.AirMeterHandler;
 import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import com.fuzs.aquaacrobatics.client.model.WaterResourcePack;
@@ -71,8 +73,8 @@ public class ClientProxy extends CommonProxy {
         if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
             ModelLoader.setCustomStateMapper(CommonProxy.BUBBLE_COLUMN, new StateMap.Builder().ignore(BlockLiquid.LEVEL, BlockBubbleColumn.DRAG).build());
         if(ConfigHandler.MiscellaneousConfig.aquaticWorldContent) {
-            CommonProxy.blockKelp.initModelOverride();
-            CommonProxy.blockKelpPlant.initModelOverride();
+            ((KelpTopBlock)CommonProxy.blockKelp).initModelOverride();
+            ((KelpBlock)CommonProxy.blockKelpPlant).initModelOverride();
             CommonProxy.blockSeagrass.initModelOverride();
             RenderingRegistry.registerEntityRenderingHandler(EntityDrowned.class, RenderDrowned.FACTORY);
         }
