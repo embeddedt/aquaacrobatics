@@ -1,5 +1,7 @@
 {
+    "parent": "builtin/entity",
     "textures": {
+        "particle": "aquaacrobatics:entity/conduit/break_particle"
     }
 }
 

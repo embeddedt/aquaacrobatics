@@ -33,8 +33,7 @@
     "client.ModelFluidMixin",
     "client.RenderBoatMixin",
     "client.RenderPlayerMixin",
-    "client.PlayerControllerMPMixin",
-    "client.TileEntityItemStackRendererMixin"
+    "client.PlayerControllerMPMixin"
   ],
   "injectors": {
     "defaultRequire": 1

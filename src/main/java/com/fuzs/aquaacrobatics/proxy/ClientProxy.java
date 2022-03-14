@@ -8,6 +8,7 @@ import com.fuzs.aquaacrobatics.client.handler.AirMeterHandler;
 import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import com.fuzs.aquaacrobatics.client.model.WaterResourcePack;
 import com.fuzs.aquaacrobatics.client.render.RenderDrowned;
+import com.fuzs.aquaacrobatics.client.render.TileEntityConduitItemRenderer;
 import com.fuzs.aquaacrobatics.client.render.TileEntityConduitRenderer;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntityDrowned;
@@ -24,6 +25,7 @@ import com.fuzs.aquaacrobatics.util.Keybindings;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -71,6 +73,7 @@ public class ClientProxy extends CommonProxy {
         super.onInit();
         Keybindings.register();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConduit.class, new TileEntityConduitRenderer());
+        CommonProxy.itemConduit.setTileEntityItemStackRenderer(new TileEntityConduitItemRenderer());
     }
 
     @SubscribeEvent
@@ -82,8 +85,9 @@ public class ClientProxy extends CommonProxy {
             ((KelpBlock)CommonProxy.blockKelpPlant).initModelOverride();
             CommonProxy.blockSeagrass.initModelOverride();
             RenderingRegistry.registerEntityRenderingHandler(EntityDrowned.class, RenderDrowned.FACTORY);
+            ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(AquaAcrobatics.MODID + ":conduit", "inventory");
+            ModelLoader.setCustomModelResourceLocation(itemConduit, 0, itemModelResourceLocation);
         }
-        
     }
     
     @SubscribeEvent
