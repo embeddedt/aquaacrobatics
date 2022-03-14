@@ -60,17 +60,15 @@ public class EntityDrowned extends EntityZombie implements IEntitySwimmer {
 
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
         livingdata = super.onInitialSpawn(difficulty, livingdata);
-        System.out.println("on init spawn");
-        if (this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).isEmpty() && this.rand.nextFloat() < 1f) { //0.03F) {
+        if (this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).isEmpty() && this.rand.nextFloat() < 0.03F) {
             this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, new ItemStack(CommonProxy.itemNautilusShell));
-            System.out.println("hold shell");
             this.inventoryHandsDropChances[EntityEquipmentSlot.OFFHAND.getIndex()] = 2.0F;
         }
         return livingdata;
     }
 
     protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-        if (true) { //(double)this.rand.nextFloat() > 0.9D) {
+        if ((double)this.rand.nextFloat() > 0.9D) {
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.FISHING_ROD));
         }
     }
