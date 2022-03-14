@@ -2,8 +2,6 @@ package com.fuzs.aquaacrobatics.block;
 
 import static net.minecraft.block.BlockLiquid.LEVEL;
 
-import git.jbredwards.fluidlogged_api.common.util.FluidState;
-import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.PropertyInteger;

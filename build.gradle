@@ -89,7 +89,7 @@ dependencies {
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')
 
     /* use ./gradlew publishToMavenLocal on Fluidlogged API first */
-    /* using commit fcc9e269ff4a32ad6b556ce08291c74f78697dae */
+    /* using commit 0cbe5ae749116b0dbebf5bc85e8d48f5ed8eff73 */
     deobfCompile "git.jbredwards.fluidlogged_api:Fluidlogged-API:v1.7-mc1.12.2"
 
     compile ("org.spongepowered:mixin:0.8.3") {

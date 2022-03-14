@@ -1,6 +1,6 @@
 package com.fuzs.aquaacrobatics.world.gen;
 
-import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
+import git.jbredwards.fluidlogged_api.api.util.FluidloggedUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

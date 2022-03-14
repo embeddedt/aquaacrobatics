@@ -1,8 +1,7 @@
 package com.fuzs.aquaacrobatics.block;
 
-import git.jbredwards.fluidlogged_api.common.block.IFluidloggable;
-import git.jbredwards.fluidlogged_api.common.util.FluidState;
-import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
+import git.jbredwards.fluidlogged_api.api.block.IFluidloggable;
+import git.jbredwards.fluidlogged_api.api.util.FluidloggedUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
 
 import static net.minecraft.block.BlockLiquid.LEVEL;
 
-@Optional.Interface(iface = "git.jbredwards.fluidlogged_api.common.block.IFluidloggable", modid = "fluidlogged_api")
+@Optional.Interface(iface = "git.jbredwards.fluidlogged_api.api.block.IFluidloggable", modid = "fluidlogged_api")
 public class UnderwaterPlantBlock extends Block implements IFluidloggable {
     protected UnderwaterPlantBlock() {
         super(Material.GROUND);

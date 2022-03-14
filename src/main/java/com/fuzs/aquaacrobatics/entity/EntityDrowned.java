@@ -1,6 +1,6 @@
 package com.fuzs.aquaacrobatics.entity;
 
-import git.jbredwards.fluidlogged_api.common.util.FluidloggedUtils;
+import git.jbredwards.fluidlogged_api.api.util.FluidloggedUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityIronGolem;
