@@ -142,6 +142,11 @@ public class EntityDrowned extends EntityZombie implements IEntitySwimmer {
         }
     }
 
+    public boolean isNotColliding()
+    {
+        return this.world.getCollisionBoxes(this, this.getEntityBoundingBox()).isEmpty() && this.world.checkNoEntityCollision(this.getEntityBoundingBox(), this);
+    }
+
     @Override
     public void setBreakDoorsAItask(boolean enabled) {
         super.setBreakDoorsAItask(false);
