@@ -1,5 +1,6 @@
 package com.fuzs.aquaacrobatics.entity;
 
+import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import git.jbredwards.fluidlogged_api.api.util.FluidloggedUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -8,11 +9,15 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Biomes;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -34,6 +39,13 @@ public class EntityDrowned extends EntityZombie implements IEntitySwimmer {
         this.groundNavigator = new PathNavigateGround(this, worldIn);
     }
 
+    protected void initEntityAI() {
+        this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.applyEntityAI();
+    }
+
     protected void applyEntityAI() {
         this.tasks.addTask(1, new EntityDrowned.AIGoToWater());
         this.tasks.addTask(2, new EntityDrowned.AIAttack(this, 1.0D, false));
@@ -46,10 +58,21 @@ public class EntityDrowned extends EntityZombie implements IEntitySwimmer {
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityIronGolem.class, true));
     }
 
-    @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(0, new EntityAISwimming(this));
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+        livingdata = super.onInitialSpawn(difficulty, livingdata);
+        System.out.println("on init spawn");
+        if (this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).isEmpty() && this.rand.nextFloat() < 1f) { //0.03F) {
+            this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, new ItemStack(CommonProxy.itemNautilusShell));
+            System.out.println("hold shell");
+            this.inventoryHandsDropChances[EntityEquipmentSlot.OFFHAND.getIndex()] = 2.0F;
+        }
+        return livingdata;
+    }
+
+    protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+        if (true) { //(double)this.rand.nextFloat() > 0.9D) {
+            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.FISHING_ROD));
+        }
     }
 
     private boolean wantsToSwim() {
