@@ -6,16 +6,28 @@ import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unused")
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity {
+
+    @Shadow public abstract boolean isPotionActive(Potion potionIn);
+
+    @Shadow @Nullable public abstract PotionEffect getActivePotionEffect(Potion potionIn);
 
     public EntityLivingBaseMixin(World worldIn) {
 
@@ -55,5 +67,33 @@ public abstract class EntityLivingBaseMixin extends Entity {
             return Math.min(oldAirValue + 4, 300);
         }
         return original;
+    }
+
+    private boolean aqua$isConduitProvidedEffect(Potion potion) {
+        if(!this.isInsideOfMaterial(Material.WATER))
+            return false;
+        return potion == MobEffects.HASTE || potion == MobEffects.NIGHT_VISION || potion == MobEffects.WATER_BREATHING;
+    }
+
+    @Inject(method = "isPotionActive", at = @At("RETURN"), cancellable = true)
+    private void checkConduitEffectActive(Potion potionIn, CallbackInfoReturnable<Boolean> cir) {
+        if(!cir.getReturnValue() && ConfigHandler.MiscellaneousConfig.aquaticWorldContent && aqua$isConduitProvidedEffect(potionIn)) {
+            cir.setReturnValue(isPotionActive(CommonProxy.effectConduitPower));
+        }
+    }
+
+    @Inject(method = "getActivePotionEffect", at = @At("RETURN"), cancellable = true)
+    private void getConduitEffect(Potion potionIn, CallbackInfoReturnable<PotionEffect> cir) {
+        if(cir.getReturnValue() == null && ConfigHandler.MiscellaneousConfig.aquaticWorldContent && aqua$isConduitProvidedEffect(potionIn)) {
+            PotionEffect conduit = getActivePotionEffect(CommonProxy.effectConduitPower);
+            if(conduit != null) {
+                cir.setReturnValue(new PotionEffect(potionIn,
+                        conduit.getDuration(),
+                        conduit.getAmplifier(),
+                        conduit.getIsAmbient(),
+                        conduit.doesShowParticles()
+                ));
+            }
+        }
     }
 }
