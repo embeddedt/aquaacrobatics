@@ -8,6 +8,7 @@ import com.fuzs.aquaacrobatics.client.handler.AirMeterHandler;
 import com.fuzs.aquaacrobatics.client.handler.FogHandler;
 import com.fuzs.aquaacrobatics.client.model.WaterResourcePack;
 import com.fuzs.aquaacrobatics.client.render.RenderDrowned;
+import com.fuzs.aquaacrobatics.client.render.TileEntityConduitRenderer;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.EntityDrowned;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
@@ -18,12 +19,14 @@ import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import com.fuzs.aquaacrobatics.integration.thaumicaugmentation.ThaumicAugmentationIntegration;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import com.fuzs.aquaacrobatics.network.message.PacketSendKey;
+import com.fuzs.aquaacrobatics.tile.TileEntityConduit;
 import com.fuzs.aquaacrobatics.util.Keybindings;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -33,6 +36,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -66,6 +70,7 @@ public class ClientProxy extends CommonProxy {
     public void onInit() {
         super.onInit();
         Keybindings.register();
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConduit.class, new TileEntityConduitRenderer());
     }
 
     @SubscribeEvent

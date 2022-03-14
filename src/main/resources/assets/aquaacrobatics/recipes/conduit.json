@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"  ],
+  "key": {
+    "A": [
+      {
+        "item": "aquaacrobatics:nautilus_shell",
+        "data": 0
+      }
+    ],
+    "B": [
+      {
+        "item": "aquaacrobatics:heart_of_the_sea",
+        "data": 0
+      }
+    ]
+  },
+  "result": {
+    "item": "aquaacrobatics:conduit",
+    "data": 0
+  }
+}

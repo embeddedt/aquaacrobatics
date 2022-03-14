@@ -5,12 +5,14 @@ import com.fuzs.aquaacrobatics.block.*;
 import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
+import com.fuzs.aquaacrobatics.effect.PotionConduitPower;
 import com.fuzs.aquaacrobatics.entity.EntityDrowned;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import com.fuzs.aquaacrobatics.item.DriedKelpItem;
 import com.fuzs.aquaacrobatics.item.ExplorerMapItem;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
+import com.fuzs.aquaacrobatics.tile.TileEntityConduit;
 import com.fuzs.aquaacrobatics.world.gen.WorldGenHandler;
 import com.fuzs.aquaacrobatics.world.structure.BuriedTreasurePieces;
 import com.fuzs.aquaacrobatics.world.structure.BuriedTreasureStructure;
@@ -23,6 +25,7 @@ import net.minecraft.init.Biomes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -42,16 +45,21 @@ public class CommonProxy {
     public static Block blockDriedKelp;
     public static Block blockKelp;
     public static Block blockKelpPlant;
+    public static Block blockConduit;
     public static SeagrassBlock blockSeagrass;
 
     public static ItemBlock itemDriedKelpBlock;
     public static ItemBlock itemKelp;
     public static ItemBlock itemSeagrass;
+    public static ItemBlock itemConduit;
     public static Item itemDriedKelp;
     public static Item itemSeaHeart;
     public static Item itemNautilusShell;
 
     public static Item itemBuriedTreasureMap;
+
+    @GameRegistry.ObjectHolder("aquaacrobatics:conduit_power")
+    public static Potion effectConduitPower;
 
     private boolean needNetworking() {
         return ConfigHandler.MovementConfig.enableToggleCrawling;
@@ -77,6 +85,11 @@ public class CommonProxy {
             itemSeagrass = new ItemBlock(blockSeagrass);
             AquaAcrobatics.REGISTRY.registerBlock(blockSeagrass, itemSeagrass, "seagrass");
 
+            blockConduit = new ConduitBlock();
+            itemConduit = new ItemBlock(blockConduit);
+            AquaAcrobatics.REGISTRY.registerBlock(blockConduit, itemConduit, "conduit");
+            GameRegistry.registerTileEntity(TileEntityConduit.class, new ResourceLocation(AquaAcrobatics.MODID, "conduit"));
+
             itemDriedKelp = AquaAcrobatics.REGISTRY.registerItem(new DriedKelpItem(), "dried_kelp");
 
             itemSeaHeart = AquaAcrobatics.REGISTRY.registerItem(new Item().setCreativeTab(CreativeTabs.MATERIALS), "heart_of_the_sea");
@@ -84,10 +97,12 @@ public class CommonProxy {
 
             itemBuriedTreasureMap = AquaAcrobatics.REGISTRY.registerItem(new ExplorerMapItem("Buried_Treasure"), "buried_treasure_map");
 
+
             int entityNetworkId = 1;
             AquaAcrobatics.REGISTRY.registerMob(EntityDrowned.class, "drowned", entityNetworkId++, 9433559, 7969893);
             EntityRegistry.addSpawn(EntityDrowned.class, 100, 3, 5, EnumCreatureType.MONSTER, Biomes.OCEAN, Biomes.DEEP_OCEAN, Biomes.FROZEN_OCEAN, Biomes.RIVER, Biomes.FROZEN_RIVER);
             EntitySpawnPlacementRegistry.setPlacementType(EntityDrowned.class, EntityLiving.SpawnPlacementType.IN_WATER);
+
             MinecraftForge.EVENT_BUS.register(new WorldGenHandler());
         }
     }
@@ -105,6 +120,13 @@ public class CommonProxy {
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
             event.getRegistry().register(new BlockBubbleColumn());
+    }
+
+
+    @SubscribeEvent
+    public static void registerPotions(RegistryEvent.Register<Potion> event) {
+        if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
+            event.getRegistry().register(new PotionConduitPower());
     }
 
 
