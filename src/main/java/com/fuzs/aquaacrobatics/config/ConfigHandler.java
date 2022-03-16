@@ -119,6 +119,11 @@ public class ConfigHandler {
         @Config.RequiresMcRestart
         public static boolean betweenlandsIntegration = true;
 
+        @Config.Name("Chiseled Me Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean chiseledMeIntegration = true;
+
         @Config.Name("Ender IO Integration")
         @Config.Comment(COMPAT_DESCRIPTION)
         @Config.RequiresMcRestart

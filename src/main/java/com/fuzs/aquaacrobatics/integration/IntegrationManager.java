@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 public class IntegrationManager {
 
     private static boolean isBetweenlandsLoaded;
+    private static boolean isChiseledMeLoaded;
     private static boolean isEnderIoLoaded;
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;
@@ -24,6 +25,7 @@ public class IntegrationManager {
 
     public static void loadCompat() {
         isBetweenlandsLoaded = Loader.isModLoaded("thebetweenlands");
+        isChiseledMeLoaded = Loader.isModLoaded("chiseled_me");
         isEnderIoLoaded = Loader.isModLoaded("enderio");
         isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
         isMoBendsLoaded = Loader.isModLoaded("mobends");
@@ -38,6 +40,11 @@ public class IntegrationManager {
     public static boolean isBetweenlandsEnabled() {
 
         return isBetweenlandsLoaded && ConfigHandler.IntegrationConfig.betweenlandsIntegration;
+    }
+
+    public static boolean isChiseledMeEnabled() {
+
+        return isChiseledMeLoaded && ConfigHandler.IntegrationConfig.chiseledMeIntegration;
     }
 
     public static boolean isEnderIoEnabled() {

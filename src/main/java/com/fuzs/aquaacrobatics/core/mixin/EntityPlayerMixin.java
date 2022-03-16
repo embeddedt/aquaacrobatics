@@ -7,6 +7,7 @@ import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
 import com.fuzs.aquaacrobatics.integration.betweenlands.BetweenlandsIntegration;
+import com.fuzs.aquaacrobatics.integration.chiseledme.ChiseledMeIntegration;
 import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
 import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaublesIntegration;
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
@@ -83,10 +84,27 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         super(worldIn);
     }
 
+    private float findEntitySizeScaleFactor() {
+        float finalFactor = 1f;
+        if(IntegrationManager.isTrinketsAndBaublesEnabled())
+            finalFactor *= TrinketsAndBaublesIntegration.getResizeFactor((EntityPlayer)(Object)this);
+        if(IntegrationManager.isChiseledMeEnabled())
+            finalFactor *= ChiseledMeIntegration.getResizeFactor((EntityPlayer)(Object)this);
+        return finalFactor;
+    }
+
+    private EntitySize handleEntitySizeScaling(EntitySize in) {
+        float finalFactor = findEntitySizeScaleFactor();
+        if(finalFactor == 1f)
+            return in;
+        else
+            return in.scale(finalFactor);
+    }
+
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onConstructed(CallbackInfo callbackInfo) {
 
-        this.size = EntitySize.flexible(0.6F, 1.8F);
+        this.size = handleEntitySizeScaling(EntitySize.flexible(0.6F, 1.8F));
         this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
         this.dataManager.register(POSE, Pose.STANDING);
         if (ConfigHandler.MovementConfig.enableToggleCrawling) {
@@ -215,7 +233,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public EntitySize getSize(Pose poseIn) {
 
-        return SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
+        return handleEntitySizeScaling(SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE));
     }
 
     @Override
@@ -268,10 +286,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         if (IntegrationManager.isMorphEnabled() && MorphIntegration.isMorphing(this.getPlayer())) {
             return false;
         }
-        
-        if(IntegrationManager.isTrinketsAndBaublesEnabled() && TrinketsAndBaublesIntegration.hasResized(this.getPlayer())) {
-            return false;
-        }
 
         // is another mod interfering
         final float delta = 0.025F;
@@ -317,8 +331,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
     public final void getEyeHeight(CallbackInfoReturnable<Float> callbackInfoReturnable) {
-
-        callbackInfoReturnable.setReturnValue(this.playerEyeHeight);
+        callbackInfoReturnable.setReturnValue(this.playerEyeHeight * findEntitySizeScaleFactor());
     }
 
     @Shadow
