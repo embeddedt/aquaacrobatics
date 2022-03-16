@@ -93,6 +93,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         return finalFactor;
     }
 
+    private float findEyeScaleFactor() {
+        float finalFactor = 1f;
+        if(IntegrationManager.isChiseledMeEnabled())
+            finalFactor *= ChiseledMeIntegration.getResizeFactor((EntityPlayer)(Object)this);
+        return finalFactor;
+    }
+
     private EntitySize handleEntitySizeScaling(EntitySize in) {
         float finalFactor = findEntitySizeScaleFactor();
         if(finalFactor == 1f)
@@ -331,7 +338,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
     public final void getEyeHeight(CallbackInfoReturnable<Float> callbackInfoReturnable) {
-        callbackInfoReturnable.setReturnValue(this.playerEyeHeight * findEntitySizeScaleFactor());
+        callbackInfoReturnable.setReturnValue(this.playerEyeHeight * findEyeScaleFactor());
     }
 
     @Shadow
