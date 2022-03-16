@@ -1,0 +1,1 @@
+{ "variants": { "facing=east": { "model": "aquaacrobatics:fire_coral_wall_fan", "y": 90 }, "facing=south": { "model": "aquaacrobatics:fire_coral_wall_fan", "y": 180 }, "facing=west": { "model": "aquaacrobatics:fire_coral_wall_fan", "y": 270 }, "facing=north": { "model": "aquaacrobatics:fire_coral_wall_fan", "y": 0 } } }

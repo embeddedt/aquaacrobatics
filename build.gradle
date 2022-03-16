@@ -107,8 +107,14 @@ dependencies {
 sourceSets {
     main {
         ext.refMap = "mixins.${project.ext.id}.refmap.json"
+        resources {
+            srcDirs += [
+                    'src/generated/resources'
+            ]
+        }
     }
 }
+
 
 
 processResources {

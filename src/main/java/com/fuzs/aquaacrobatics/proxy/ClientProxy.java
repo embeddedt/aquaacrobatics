@@ -4,8 +4,13 @@ import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
 import com.fuzs.aquaacrobatics.block.KelpBlock;
 import com.fuzs.aquaacrobatics.block.KelpTopBlock;
+import com.fuzs.aquaacrobatics.block.coral.BlockAbstractCoral;
+import com.fuzs.aquaacrobatics.block.coral.BlockCoral;
+import com.fuzs.aquaacrobatics.block.coral.BlockCoralFan;
 import com.fuzs.aquaacrobatics.client.handler.AirMeterHandler;
 import com.fuzs.aquaacrobatics.client.handler.FogHandler;
+import com.fuzs.aquaacrobatics.client.model.BlockCoralFanStateMapper;
+import com.fuzs.aquaacrobatics.client.model.BlockCoralStateMapper;
 import com.fuzs.aquaacrobatics.client.model.WaterResourcePack;
 import com.fuzs.aquaacrobatics.client.render.RenderDrowned;
 import com.fuzs.aquaacrobatics.client.render.TileEntityConduitItemRenderer;
@@ -18,18 +23,25 @@ import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
 import com.fuzs.aquaacrobatics.integration.enderio.EnderIOIntegration;
 import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import com.fuzs.aquaacrobatics.integration.thaumicaugmentation.ThaumicAugmentationIntegration;
+import com.fuzs.aquaacrobatics.item.ItemBlockCoral;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import com.fuzs.aquaacrobatics.network.message.PacketSendKey;
 import com.fuzs.aquaacrobatics.tile.TileEntityConduit;
 import com.fuzs.aquaacrobatics.util.Keybindings;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -49,6 +61,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(Side.CLIENT)
@@ -76,6 +89,13 @@ public class ClientProxy extends CommonProxy {
         CommonProxy.itemConduit.setTileEntityItemStackRenderer(new TileEntityConduitItemRenderer());
     }
 
+    private static void doItemAndBlockModel(Block block, Item item, StateMapperBase mapper) {
+        ModelLoader.setCustomStateMapper(block, mapper);
+        for(Map.Entry<IBlockState, ModelResourceLocation> e : mapper.putStateModelLocations(block).entrySet()) {
+            ModelLoader.setCustomModelResourceLocation(item, block.getMetaFromState(e.getKey()), e.getValue());
+        }
+    }
+
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
@@ -87,6 +107,18 @@ public class ClientProxy extends CommonProxy {
             RenderingRegistry.registerEntityRenderingHandler(EntityDrowned.class, RenderDrowned.FACTORY);
             ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(AquaAcrobatics.MODID + ":conduit", "inventory");
             ModelLoader.setCustomModelResourceLocation(itemConduit, 0, itemModelResourceLocation);
+            /* coral */
+            doItemAndBlockModel(CommonProxy.blockCoralBlock, CommonProxy.itemCoralBlock, new BlockCoralStateMapper(BlockCoral.VARIANT, BlockCoral.DEAD, "coral_block"));
+            doItemAndBlockModel(CommonProxy.blockCoralPlant, CommonProxy.itemCoralPlant, new BlockCoralStateMapper(BlockCoral.VARIANT, BlockCoral.DEAD, "coral"));
+            for(BlockCoral.EnumType type : BlockCoral.EnumType.values()) {
+                String base = type.getName() + "_coral_fan";
+                ResourceLocation location = new ResourceLocation(AquaAcrobatics.MODID, base);
+                Item item = Item.REGISTRY.getObject(location);
+                BlockAbstractCoral block = (BlockAbstractCoral) Block.REGISTRY.getObject(location);
+                ModelLoader.setCustomStateMapper(block, new BlockCoralFanStateMapper());
+                ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(location, "inventory"));
+                ModelLoader.setCustomModelResourceLocation(item, 8, new ModelResourceLocation(new ResourceLocation(AquaAcrobatics.MODID, "dead_" + base), "inventory"));
+            }
         }
     }
     

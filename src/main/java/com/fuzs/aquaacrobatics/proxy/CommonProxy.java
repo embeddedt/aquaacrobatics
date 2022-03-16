@@ -4,6 +4,8 @@ import com.fuzs.aquaacrobatics.AquaAcrobatics;
 import com.fuzs.aquaacrobatics.block.*;
 import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.block.coral.BlockCoral;
+import com.fuzs.aquaacrobatics.block.coral.BlockCoralFan;
+import com.fuzs.aquaacrobatics.block.coral.BlockCoralPlant;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.effect.PotionConduitPower;
@@ -13,6 +15,7 @@ import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import com.fuzs.aquaacrobatics.item.DriedKelpItem;
 import com.fuzs.aquaacrobatics.item.ExplorerMapItem;
 import com.fuzs.aquaacrobatics.item.ItemBlockCoral;
+import com.fuzs.aquaacrobatics.item.ItemBlockCoralFan;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import com.fuzs.aquaacrobatics.tile.TileEntityConduit;
 import com.fuzs.aquaacrobatics.world.gen.WorldGenHandler;
@@ -48,6 +51,7 @@ public class CommonProxy {
     public static Block blockKelp;
     public static Block blockKelpPlant;
     public static Block blockConduit;
+    public static Block blockCoralPlant;
     public static Block blockCoralBlock;
     public static SeagrassBlock blockSeagrass;
 
@@ -55,6 +59,7 @@ public class CommonProxy {
     public static ItemBlock itemKelp;
     public static ItemBlock itemSeagrass;
     public static ItemBlock itemConduit;
+    public static ItemBlock itemCoralPlant;
     public static ItemBlock itemCoralBlock;
     public static Item itemDriedKelp;
     public static Item itemSeaHeart;
@@ -95,8 +100,18 @@ public class CommonProxy {
             GameRegistry.registerTileEntity(TileEntityConduit.class, new ResourceLocation(AquaAcrobatics.MODID, "conduit"));
 
             blockCoralBlock = new BlockCoral();
-            itemCoralBlock = new ItemBlockCoral(blockCoralBlock);
+            itemCoralBlock = new ItemBlockCoral((BlockCoral)blockCoralBlock);
             AquaAcrobatics.REGISTRY.registerBlock(blockCoralBlock, itemCoralBlock, "coral_block");
+
+            blockCoralPlant = new BlockCoralPlant();
+            itemCoralPlant = new ItemBlockCoral((BlockCoralPlant)blockCoralPlant);
+            AquaAcrobatics.REGISTRY.registerBlock(blockCoralPlant, itemCoralPlant, "coral");
+
+            for(BlockCoral.EnumType type : BlockCoral.EnumType.values()) {
+                BlockCoralFan fanBlock = new BlockCoralFan(type);
+                ItemBlock fanItem = new ItemBlockCoralFan(fanBlock);
+                AquaAcrobatics.REGISTRY.registerBlock(fanBlock, fanItem, type.getName() + "_coral_fan");
+            }
 
             itemDriedKelp = AquaAcrobatics.REGISTRY.registerItem(new DriedKelpItem(), "dried_kelp");
 

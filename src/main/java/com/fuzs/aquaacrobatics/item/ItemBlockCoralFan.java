@@ -1,17 +1,12 @@
 package com.fuzs.aquaacrobatics.item;
 
 import com.fuzs.aquaacrobatics.block.coral.BlockAbstractCoral;
-import com.fuzs.aquaacrobatics.block.coral.BlockCoral;
-import net.minecraft.block.Block;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class ItemBlockCoral extends ItemBlock {
-    public ItemBlockCoral(BlockAbstractCoral block) {
+public class ItemBlockCoralFan extends ItemBlock {
+    public ItemBlockCoralFan(BlockAbstractCoral block) {
         super(block);
     }
 
@@ -23,7 +18,7 @@ public class ItemBlockCoral extends ItemBlock {
         sb.append("tile.aquaacrobatics.");
         if(coral.isDead(state))
             sb.append("dead_");
-        sb.append(coral.getCoralType(state).getName()).append("_").append(block.getRegistryName().getPath());
+        sb.append(coral.getCoralType(state).getName()).append("_coral_fan");
         return sb.toString();
     }
 

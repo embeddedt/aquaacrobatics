@@ -7,22 +7,41 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
 
 /**
  * Solid coral.
  */
-public class BlockCoral extends Block {
+public class BlockCoral extends BlockAbstractCoral {
     public static final PropertyEnum<BlockCoral.EnumType> VARIANT = PropertyEnum.create("variant", BlockCoral.EnumType.class);
     public static final PropertyBool DEAD = PropertyBool.create("dead");
 
     public BlockCoral() {
-        super(Material.ROCK);
+        this.setCreativeTab(CreativeTabs.DECORATIONS);
         this.setHardness(1.5f);
         this.setResistance(6.0f);
         this.setDefaultState(this.getDefaultState().withProperty(VARIANT, EnumType.TUBE).withProperty(DEAD, false));
+    }
+
+    @Override
+    public IBlockState getDeadVersion(World worldIn, BlockPos pos, IBlockState current) {
+        return current.withProperty(DEAD, true);
+    }
+
+    @Override
+    public boolean isDead(IBlockState state) {
+        return state.getValue(DEAD);
+    }
+
+    @Override
+    public EnumType getCoralType(IBlockState state) {
+        return state.getValue(VARIANT);
     }
 
     @Override
@@ -49,6 +68,11 @@ public class BlockCoral extends Block {
         for(IBlockState state : this.getBlockState().getValidStates()) {
             items.add(new ItemStack(this, 1, this.getMetaFromState(state)));
         }
+    }
+
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return new ItemStack(this, 1, this.getMetaFromState(state));
     }
 
     public enum EnumType implements IStringSerializable
