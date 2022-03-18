@@ -6,6 +6,7 @@ import com.fuzs.aquaacrobatics.biome.BiomeWaterFogColors;
 import com.fuzs.aquaacrobatics.block.coral.BlockCoral;
 import com.fuzs.aquaacrobatics.block.coral.BlockCoralFan;
 import com.fuzs.aquaacrobatics.block.coral.BlockCoralPlant;
+import com.fuzs.aquaacrobatics.client.handler.AssetHandler;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.effect.PotionConduitPower;
@@ -79,6 +80,7 @@ public class CommonProxy {
         if(needNetworking())
             NetworkHandler.registerMessages(AquaAcrobatics.MODID);
         if(ConfigHandler.MiscellaneousConfig.aquaticWorldContent) {
+            AssetHandler.downloadAssets();
             blockDriedKelp = new DriedKelpBlock();
             itemDriedKelpBlock = new DriedKelpItemBlock();
             AquaAcrobatics.REGISTRY.registerBlock(blockDriedKelp, itemDriedKelpBlock, "dried_kelp_block");

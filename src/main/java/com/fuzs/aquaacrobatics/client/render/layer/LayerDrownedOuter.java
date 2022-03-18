@@ -12,7 +12,7 @@ import net.minecraft.entity.monster.EntityStray;
 import net.minecraft.util.ResourceLocation;
 
 public class LayerDrownedOuter implements LayerRenderer<EntityDrowned> {
-    private static final ResourceLocation DROWNED_OUTER = new ResourceLocation(AquaAcrobatics.MODID, "textures/entity/drowned_outer_layer.png");
+    private static final ResourceLocation DROWNED_OUTER = new ResourceLocation(AquaAcrobatics.MODID, "textures/entity/zombie/drowned_outer_layer.png");
     private final RenderDrowned renderer;
     private final ModelZombie layerModel = new ModelZombie(0.25F, false);
 

@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 
 public class RenderDrowned extends RenderZombie {
 
-    private ResourceLocation mobTexture = new ResourceLocation(AquaAcrobatics.MODID, "textures/entity/drowned.png");
+    private ResourceLocation mobTexture = new ResourceLocation(AquaAcrobatics.MODID, "textures/entity/zombie/drowned.png");
 
     public static final Factory FACTORY = new Factory();
 
