@@ -22,8 +22,6 @@ import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 
 import java.util.Random;
 
-import static net.minecraft.block.BlockLiquid.LEVEL;
-
 public class SeagrassBlock extends UnderwaterPlantBlock {
     public static enum SeagrassType implements IStringSerializable {
         SINGLE("single"),
@@ -58,7 +56,7 @@ public class SeagrassBlock extends UnderwaterPlantBlock {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, LEVEL, TYPE);
+        return new BlockStateContainer(this, TYPE);
     }
 
     public boolean isValidPosition(IBlockAccess worldIn, BlockPos pos) {
@@ -140,7 +138,7 @@ public class SeagrassBlock extends UnderwaterPlantBlock {
     }
     
     public void initModelOverride() {
-        ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(LEVEL).build());
+        ModelLoader.setCustomStateMapper(this, new StateMap.Builder().build());
     }
 
     @Override
