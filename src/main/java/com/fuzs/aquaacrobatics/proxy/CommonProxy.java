@@ -120,7 +120,6 @@ public class CommonProxy {
             itemNautilusShell = AquaAcrobatics.REGISTRY.registerItem(new Item().setCreativeTab(CreativeTabs.MATERIALS), "nautilus_shell");
 
             itemBuriedTreasureMap = AquaAcrobatics.REGISTRY.registerItem(new ExplorerMapItem("Buried_Treasure"), "buried_treasure_map");
-            AquaAcrobatics.REGISTRY.registerItem(new ExplorerMapItem("Shipwreck"), "shipwreck_map");
 
 
             int entityNetworkId = 1;
