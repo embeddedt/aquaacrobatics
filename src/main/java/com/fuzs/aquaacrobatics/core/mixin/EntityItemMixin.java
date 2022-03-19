@@ -32,7 +32,7 @@ public abstract class EntityItemMixin extends Entity {
     
     @Redirect(method = "onUpdate", at = @At(value="INVOKE", target = "Lnet/minecraft/entity/item/EntityItem;hasNoGravity()Z", ordinal = 0), expect = 1, require = 0)
     private boolean applyFloatMotionIfInWater(EntityItem entityItem) {
-        if(this.world.getBlockState(new BlockPos(entityItem)).getMaterial() == Material.WATER) {
+        if(isInsideOfMaterial(Material.WATER)) {
             applyFloatMotion();
             return true;
         } else {
