@@ -51,7 +51,8 @@ public class BlockBubbleColumn extends BlockStaticLiquid {
    }
    
 
-   public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+   @Override
+   public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
       IBlockState iblockstate = worldIn.getBlockState(pos.up());
       IBubbleColumnInteractable bubbleEntity = (IBubbleColumnInteractable)entityIn;
       boolean downwards = !state.getValue(DRAG);
