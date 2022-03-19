@@ -12,6 +12,11 @@ public class AssetHandler {
     private static void putTexture(String assetPath) {
         assetPaths.put("assets/minecraft/" + assetPath, "assets/aquaacrobatics/" + assetPath);
     }
+
+    private static void putStructure(String assetPath) {
+        assetPaths.put("data/minecraft/" + assetPath, "assets/aquaacrobatics/" + assetPath);
+    }
+
     public static void downloadAssets() {
         AquaAcrobatics.LOGGER.info("Aqua Acrobatics is loading vanilla assets from newer versions...");
         putTexture("textures/block/brain_coral.png");
@@ -77,7 +82,6 @@ public class AssetHandler {
         putTexture("textures/entity/conduit/wind_vertical.png");
         putTexture("textures/entity/zombie/drowned.png");
         putTexture("textures/entity/zombie/drowned_outer_layer.png");
-
 
         AssetMoverAPI.fromMinecraft("1.18.1", assetPaths);
         assetPaths = null; /* allow GC */

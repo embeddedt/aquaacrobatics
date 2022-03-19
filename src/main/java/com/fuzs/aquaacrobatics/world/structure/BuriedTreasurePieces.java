@@ -21,6 +21,9 @@ import java.util.Random;
 
 import static com.fuzs.aquaacrobatics.world.gen.FluidBlockHelper.isLiquid;
 
+/**
+ * Based on MCP 1.13.
+ */
 public class BuriedTreasurePieces {
     public static void registerBuriedTreasurePieces() {
         MapGenStructureIO.registerStructureComponent(BuriedTreasurePieces.Piece.class, "BTP");

@@ -1,0 +1,77 @@
+{
+  "pools": [
+    {
+      "name": "buried_treasure_map",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "aquaacrobatics:buried_treasure_map"
+        }
+      ]
+    },
+    {
+      "name": "cartography_items",
+      "rolls": 3,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:compass"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:map"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:clock"
+        },
+        {
+          "type": "item",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 10.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:paper"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 5.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:feather"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 5.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:book"
+        }
+      ]
+    }
+  ]
+}

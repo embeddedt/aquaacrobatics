@@ -4,6 +4,7 @@ import com.fuzs.aquaacrobatics.block.KelpTopBlock;
 import com.fuzs.aquaacrobatics.block.SeagrassBlock;
 import com.fuzs.aquaacrobatics.proxy.CommonProxy;
 import com.fuzs.aquaacrobatics.world.structure.BuriedTreasureStructure;
+import com.fuzs.aquaacrobatics.world.structure.ShipwreckStructure;
 import git.jbredwards.fluidlogged_api.api.block.IFluidloggable;
 import git.jbredwards.fluidlogged_api.api.util.FluidloggedUtils;
 import net.minecraft.block.Block;
@@ -23,16 +24,19 @@ import java.util.Random;
 
 public class WorldGenHandler {
     private static final BuriedTreasureStructure buriedTreasure = new BuriedTreasureStructure();
+    private static final ShipwreckStructure shipwreck = new ShipwreckStructure();
 
     @SubscribeEvent
     public void onDecorateOverworld(PopulateChunkEvent.Post event) {
         if(event.getGenerator() instanceof ChunkGeneratorOverworld) {
             buriedTreasure.generateStructure(event.getWorld(), event.getRand(), new ChunkPos(event.getChunkX(), event.getChunkZ()));
+            shipwreck.generateStructure(event.getWorld(), event.getRand(), new ChunkPos(event.getChunkX(), event.getChunkZ()));
         }
     }
 
     public static void onChunkGenerate(World world, int x, int z, ChunkPrimer chunkPrimer) {
         buriedTreasure.generate(world, x, z, chunkPrimer);
+        shipwreck.generate(world, x, z, chunkPrimer);
     }
 
     @SubscribeEvent

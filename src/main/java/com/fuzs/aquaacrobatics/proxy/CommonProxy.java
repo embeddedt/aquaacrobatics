@@ -20,8 +20,7 @@ import com.fuzs.aquaacrobatics.item.ItemBlockCoralFan;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import com.fuzs.aquaacrobatics.tile.TileEntityConduit;
 import com.fuzs.aquaacrobatics.world.gen.WorldGenHandler;
-import com.fuzs.aquaacrobatics.world.structure.BuriedTreasurePieces;
-import com.fuzs.aquaacrobatics.world.structure.BuriedTreasureStructure;
+import com.fuzs.aquaacrobatics.world.structure.*;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -121,6 +120,7 @@ public class CommonProxy {
             itemNautilusShell = AquaAcrobatics.REGISTRY.registerItem(new Item().setCreativeTab(CreativeTabs.MATERIALS), "nautilus_shell");
 
             itemBuriedTreasureMap = AquaAcrobatics.REGISTRY.registerItem(new ExplorerMapItem("Buried_Treasure"), "buried_treasure_map");
+            AquaAcrobatics.REGISTRY.registerItem(new ExplorerMapItem("Shipwreck"), "shipwreck_map");
 
 
             int entityNetworkId = 1;
@@ -136,8 +136,14 @@ public class CommonProxy {
         if(ConfigHandler.MiscellaneousConfig.aquaticWorldContent) {
             GameRegistry.addSmelting(itemKelp, new ItemStack(itemDriedKelp), 0.1f);
             LootTableList.register(new ResourceLocation(AquaAcrobatics.MODID, "chests/buried_treasure"));
+            LootTableList.register(new ResourceLocation(AquaAcrobatics.MODID, "chests/shipwreck_map"));
+            LootTableList.register(new ResourceLocation(AquaAcrobatics.MODID, "chests/shipwreck_treasure"));
+            LootTableList.register(new ResourceLocation(AquaAcrobatics.MODID, "chests/shipwreck_supply"));
             MapGenStructureIO.registerStructure(BuriedTreasureStructure.Start.class, "Buried_Treasure");
+            MapGenStructureIO.registerStructure(ShipwreckStructure.Start.class, "Shipwreck");
             BuriedTreasurePieces.registerBuriedTreasurePieces();
+            UnflatteningDataFixer.init();
+            ShipwreckPieces.registerShipwreckPieces();
         }
     }
 

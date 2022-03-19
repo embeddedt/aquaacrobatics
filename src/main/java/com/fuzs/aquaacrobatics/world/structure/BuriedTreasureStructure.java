@@ -26,7 +26,9 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+/**
+ * Based on MCP 1.13.
+ */
 public class BuriedTreasureStructure extends MapGenStructure {
     public BuriedTreasureStructure() {
     }

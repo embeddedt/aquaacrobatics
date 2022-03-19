@@ -1,6 +1,7 @@
 package com.fuzs.aquaacrobatics.item;
 
 import com.fuzs.aquaacrobatics.world.structure.BuriedTreasureStructure;
+import com.fuzs.aquaacrobatics.world.structure.ShipwreckStructure;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemEmptyMap;
@@ -37,6 +38,9 @@ public class ExplorerMapItem extends ItemEmptyMap {
             switch(structureName) {
                 case "Buried_Treasure":
                     aquaStructure = new BuriedTreasureStructure();
+                    break;
+                case "Shipwreck":
+                    aquaStructure = new ShipwreckStructure();
                     break;
                 default:
                     throw new IllegalArgumentException("Unexpected structure: " + structureName);
