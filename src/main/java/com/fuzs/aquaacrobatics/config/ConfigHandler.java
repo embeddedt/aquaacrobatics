@@ -63,6 +63,10 @@ public class ConfigHandler {
         @Config.Comment("Enables a keybind to toggle crawling.")
         public static boolean enableToggleCrawling = false;
 
+        @Config.Name("New Projectile Behavior")
+        @Config.Comment("Modify projectile behavior to be closer to that of newer versions (fixes MC-73884 and allows bubble columns to work with ender pearls).")
+        public static boolean newProjectileBehavior = false;
+
     }
 
     public static class BlocksConfig {

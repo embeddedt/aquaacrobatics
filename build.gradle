@@ -50,6 +50,7 @@ minecraft {
     def extraArgs = "-Daquaacrobatics.fghack=true"
     
     clientJvmArgs += extraArgs
+    clientJvmArgs += "-Dmixin.debug.export=true"
     serverJvmArgs += extraArgs
 }
 
