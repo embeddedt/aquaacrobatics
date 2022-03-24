@@ -64,6 +64,9 @@ repositories {
     maven {
         url "https://maven.cleanroommc.com"
     }
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -91,8 +94,7 @@ dependencies {
     compileOnly files('deps/GalacticraftCore-1.12.2-4.0.2.280-deobf.jar')
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')
 
-    /* use ./gradlew publishToMavenLocal on Fluidlogged API first */
-    deobfCompile "git.jbredwards.fluidlogged_api:Fluidlogged-API:v1.7.1-mc1.12.2"
+    deobfCompile 'com.github.jbredwards:Fluidlogged-API:5c18d3ff5c'
 
     compile ("org.spongepowered:mixin:0.8.3") {
 
