@@ -58,7 +58,7 @@ repositories {
     maven { url = "https://repo.spongepowered.org/repository/maven-public" }
     //maven { url "https://maven.mcmoddev.com/" }
     maven {
-        url "https://cfa2.cursemaven.com"
+        url "https://www.cursemaven.com"
     }
     maven { url 'https://maven.tehnut.info' }
     maven {
