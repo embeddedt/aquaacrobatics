@@ -20,8 +20,11 @@ public class WitcheryResurrectedIntegration
     public static void subscribeTransformEvent()
     {
 
-        if (!HAS_TRANSFORMED && IntegrationManager.isWitcheryResurrectedEnabled()) {
-            CreatureForm.PLAYER_TRANSFORM_EVENT.subscribe((sender, args) -> HAS_TRANSFORMED = true);
+        if (IntegrationManager.isWitcheryResurrectedEnabled()) {
+            CreatureForm.PLAYER_TRANSFORM_EVENT.subscribe((sender, args) -> {
+                if (!HAS_TRANSFORMED)
+                    HAS_TRANSFORMED = true;
+            });
         }
     }
 
