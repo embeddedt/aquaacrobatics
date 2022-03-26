@@ -8,6 +8,7 @@ import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.core.mixin.accessor.FluidAccessor;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
+import com.fuzs.aquaacrobatics.integration.witchery.WitcheryResurrectedIntegration;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -55,7 +56,10 @@ public class CommonProxy {
 
             HatsIntegration.register();
         }
-        
+
+        if (IntegrationManager.isWitcheryResurrectedEnabled())
+            WitcheryResurrectedIntegration.register();
+
         if(!AquaAcrobaticsCore.isModCompatLoaded)
             AquaAcrobatics.LOGGER.error("Please consider installing MixinBooter to ensure compatibility with more mods");
 

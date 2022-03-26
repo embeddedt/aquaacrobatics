@@ -113,7 +113,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private void onConstructed(CallbackInfo callbackInfo) {
 
         this.size = handleEntitySizeScaling(EntitySize.flexible(0.6F, 1.8F));
-        this.playerEyeHeight = this.getEyeHeight(this.getPose(), this.size);
+        this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
         this.dataManager.register(POSE, Pose.STANDING);
         if (ConfigHandler.MovementConfig.enableToggleCrawling) {
             this.dataManager.register(TOGGLED_CRAWLING, false);
@@ -140,7 +140,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public void onEntityUpdate() {
 
         super.onEntityUpdate();
-        if (WitcheryResurrectedIntegration.enabled && WitcheryResurrectedIntegration.HAS_TRANSFORMED) {
+        if (IntegrationManager.isWitcheryResurrectedEnabled() && WitcheryResurrectedIntegration.HAS_TRANSFORMED) {
             // A bit buggy, think some packages are not sent from Witchery. Sneaking updates the camera though.
             this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
             WitcheryResurrectedIntegration.HAS_TRANSFORMED = false;
@@ -314,10 +314,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
 
     protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
-        switch (WitcheryResurrectedIntegration.getCurrentTransformation()) {
-            case BAT:
-            case WOLF:
-                return 0.5f;
+        if(IntegrationManager.isWitcheryResurrectedEnabled()) {
+            switch (WitcheryResurrectedIntegration.getCurrentTransformation()) {
+                case BAT:
+                case WOLF:
+                    return 0.5f;
+            }
         }
         return poseIn == Pose.SLEEPING || poseIn ==  Pose.DYING ? 0.2F : this.getStandingEyeHeight(poseIn, sizeIn);
     }
