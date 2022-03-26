@@ -121,11 +121,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
         if (IntegrationManager.isWitcheryResurrectedEnabled())
             WitcheryResurrectedIntegration.subscribeTransformEvent();
-        /*if (IntegrationManager.isWitcheryResurrectedEnabled()) {
-            CreatureForm.PLAYER_TRANSFORM_EVENT.subscribe((sender, args) -> {
-                this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
-            });
-        }*/
     }
 
     @Override

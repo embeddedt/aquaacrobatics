@@ -1,11 +1,7 @@
 package com.fuzs.aquaacrobatics.integration.witchery;
 
-import com.fuzs.aquaacrobatics.entity.Pose;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
-import javafx.event.Event;
 import net.minecraft.entity.player.EntityPlayer;
-import net.msrandom.events.EventArgs;
-import net.msrandom.events.EventHandler;
 import net.msrandom.witchery.init.WitcheryCreatureTraits;
 import net.msrandom.witchery.init.data.WitcheryAlternateForms;
 import net.msrandom.witchery.transformation.CreatureForm;
@@ -20,7 +16,6 @@ public class WitcheryResurrectedIntegration
             BAT_EYE_HEIGHT = 0.5f;
     public static boolean HAS_TRANSFORMED = false;
 
-    //CreatureForm.PlayerTransformEventArgs.
 
     public static void subscribeTransformEvent()
     {
@@ -59,29 +54,4 @@ public class WitcheryResurrectedIntegration
         return isWerewolf(player) &&
                 WitcheryUtils.getExtension(player).getCurrentForm() == WitcheryAlternateForms.WOLFMAN;
     }
-
-    /*public static class TransformEventHandler<S, A extends EventArgs> implements EventHandler<S, A> {
-
-
-
-        @Override
-        public void subscribe(BiConsumer<S, A> biConsumer) {
-
-        }
-
-        @Override
-        public void unsubscribe(BiConsumer<S, A> biConsumer) {
-
-        }
-
-        public void handle(Event event) {
-
-        }
-
-        @Override
-        public void accept(S s, A a) {
-
-        }
-    }*/
-
 }
