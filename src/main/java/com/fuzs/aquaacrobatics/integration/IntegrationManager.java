@@ -2,11 +2,9 @@ package com.fuzs.aquaacrobatics.integration;
 
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import net.minecraftforge.fml.common.Loader;
-import net.msrandom.witchery.WitcheryResurrected;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class IntegrationManager {
 
@@ -37,7 +35,7 @@ public class IntegrationManager {
         isHatsLoaded = Loader.isModLoaded("hats");
         isThaumicAugmentationLoaded = Loader.isModLoaded("thaumicaugmentation");
         isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
-        isWitcheryResurrectedLoaded = Loader.isModLoaded(WitcheryResurrected.MOD_ID);
+        isWitcheryResurrectedLoaded = Loader.isModLoaded("witchery");
     }
 
     public static boolean isBetweenlandsEnabled() {

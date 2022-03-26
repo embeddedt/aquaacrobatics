@@ -7,30 +7,43 @@ import net.msrandom.witchery.init.data.WitcheryAlternateForms;
 import net.msrandom.witchery.transformation.CreatureForm;
 import net.msrandom.witchery.util.WitcheryUtils;
 
-import java.util.function.BiConsumer;
-
 public class WitcheryResurrectedIntegration
 {
-    public static final float
-            WOLF_EYE_HEIGHT = 0.5f,
-            BAT_EYE_HEIGHT = 0.5f;
     public static boolean HAS_TRANSFORMED = false;
 
+    public static boolean enabled = IntegrationManager.isWitcheryResurrectedEnabled();
 
-    public static void subscribeTransformEvent()
-    {
+    private static Transformation currentTransformation = Transformation.PLAYER;
 
-        if (IntegrationManager.isWitcheryResurrectedEnabled()) {
+    //private static EntityPlayer PLAYER;
+
+    static {
+        if (enabled) {
             CreatureForm.PLAYER_TRANSFORM_EVENT.subscribe((sender, args) -> {
-                if (!HAS_TRANSFORMED)
-                    HAS_TRANSFORMED = true;
+                if (args.getCurrentForm() == WitcheryAlternateForms.BAT) {
+                    currentTransformation = Transformation.BAT;
+                } else if (args.getCurrentForm() == WitcheryAlternateForms.WOLFMAN) {
+                    currentTransformation = Transformation.WOLFMAN;
+                } else if (args.getCurrentForm() == WitcheryAlternateForms.WOLF) {
+                    currentTransformation = Transformation.WOLF;
+                } else if (args.getCurrentForm() == WitcheryAlternateForms.TOAD) {
+                    currentTransformation = Transformation.TOAD;
+                } else {
+                    currentTransformation = Transformation.PLAYER;
+                }
+                HAS_TRANSFORMED = true;
             });
         }
     }
 
+    public static Transformation getCurrentTransformation()
+    {
+        return currentTransformation;
+    }
+
     public static boolean isVampire(EntityPlayer player)
     {
-        return IntegrationManager.isWitcheryResurrectedEnabled() &&
+        return enabled &&
                 WitcheryUtils.getExtension(player).isTransformation(WitcheryCreatureTraits.VAMPIRE);
     }
 
@@ -42,7 +55,7 @@ public class WitcheryResurrectedIntegration
 
     public static boolean isWerewolf(EntityPlayer player)
     {
-        return IntegrationManager.isWitcheryResurrectedEnabled() &&
+        return enabled &&
                 WitcheryUtils.getExtension(player).isTransformation(WitcheryCreatureTraits.WEREWOLF);
     }
 
@@ -56,5 +69,13 @@ public class WitcheryResurrectedIntegration
     {
         return isWerewolf(player) &&
                 WitcheryUtils.getExtension(player).getCurrentForm() == WitcheryAlternateForms.WOLFMAN;
+    }
+
+    public enum Transformation {
+        PLAYER,
+        WOLF,
+        WOLFMAN,
+        BAT,
+        TOAD;
     }
 }

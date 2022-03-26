@@ -113,14 +113,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private void onConstructed(CallbackInfo callbackInfo) {
 
         this.size = handleEntitySizeScaling(EntitySize.flexible(0.6F, 1.8F));
-        this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
+        this.playerEyeHeight = this.getEyeHeight(this.getPose(), this.size);
         this.dataManager.register(POSE, Pose.STANDING);
         if (ConfigHandler.MovementConfig.enableToggleCrawling) {
             this.dataManager.register(TOGGLED_CRAWLING, false);
         }
-
-        if (IntegrationManager.isWitcheryResurrectedEnabled())
-            WitcheryResurrectedIntegration.subscribeTransformEvent();
     }
 
     @Override
@@ -143,7 +140,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public void onEntityUpdate() {
 
         super.onEntityUpdate();
-        if (IntegrationManager.isWitcheryResurrectedEnabled() && WitcheryResurrectedIntegration.HAS_TRANSFORMED) {
+        if (WitcheryResurrectedIntegration.enabled && WitcheryResurrectedIntegration.HAS_TRANSFORMED) {
+            // A bit buggy, think some packages are not sent from Witchery. Sneaking updates the camera though.
             this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
             WitcheryResurrectedIntegration.HAS_TRANSFORMED = false;
         } else if (this.isInWater()) {
@@ -316,10 +314,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
 
     protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
-        if (WitcheryResurrectedIntegration.isWolfTransformation(this.getPlayer())) {
-            return WitcheryResurrectedIntegration.WOLF_EYE_HEIGHT;
-        } else if (WitcheryResurrectedIntegration.isBatTransformation(this.getPlayer())) {
-            return WitcheryResurrectedIntegration.BAT_EYE_HEIGHT;
+        switch (WitcheryResurrectedIntegration.getCurrentTransformation()) {
+            case BAT:
+            case WOLF:
+                return 0.5f;
         }
         return poseIn == Pose.SLEEPING || poseIn ==  Pose.DYING ? 0.2F : this.getStandingEyeHeight(poseIn, sizeIn);
     }
