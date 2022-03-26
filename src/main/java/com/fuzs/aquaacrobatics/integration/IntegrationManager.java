@@ -2,6 +2,7 @@ package com.fuzs.aquaacrobatics.integration;
 
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import net.minecraftforge.fml.common.Loader;
+import net.msrandom.witchery.WitcheryResurrected;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,8 @@ public class IntegrationManager {
     private static boolean isHatsLoaded;
     private static boolean isThaumicAugmentationLoaded;
     private static boolean isTrinketsAndBaublesLoaded;
-    
+    private static boolean isWitcheryResurrectedLoaded;
+
     public static List<IElytraOpenHook> elytraOpenHooks = new LinkedList<>();
 
     public static void loadCompat() {
@@ -35,6 +37,7 @@ public class IntegrationManager {
         isHatsLoaded = Loader.isModLoaded("hats");
         isThaumicAugmentationLoaded = Loader.isModLoaded("thaumicaugmentation");
         isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
+        isWitcheryResurrectedLoaded = Loader.isModLoaded(WitcheryResurrected.MOD_ID);
     }
 
     public static boolean isBetweenlandsEnabled() {
@@ -90,5 +93,10 @@ public class IntegrationManager {
     public static boolean isTrinketsAndBaublesEnabled() {
 
         return isTrinketsAndBaublesLoaded && ConfigHandler.IntegrationConfig.trinketsAndBaublesIntegration;
+    }
+
+    public static boolean isWitcheryResurrectedEnabled()
+    {
+        return isWitcheryResurrectedLoaded && ConfigHandler.IntegrationConfig.witcheryResurrectedIntegration;
     }
 }

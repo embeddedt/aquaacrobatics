@@ -11,6 +11,7 @@ import com.fuzs.aquaacrobatics.integration.chiseledme.ChiseledMeIntegration;
 import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
 import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaublesIntegration;
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
+import com.fuzs.aquaacrobatics.integration.witchery.WitcheryResurrectedIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
 import net.minecraft.network.datasync.DataSerializers;
@@ -117,6 +118,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         if (ConfigHandler.MovementConfig.enableToggleCrawling) {
             this.dataManager.register(TOGGLED_CRAWLING, false);
         }
+
+        if (IntegrationManager.isWitcheryResurrectedEnabled())
+            WitcheryResurrectedIntegration.subscribeTransformEvent();
+        /*if (IntegrationManager.isWitcheryResurrectedEnabled()) {
+            CreatureForm.PLAYER_TRANSFORM_EVENT.subscribe((sender, args) -> {
+                this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
+            });
+        }*/
     }
 
     @Override
@@ -139,7 +148,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public void onEntityUpdate() {
 
         super.onEntityUpdate();
-        if (this.isInWater()) {
+        if (IntegrationManager.isWitcheryResurrectedEnabled() && WitcheryResurrectedIntegration.HAS_TRANSFORMED) {
+            this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
+            WitcheryResurrectedIntegration.HAS_TRANSFORMED = false;
+        } else if (this.isInWater()) {
             int i = this.isSpectator() ? 10 : 1;
             this.timeUnderwater = MathHelper.clamp(this.timeUnderwater + i, 0, 600);
         } else if (this.timeUnderwater > 0) {
@@ -309,7 +321,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
 
     protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
-
+        if (WitcheryResurrectedIntegration.isWolfTransformation(this.getPlayer())) {
+            return WitcheryResurrectedIntegration.WOLF_EYE_HEIGHT;
+        } else if (WitcheryResurrectedIntegration.isBatTransformation(this.getPlayer())) {
+            return WitcheryResurrectedIntegration.BAT_EYE_HEIGHT;
+        }
         return poseIn == Pose.SLEEPING || poseIn ==  Pose.DYING ? 0.2F : this.getStandingEyeHeight(poseIn, sizeIn);
     }
 
