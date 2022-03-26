@@ -168,6 +168,10 @@ public class ConfigHandler {
         @Config.Comment(COMPAT_DESCRIPTION)
         public static boolean trinketsAndBaublesIntegration = true;
 
+        @Config.Name("Witchery: Resurrected Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        public static boolean witcheryResurrectedIntegration = true;
+
     }
 
     @SuppressWarnings("unused")

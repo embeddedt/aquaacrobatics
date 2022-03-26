@@ -61,6 +61,12 @@ repositories {
     maven {
         url "https://cursemaven.com"
     }
+    ivy {
+        url "https://witchery.msrandom.net/download/"
+        layout "pattern", {
+            artifact "[organisation]/[artifact].[ext]"
+        }
+    }
 }
 
 dependencies {
@@ -86,6 +92,7 @@ dependencies {
     deobfCompile "curse.maven:mixinbooter-419286:3575119:"
     compileOnly files('deps/GalacticraftCore-1.12.2-4.0.2.280-deobf.jar')
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')
+    compileOnly 'WitcheryResurrected0.5.2Hotfix4:WitcheryResurrected-1.12.2-0.5.2.4-forge-all'
 
     compile ("org.spongepowered:mixin:0.8.3") {
 

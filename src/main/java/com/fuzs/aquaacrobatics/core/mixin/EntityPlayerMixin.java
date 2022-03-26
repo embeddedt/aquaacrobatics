@@ -11,6 +11,7 @@ import com.fuzs.aquaacrobatics.integration.chiseledme.ChiseledMeIntegration;
 import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
 import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaublesIntegration;
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
+import com.fuzs.aquaacrobatics.integration.witchery.WitcheryResurrectedIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
 import net.minecraft.network.datasync.DataSerializers;
@@ -139,7 +140,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public void onEntityUpdate() {
 
         super.onEntityUpdate();
-        if (this.isInWater()) {
+        if (IntegrationManager.isWitcheryResurrectedEnabled() && WitcheryResurrectedIntegration.HAS_TRANSFORMED) {
+            // A bit buggy, think some packages are not sent from Witchery. Sneaking updates the camera though.
+            this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
+            WitcheryResurrectedIntegration.HAS_TRANSFORMED = false;
+        } else if (this.isInWater()) {
             int i = this.isSpectator() ? 10 : 1;
             this.timeUnderwater = MathHelper.clamp(this.timeUnderwater + i, 0, 600);
         } else if (this.timeUnderwater > 0) {
@@ -309,7 +314,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
 
     protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
-
+        if(IntegrationManager.isWitcheryResurrectedEnabled()) {
+            switch (WitcheryResurrectedIntegration.getCurrentTransformation()) {
+                case BAT:
+                case WOLF:
+                    return 0.5f;
+            }
+        }
         return poseIn == Pose.SLEEPING || poseIn ==  Pose.DYING ? 0.2F : this.getStandingEyeHeight(poseIn, sizeIn);
     }
 
