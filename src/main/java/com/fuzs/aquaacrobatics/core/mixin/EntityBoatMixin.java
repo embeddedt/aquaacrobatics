@@ -19,11 +19,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.fuzs.aquaacrobatics.handler.CommonHandler.BOAT_ROCKING_TICKS;
-
 @Mixin(EntityBoat.class)
 public abstract class EntityBoatMixin extends Entity implements IBubbleColumnInteractable, IRockableBoat {
-
+    private static final DataParameter<Integer> BOAT_ROCKING_TICKS = EntityDataManager.createKey(EntityBoat.class, DataSerializers.VARINT);
     private boolean aqua$rocking;
     private boolean aqua$rockingDownwards;
     private float rockingIntensity;
@@ -47,6 +45,11 @@ public abstract class EntityBoatMixin extends Entity implements IBubbleColumnInt
         if (this.rand.nextInt(20) == 0) {
             this.world.playSound(this.posX, this.posY, this.posZ, this.getSplashSound(), this.getSoundCategory(), 1.0F, 0.8F + 0.4F * this.rand.nextFloat(), false);
         }
+    }
+
+    @Override
+    public void aqua$doRegisterData() {
+        this.dataManager.register(BOAT_ROCKING_TICKS, 0);
     }
     
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/EntityBoat;doBlockCollisions()V"))
