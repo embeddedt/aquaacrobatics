@@ -6,6 +6,7 @@ import com.fuzs.aquaacrobatics.block.BlockBubbleColumn;
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.core.AquaAcrobaticsCore;
 import com.fuzs.aquaacrobatics.core.mixin.accessor.FluidAccessor;
+import com.fuzs.aquaacrobatics.handler.CommonHandler;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.hats.HatsIntegration;
 import com.fuzs.aquaacrobatics.integration.witchery.WitcheryResurrectedIntegration;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -37,6 +39,7 @@ public class CommonProxy {
         IntegrationManager.loadCompat();
         if(needNetworking())
             NetworkHandler.registerMessages(AquaAcrobatics.MODID);
+        MinecraftForge.EVENT_BUS.register(new CommonHandler());
     }
 
     public void onInit() {

@@ -19,9 +19,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.fuzs.aquaacrobatics.handler.CommonHandler.BOAT_ROCKING_TICKS;
+
 @Mixin(EntityBoat.class)
 public abstract class EntityBoatMixin extends Entity implements IBubbleColumnInteractable, IRockableBoat {
-    private static final DataParameter<Integer> ROCKING_TICKS = EntityDataManager.createKey(EntityBoat.class, DataSerializers.VARINT);
 
     private boolean aqua$rocking;
     private boolean aqua$rockingDownwards;
@@ -31,12 +32,6 @@ public abstract class EntityBoatMixin extends Entity implements IBubbleColumnInt
     
     public EntityBoatMixin(World worldIn) {
         super(worldIn);
-    }
-
-    @Inject(method = "entityInit", at = @At("TAIL"))
-    private void registerRockingData(CallbackInfo ci) {
-        if(ConfigHandler.MiscellaneousConfig.bubbleColumns)
-            this.dataManager.register(ROCKING_TICKS, 0);
     }
     
     public void onEnterBubbleColumnWithAirAbove(boolean downwards) {
@@ -106,13 +101,13 @@ public abstract class EntityBoatMixin extends Entity implements IBubbleColumnInt
     public void setRockingTicks(int p_203055_1_) {
         if(!ConfigHandler.MiscellaneousConfig.bubbleColumns)
             return;
-        this.dataManager.set(ROCKING_TICKS, p_203055_1_);
+        this.dataManager.set(BOAT_ROCKING_TICKS, p_203055_1_);
     }
 
     public int getRockingTicks() {
         if(!ConfigHandler.MiscellaneousConfig.bubbleColumns)
             return 0;
-        return this.dataManager.get(ROCKING_TICKS);
+        return this.dataManager.get(BOAT_ROCKING_TICKS);
     }
 
     @SideOnly(Side.CLIENT)
