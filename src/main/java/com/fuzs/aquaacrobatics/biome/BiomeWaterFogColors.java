@@ -69,6 +69,8 @@ public abstract class BiomeWaterFogColors {
             "traverse:thicket,0x3F76E4,0x50533",
             "traverse:arid_highland,0x3F76E4,0x50533",
             "traverse:rocky_plains,0x3F76E4,0x50533",
+            "thaumcraft:magical_forest,3035999,",
+            "thaumcraft:eerie,3035999,"
     };
     
     private static int emulateLegacyColor(int modColor) {
