@@ -5,11 +5,11 @@ import net.minecraftforge.fml.common.Loader;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class IntegrationManager {
 
     private static boolean isBetweenlandsLoaded;
+    private static boolean isChiseledMeLoaded;
     private static boolean isEnderIoLoaded;
     private static boolean isRandomPatchesLoaded;
     private static boolean isMoBendsLoaded;
@@ -19,11 +19,13 @@ public class IntegrationManager {
     private static boolean isHatsLoaded;
     private static boolean isThaumicAugmentationLoaded;
     private static boolean isTrinketsAndBaublesLoaded;
-    
+    private static boolean isWitcheryResurrectedLoaded;
+
     public static List<IElytraOpenHook> elytraOpenHooks = new LinkedList<>();
 
     public static void loadCompat() {
         isBetweenlandsLoaded = Loader.isModLoaded("thebetweenlands");
+        isChiseledMeLoaded = Loader.isModLoaded("chiseled_me");
         isEnderIoLoaded = Loader.isModLoaded("enderio");
         isRandomPatchesLoaded = Loader.isModLoaded("randompatches");
         isMoBendsLoaded = Loader.isModLoaded("mobends");
@@ -33,11 +35,17 @@ public class IntegrationManager {
         isHatsLoaded = Loader.isModLoaded("hats");
         isThaumicAugmentationLoaded = Loader.isModLoaded("thaumicaugmentation");
         isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
+        isWitcheryResurrectedLoaded = Loader.isModLoaded("witchery");
     }
 
     public static boolean isBetweenlandsEnabled() {
 
         return isBetweenlandsLoaded && ConfigHandler.IntegrationConfig.betweenlandsIntegration;
+    }
+
+    public static boolean isChiseledMeEnabled() {
+
+        return isChiseledMeLoaded && ConfigHandler.IntegrationConfig.chiseledMeIntegration;
     }
 
     public static boolean isEnderIoEnabled() {
@@ -83,5 +91,10 @@ public class IntegrationManager {
     public static boolean isTrinketsAndBaublesEnabled() {
 
         return isTrinketsAndBaublesLoaded && ConfigHandler.IntegrationConfig.trinketsAndBaublesIntegration;
+    }
+
+    public static boolean isWitcheryResurrectedEnabled()
+    {
+        return isWitcheryResurrectedLoaded && ConfigHandler.IntegrationConfig.witcheryResurrectedIntegration;
     }
 }

@@ -50,6 +50,7 @@ minecraft {
     def extraArgs = "-Daquaacrobatics.fghack=true"
     
     clientJvmArgs += extraArgs
+    clientJvmArgs += "-Dmixin.debug.export=true"
     serverJvmArgs += extraArgs
 }
 
@@ -67,6 +68,12 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+    ivy {
+        url "https://witchery.msrandom.net/download/"
+        layout "pattern", {
+            artifact "[organisation]/[artifact].[ext]"
+        }
+    }
 }
 
 dependencies {
@@ -76,7 +83,8 @@ dependencies {
     deobfProvided "curse.maven:artemislib-313590:2741812:"
     deobfCompile "curse.maven:baubles-227083:2518667:"
     deobfCompile "curse.maven:bookshelf-228525:2836960:"
-    deobfProvided "curse.maven:betweenlands-243363:3540284:"
+    deobfProvided "curse.maven:betweenlands-243363:3540287:"
+    deobfProvided "curse.maven:chiseledme-250075:3467731"
     deobfProvided "curse.maven:dynamictrees-252818:3446235:"
     deobfProvided "curse.maven:endercore-231868:2972849:"
     deobfProvided "curse.maven:enderio-64578:3328811:"
@@ -93,6 +101,7 @@ dependencies {
     deobfCompile "curse.maven:mixinbooter-419286:3575119:"
     compileOnly files('deps/GalacticraftCore-1.12.2-4.0.2.280-deobf.jar')
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')
+    compileOnly 'WitcheryResurrected0.5.2Hotfix4:WitcheryResurrected-1.12.2-0.5.2.4-forge-all'
 
     deobfCompile 'com.github.jbredwards:Fluidlogged-API:5c18d3ff5c'
 

@@ -9,9 +9,11 @@ import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import com.fuzs.aquaacrobatics.integration.IntegrationManager;
 import com.fuzs.aquaacrobatics.integration.artemislib.ArtemisLibIntegration;
 import com.fuzs.aquaacrobatics.integration.betweenlands.BetweenlandsIntegration;
+import com.fuzs.aquaacrobatics.integration.chiseledme.ChiseledMeIntegration;
 import com.fuzs.aquaacrobatics.integration.morph.MorphIntegration;
 import com.fuzs.aquaacrobatics.integration.trinketsandbaubles.TrinketsAndBaublesIntegration;
 import com.fuzs.aquaacrobatics.integration.wings.WingsIntegration;
+import com.fuzs.aquaacrobatics.integration.witchery.WitcheryResurrectedIntegration;
 import com.fuzs.aquaacrobatics.network.datasync.PoseSerializer;
 import com.fuzs.aquaacrobatics.util.math.MathHelperNew;
 import net.minecraft.entity.Entity;
@@ -86,10 +88,34 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         super(worldIn);
     }
 
+    private float findEntitySizeScaleFactor() {
+        float finalFactor = 1f;
+        if(IntegrationManager.isTrinketsAndBaublesEnabled())
+            finalFactor *= TrinketsAndBaublesIntegration.getResizeFactor((EntityPlayer)(Object)this);
+        if(IntegrationManager.isChiseledMeEnabled())
+            finalFactor *= ChiseledMeIntegration.getResizeFactor((EntityPlayer)(Object)this);
+        return finalFactor;
+    }
+
+    private float findEyeScaleFactor() {
+        float finalFactor = 1f;
+        if(IntegrationManager.isChiseledMeEnabled())
+            finalFactor *= ChiseledMeIntegration.getResizeFactor((EntityPlayer)(Object)this);
+        return finalFactor;
+    }
+
+    private EntitySize handleEntitySizeScaling(EntitySize in) {
+        float finalFactor = findEntitySizeScaleFactor();
+        if(finalFactor == 1f)
+            return in;
+        else
+            return in.scale(finalFactor);
+    }
+
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onConstructed(CallbackInfo callbackInfo) {
 
-        this.size = EntitySize.flexible(0.6F, 1.8F);
+        this.size = handleEntitySizeScaling(EntitySize.flexible(0.6F, 1.8F));
         this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
         this.dataManager.register(POSE, Pose.STANDING);
         if (ConfigHandler.MovementConfig.enableToggleCrawling) {
@@ -117,7 +143,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     public void onEntityUpdate() {
 
         super.onEntityUpdate();
-        if (this.isInWater()) {
+        if (IntegrationManager.isWitcheryResurrectedEnabled() && WitcheryResurrectedIntegration.HAS_TRANSFORMED) {
+            // A bit buggy, think some packages are not sent from Witchery. Sneaking updates the camera though.
+            this.playerEyeHeight = this.getEyeHeight(Pose.STANDING, this.size);
+            WitcheryResurrectedIntegration.HAS_TRANSFORMED = false;
+        } else if (this.isInWater()) {
             int i = this.isSpectator() ? 10 : 1;
             this.timeUnderwater = MathHelper.clamp(this.timeUnderwater + i, 0, 600);
         } else if (this.timeUnderwater > 0) {
@@ -220,7 +250,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public EntitySize getSize(Pose poseIn) {
 
-        return SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
+        return handleEntitySizeScaling(SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE));
     }
 
     @Override
@@ -273,10 +303,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         if (IntegrationManager.isMorphEnabled() && MorphIntegration.isMorphing(this.getPlayer())) {
             return false;
         }
-        
-        if(IntegrationManager.isTrinketsAndBaublesEnabled() && TrinketsAndBaublesIntegration.hasResized(this.getPlayer())) {
-            return false;
-        }
 
         // is another mod interfering
         final float delta = 0.025F;
@@ -293,7 +319,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
 
     protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
-
+        if(IntegrationManager.isWitcheryResurrectedEnabled()) {
+            switch (WitcheryResurrectedIntegration.getCurrentTransformation()) {
+                case BAT:
+                case WOLF:
+                    return 0.5f;
+            }
+        }
         return poseIn == Pose.SLEEPING || poseIn ==  Pose.DYING ? 0.2F : this.getStandingEyeHeight(poseIn, sizeIn);
     }
 
@@ -322,8 +354,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
     public final void getEyeHeight(CallbackInfoReturnable<Float> callbackInfoReturnable) {
-
-        callbackInfoReturnable.setReturnValue(this.playerEyeHeight);
+        callbackInfoReturnable.setReturnValue(this.playerEyeHeight * findEyeScaleFactor());
     }
 
     @Shadow

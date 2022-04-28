@@ -13,6 +13,7 @@
     "EntityPlayerMPMixin",
     "EntityMixin",
     "EntityLivingBaseMixin",
+    "EntityThrowableMixin",
     "NetHandlerPlayServerMixin",
     "BiomeMixin",
     "BlockGrassMixin",

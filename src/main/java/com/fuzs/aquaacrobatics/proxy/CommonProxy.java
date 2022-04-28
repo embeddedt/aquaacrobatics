@@ -17,6 +17,8 @@ import com.fuzs.aquaacrobatics.item.DriedKelpItem;
 import com.fuzs.aquaacrobatics.item.ExplorerMapItem;
 import com.fuzs.aquaacrobatics.item.ItemBlockCoral;
 import com.fuzs.aquaacrobatics.item.ItemBlockCoralFan;
+import com.fuzs.aquaacrobatics.handler.CommonHandler;
+import com.fuzs.aquaacrobatics.integration.witchery.WitcheryResurrectedIntegration;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import com.fuzs.aquaacrobatics.tile.TileEntityConduit;
 import com.fuzs.aquaacrobatics.world.gen.WorldGenHandler;
@@ -34,6 +36,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -129,6 +132,7 @@ public class CommonProxy {
 
             MinecraftForge.EVENT_BUS.register(new WorldGenHandler());
         }
+        MinecraftForge.EVENT_BUS.register(new CommonHandler());
     }
     
     public void onInit() {
@@ -166,7 +170,10 @@ public class CommonProxy {
 
             HatsIntegration.register();
         }
-        
+
+        if (IntegrationManager.isWitcheryResurrectedEnabled())
+            WitcheryResurrectedIntegration.register();
+
         if(!AquaAcrobaticsCore.isModCompatLoaded)
             AquaAcrobatics.LOGGER.error("Please consider installing MixinBooter to ensure compatibility with more mods");
 
