@@ -34,7 +34,7 @@ public class ConduitBlock extends BlockContainer implements IFluidloggable {
     }
 
     @Override
-    public boolean isFluidValid(@Nonnull IBlockState state, @Nonnull Fluid fluid) {
+    public boolean isFluidValid(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Fluid fluid) {
         return fluid == FluidRegistry.WATER;
     }
 
