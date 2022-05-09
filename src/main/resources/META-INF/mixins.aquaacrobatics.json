@@ -15,6 +15,7 @@
     "EntityThrowableMixin",
     "NetHandlerPlayServerMixin",
     "BiomeMixin",
+    "BiomeColorHelperMixin",
     "BlockGrassMixin",
     "BlockLiquidMixin",
     "BlockMagmaMixin",

@@ -13,6 +13,7 @@ import com.fuzs.aquaacrobatics.integration.mobends.MoBendsIntegration;
 import com.fuzs.aquaacrobatics.integration.thaumicaugmentation.ThaumicAugmentationIntegration;
 import com.fuzs.aquaacrobatics.network.NetworkHandler;
 import com.fuzs.aquaacrobatics.network.message.PacketSendKey;
+import com.fuzs.aquaacrobatics.optifine.OptifineHelper;
 import com.fuzs.aquaacrobatics.util.Keybindings;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
@@ -53,6 +54,7 @@ public class ClientProxy extends CommonProxy {
             List<IResourcePack> packs = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "field_110449_ao");
             packs.add(new WaterResourcePack(event.getSourceFile()));
             FMLClientHandler.instance().refreshResources(VanillaResourceType.TEXTURES);
+            OptifineHelper.init();
         }
     }
 
