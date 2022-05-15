@@ -1,10 +1,14 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
+import com.fuzs.aquaacrobatics.config.ConfigHandler;
 import com.fuzs.aquaacrobatics.entity.IBubbleColumnInteractable;
 import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockVine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -13,6 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @SuppressWarnings("unused")
@@ -56,5 +61,12 @@ public abstract class EntityMixin implements IBubbleColumnInteractable {
             this.motionY = Math.min(1.8, this.motionY + 0.1);
         } else
             this.motionY = Math.max(-0.9, this.motionY - 0.03);
+    }
+
+    @ModifyVariable(method = "move", ordinal = 0, name = "block", at = @At("LOAD"))
+    private Block getFakeClimbingBlock(Block original) {
+        if(ConfigHandler.MovementConfig.newClimbingBehavior && original instanceof BlockVine)
+            return Blocks.LADDER;
+        return original;
     }
 }

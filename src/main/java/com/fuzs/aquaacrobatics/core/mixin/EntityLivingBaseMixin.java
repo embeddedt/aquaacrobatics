@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -55,5 +56,13 @@ public abstract class EntityLivingBaseMixin extends Entity {
             return Math.min(oldAirValue + 4, 300);
         }
         return original;
+    }
+
+    @Redirect(method = "travel", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/EntityLivingBase;collidedHorizontally:Z", ordinal = 1))
+    private boolean isJumpingOnLadder(EntityLivingBase instance) {
+        if(ConfigHandler.MovementConfig.newClimbingBehavior)
+            return instance.collidedHorizontally || instance.isJumping;
+        else
+            return instance.collidedHorizontally;
     }
 }

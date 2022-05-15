@@ -67,6 +67,10 @@ public class ConfigHandler {
         @Config.Comment("Modify projectile behavior to be closer to that of newer versions (fixes MC-73884 and allows bubble columns to work with ender pearls).")
         public static boolean newProjectileBehavior = false;
 
+        @Config.Name("New Climbing Behavior")
+        @Config.Comment("Allow climbing vines and climbing by pressing jump.")
+        public static boolean newClimbingBehavior = false;
+
     }
 
     public static class BlocksConfig {
