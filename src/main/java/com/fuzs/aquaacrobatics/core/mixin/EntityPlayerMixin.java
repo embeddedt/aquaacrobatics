@@ -96,6 +96,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     private float findEyeScaleFactor() {
         float finalFactor = 1f;
+        if(IntegrationManager.isArtemisLibEnabled())
+            finalFactor *= ArtemisLibIntegration.getEyeFactor((EntityPlayer)(Object)this);
         if(IntegrationManager.isChiseledMeEnabled())
             finalFactor *= ChiseledMeIntegration.getResizeFactor((EntityPlayer)(Object)this);
         return finalFactor;

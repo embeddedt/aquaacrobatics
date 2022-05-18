@@ -4,6 +4,7 @@ import com.artemis.artemislib.util.AttachAttributes;
 import com.artemis.artemislib.util.attributes.ArtemisLibAttributes;
 import com.fuzs.aquaacrobatics.core.mixin.accessor.IEventBusAccessor;
 import com.fuzs.aquaacrobatics.entity.Pose;
+import com.fuzs.aquaacrobatics.entity.player.IPlayerResizeable;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,9 +38,16 @@ public class ArtemisLibIntegration {
         }
 
         if (pose == Pose.SWIMMING) {
-
             iattributeinstance.applyModifier(SWIMMING_HEIGHT);
         }
+    }
+
+    public static float getEyeFactor(EntityPlayer player) {
+        if(((IPlayerResizeable)player).getPose() == Pose.SWIMMING) {
+            double heightAttribute = player.getAttributeMap().getAttributeInstance(ArtemisLibAttributes.ENTITY_HEIGHT).getAttributeValue();
+            return (float)(heightAttribute * 3);
+        }
+        return 1f;
     }
 
 }
