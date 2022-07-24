@@ -27,14 +27,14 @@ public abstract class RenderPlayerMixin extends RenderLivingBase<AbstractClientP
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
     }
 
-    @Inject(method = "renderRightArm", at = @At(value = "FIELD", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/model/ModelPlayer;isSneak:Z"))
+    @Inject(method = "renderRightArm", at = @At("HEAD"))
     public void renderRightArm(AbstractClientPlayer clientPlayer, CallbackInfo callbackInfo) {
 
         ModelPlayer modelplayer = (ModelPlayer) this.getMainModel();
         ((IModelBipedSwimming) modelplayer).setSwimAnimation(0.0F);
     }
 
-    @Inject(method = "renderLeftArm", at = @At(value = "FIELD", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/model/ModelPlayer;isSneak:Z"))
+    @Inject(method = "renderLeftArm", at = @At("HEAD"))
     public void renderLeftArm(AbstractClientPlayer clientPlayer, CallbackInfo callbackInfo) {
 
         ModelPlayer modelplayer = (ModelPlayer) this.getMainModel();
