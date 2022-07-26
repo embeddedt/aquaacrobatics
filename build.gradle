@@ -4,6 +4,9 @@ buildscript {
         maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 
     dependencies {
@@ -11,6 +14,7 @@ buildscript {
             changing = true
         }
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.6-SNAPSHOT'
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
 }
 
@@ -20,6 +24,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: "com.matthewprenger.cursegradle"
 
 
 sourceCompatibility = 1.8
@@ -180,3 +185,21 @@ publishing {
 }
 
 idea { module { inheritOutputDirs = true } }
+
+curseforge {
+    if (System.getenv("CURSEFORGE_TOKEN") != null) {
+        apiKey = System.getenv("CURSEFORGE_TOKEN")
+        project {
+            id = "321792"
+            changelog = '[Changelog is not currently available]'
+            changelogType = "markdown"
+            releaseType = "release"
+            addGameVersion "Forge"
+
+            relations {
+                requiredDependency "mixinbootstrap"
+                optionalDependency "mixin-booter"
+            }
+        }
+    }
+}
