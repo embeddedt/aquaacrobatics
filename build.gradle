@@ -187,19 +187,29 @@ publishing {
 idea { module { inheritOutputDirs = true } }
 
 curseforge {
-    if (System.getenv("CURSEFORGE_TOKEN") != null) {
-        apiKey = System.getenv("CURSEFORGE_TOKEN")
-        project {
-            id = "321792"
-            changelog = '[Changelog is not currently available]'
-            changelogType = "markdown"
-            releaseType = "release"
-            addGameVersion "Forge"
-
+    if (!file('CHANGELOG.md').canRead()) { throw new FileNotFoundException("Could not read changelog file") }
+    apiKey = project.hasProperty('CURSEFORGE_TOKEN') ? project.findProperty('CURSEFORGE_TOKEN') : ''
+    project {
+        id = project_curse_id
+        changelogType = 'markdown'
+        changelog = file('CHANGELOG.md')
+        releaseType = project_release_type
+        addGameVersion 'Forge'
+        // add supported game versions separated by comma
+        project_game_versions.split(",").each {
+            addGameVersion it.trim()
+        }
+        mainArtifact(jar) {
+            displayName = "[FORGE] [${mc_version}] ${rootProject.name}-v${mod_version}"
             relations {
-                requiredDependency "mixinbootstrap"
-                optionalDependency "mixin-booter"
+                requiredDependency 'mixinbootstrap'
+                optionalDependency 'mixin-booter'
             }
         }
+    }
+    options {
+        debug = true
+        javaVersionAutoDetect = false
+        forgeGradleIntegration = false
     }
 }
