@@ -215,7 +215,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         return StreamSupport.stream(new AxisAlignedBBSpliterator(world, entity, aabb), false);
     }
 
-    @Redirect(method = "pushOutOfBlocks", at = @At(value = "INVOKE", target = "Ljava/lang/Math;ceil(D)D"))
+    @Redirect(method = { "pushOutOfBlocks", "localPushOutOfBlocks" }, at = @At(value = "INVOKE", target = "Ljava/lang/Math;ceil(D)D"))
     private double ceil(double a) {
 
         if (ConfigHandler.playerBlockCollisions == ConfigHandler.PlayerBlockCollisions.APPROXIMATE) {
@@ -273,7 +273,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
         return false;
     }
 
-    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;wasFallFlying:Z"))
+    @Inject(method = { "onLivingUpdate", "localOnLivingUpdate" }, at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;wasFallFlying:Z"))
     public void onLivingUpdate(CallbackInfo callbackInfo) {
 
         this.updatePlayerMoveState();
