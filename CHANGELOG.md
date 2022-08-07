@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v1.14.4-1.12.2] - 2022-08-06
+### Fixed
+- Fixed incorrect water fog color for BOP bayou
+
 ## [v1.14.3-1.12.2] - 2022-07-26
 ### Added
 - Added support for automatically uploading new builds to CurseForge using CurseGradle
