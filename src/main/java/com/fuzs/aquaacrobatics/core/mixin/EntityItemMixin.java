@@ -1,7 +1,9 @@
 package com.fuzs.aquaacrobatics.core.mixin;
 
 import com.fuzs.aquaacrobatics.config.ConfigHandler;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +24,6 @@ public abstract class EntityItemMixin extends Entity {
     }
 
     private void applyFloatMotion() {
-        //System.out.println("APPLY FLOAT");
         if (this.motionY < (double)0.06F) {
             this.motionY += (double)5.0E-4F;
         }
@@ -32,11 +33,16 @@ public abstract class EntityItemMixin extends Entity {
     
     @Redirect(method = "onUpdate", at = @At(value="INVOKE", target = "Lnet/minecraft/entity/item/EntityItem;hasNoGravity()Z", ordinal = 0), expect = 1, require = 0)
     private boolean applyFloatMotionIfInWater(EntityItem entityItem) {
-        if(this.world.getBlockState(new BlockPos(entityItem)).getMaterial() == Material.WATER) {
-            applyFloatMotion();
-            return true;
-        } else {
-            return entityItem.hasNoGravity();
+        double eyePosition = this.posY + (double)this.getEyeHeight();
+        BlockPos eyeBlockPos = new BlockPos(this.posX, eyePosition, this.posZ);
+        IBlockState state = this.world.getBlockState(eyeBlockPos);
+        if(state.getMaterial() == Material.WATER && state.getBlock() instanceof BlockLiquid) {
+            float thresholdHeight = eyeBlockPos.getY() + BlockLiquid.getBlockLiquidHeight(state, this.world, eyeBlockPos) + (1f/9f);
+            if(eyePosition < thresholdHeight) {
+                applyFloatMotion();
+                return true;
+            }
         }
+        return entityItem.hasNoGravity();
     }
 }
