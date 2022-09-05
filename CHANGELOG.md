@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
-## [v1.14.5-pre.1-1.12.2] - 2022-09-04
+## [v1.14.5-1.12.2] - 2022-09-04
 ### Fixed
 - Fixed items launching themselves out of water when floating
 
