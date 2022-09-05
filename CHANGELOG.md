@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v1.15.0-1.12.2] - 2022-09-05
+### Added
+- Parity for growing AE2 crystals' buoyancy with newer versions
+- Config option to disable item buoyancy
+
 ## [v1.14.5-1.12.2] - 2022-09-04
 ### Fixed
 - Fixed items launching themselves out of water when floating

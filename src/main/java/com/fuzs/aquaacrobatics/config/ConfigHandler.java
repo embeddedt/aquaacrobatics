@@ -116,11 +116,20 @@ public class ConfigHandler {
         @Config.Name("WorldProvider Fog Blacklist")
         @Config.Comment("List of WorldProviders in which fog should be disabled.")
         public static String[] providerFogBlacklist = new String[] { "thebetweenlands.common.world.WorldProviderBetweenlands" };
+
+        @Config.Name("Floating Items")
+        @Config.Comment("Whether or not items should float in water like in 1.13+.")
+        public static boolean floatingItems = true;
     }
 
     public static class IntegrationConfig {
 
         private static final String COMPAT_DESCRIPTION = "Only applies when the mod is installed. Disable when there are issues with the mod.";
+
+        @Config.Name("Applied Energistics 2 Integration")
+        @Config.Comment(COMPAT_DESCRIPTION)
+        @Config.RequiresMcRestart
+        public static boolean ae2Integration = true;
 
         @Config.Name("Betweenlands Integration")
         @Config.Comment(COMPAT_DESCRIPTION)

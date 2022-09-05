@@ -72,11 +72,17 @@ repositories {
             artifact "[organisation]/[artifact].[ext]"
         }
     }
+    maven {
+        name = "Progwml6 maven"
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven { url = "http://maven.cil.li/" }
 }
 
 dependencies {
     //deobfProvided "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
     //deobfProvided "net.ilexiconn:llibrary:1.7.9-1.12.2"
+    deobfProvided "appeng:appliedenergistics2:rv6-stable-7"
     deobfProvided "curse.maven:artemislib-313590:2741812:"
     deobfCompile "curse.maven:baubles-227083:2518667:"
     deobfProvided "curse.maven:betweenlands-243363:3540287:"

@@ -21,9 +21,12 @@ public class IntegrationManager {
     private static boolean isTrinketsAndBaublesLoaded;
     private static boolean isWitcheryResurrectedLoaded;
 
+    private static boolean isAE2Loaded;
+
     public static List<IElytraOpenHook> elytraOpenHooks = new LinkedList<>();
 
     public static void loadCompat() {
+        isAE2Loaded = Loader.isModLoaded("appliedenergistics2");
         isBetweenlandsLoaded = Loader.isModLoaded("thebetweenlands");
         isChiseledMeLoaded = Loader.isModLoaded("chiseled_me");
         isEnderIoLoaded = Loader.isModLoaded("enderio");
@@ -36,6 +39,11 @@ public class IntegrationManager {
         isThaumicAugmentationLoaded = Loader.isModLoaded("thaumicaugmentation");
         isTrinketsAndBaublesLoaded = Loader.isModLoaded("xat");
         isWitcheryResurrectedLoaded = Loader.isModLoaded("witchery");
+    }
+
+    public static boolean isAE2Enabled() {
+
+        return isAE2Loaded && ConfigHandler.IntegrationConfig.ae2Integration;
     }
 
     public static boolean isBetweenlandsEnabled() {
