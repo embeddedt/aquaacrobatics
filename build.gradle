@@ -208,7 +208,6 @@ curseforge {
         }
     }
     options {
-        debug = true
         javaVersionAutoDetect = false
         forgeGradleIntegration = false
     }
