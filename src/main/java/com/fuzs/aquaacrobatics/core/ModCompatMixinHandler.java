@@ -32,6 +32,9 @@ public class ModCompatMixinHandler {
         if(Loader.isModLoaded("xaerominimap")) {
             Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.xaerosminimap.json");
         }
+        if(Loader.isModLoaded("thaumcraft")) {
+            Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.thaumcraft.json");
+        }
         AquaAcrobaticsCore.isModCompatLoaded = true;
     }
 }

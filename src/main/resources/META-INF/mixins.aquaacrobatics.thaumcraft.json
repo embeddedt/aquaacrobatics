@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.fuzs.aquaacrobatics.core.thaumcraft.mixin",
+  "refmap": "mixins.aquaacrobatics.refmap.json",
+  "plugin": "com.fuzs.aquaacrobatics.core.AquaAcrobaticsMixinPlugin",
+  "client": [
+    "client.TileCrucibleRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

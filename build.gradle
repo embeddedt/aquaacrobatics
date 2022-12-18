@@ -57,6 +57,7 @@ minecraft {
     clientJvmArgs += extraArgs
     clientJvmArgs += "-Dmixin.debug.export=true"
     serverJvmArgs += extraArgs
+    clientJvmArgs += "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
 }
 
 repositories {
@@ -96,6 +97,7 @@ dependencies {
     deobfProvided "curse.maven:mobends-231347:3573346:"
     deobfProvided "curse.maven:morph-229080:2995522:"
     runtimeOnly "curse.maven:naturescompass-252848:2893527:"
+    deobfProvided "curse.maven:thaumcraft-223628:2629023"
     deobfProvided "curse.maven:thaumicaugmentation-319441:3536155:"
     deobfProvided "curse.maven:trinketsandbaubles-279900:3575174:"
     deobfProvided "curse.maven:wings-302584:2829351:"
