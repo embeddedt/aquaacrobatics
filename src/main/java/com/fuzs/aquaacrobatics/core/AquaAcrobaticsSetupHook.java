@@ -1,8 +1,6 @@
 package com.fuzs.aquaacrobatics.core;
 
 import net.minecraftforge.fml.relauncher.IFMLCallHook;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
 
 import java.util.Map;
 

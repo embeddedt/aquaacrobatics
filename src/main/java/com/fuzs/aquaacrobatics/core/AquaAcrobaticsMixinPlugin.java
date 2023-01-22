@@ -1,8 +1,5 @@
 package com.fuzs.aquaacrobatics.core;
 
-import com.fuzs.aquaacrobatics.AquaAcrobatics;
-import com.fuzs.aquaacrobatics.config.ConfigHandler;
-import net.minecraftforge.fml.common.Loader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
