@@ -9,10 +9,6 @@ import zone.rong.mixinbooter.MixinLoader;
 @MixinLoader
 public class ModCompatMixinHandler {
     public ModCompatMixinHandler() {
-        AquaAcrobaticsCore.LOGGER.info("Aqua Acrobatics is loading mod compatibility mixins");
-        if(Loader.isModLoaded("dynamictrees")) {
-            Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.dynamictrees.json");
-        }
         if(Loader.isModLoaded("galacticraftcore")) {
             Mixins.addConfiguration("META-INF/mixins.aquaacrobatics.galacticraft.json");
         }

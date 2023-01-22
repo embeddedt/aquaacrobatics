@@ -68,7 +68,7 @@ repositories {
         url "https://cursemaven.com"
     }
     ivy {
-        url "https://witchery.msrandom.net/download/"
+        url "https://witchery-api.msrandom.net/download/"
         layout "pattern", {
             artifact "[organisation]/[artifact].[ext]"
         }
@@ -88,7 +88,6 @@ dependencies {
     deobfCompile "curse.maven:baubles-227083:2518667:"
     deobfProvided "curse.maven:betweenlands-243363:3540287:"
     deobfProvided "curse.maven:chiseledme-250075:3467731"
-    deobfProvided "curse.maven:dynamictrees-252818:3446235:"
     deobfProvided "curse.maven:endercore-231868:2972849:"
     deobfProvided "curse.maven:enderio-64578:3328811:"
     deobfProvided "curse.maven:hats-229073:2960397:"
