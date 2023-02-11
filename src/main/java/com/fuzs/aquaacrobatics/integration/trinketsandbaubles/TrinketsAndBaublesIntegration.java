@@ -7,6 +7,9 @@ import xzeroair.trinkets.capabilities.race.EntityProperties;
 public class TrinketsAndBaublesIntegration {
     public static float getResizeFactor(EntityPlayer player) {
         EntityProperties props = Capabilities.getEntityRace(player);
-        return (float)props.getSize() / 100f;
+        if(props != null)
+            return (float)props.getSize() / 100f;
+        else
+            return 1f;
     }
 }
