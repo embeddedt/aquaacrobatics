@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v1.15.2-1.12.2] - 2023-02-11
+### Fixed
+- Crash with Trinkets & Baubles
+- Removed redundant Dynamic Trees fix
+
 ## [v1.15.1-1.12.2] - 2022-12-18
 ### Fixed
 - Gray water in Thaumcraft crucibles
