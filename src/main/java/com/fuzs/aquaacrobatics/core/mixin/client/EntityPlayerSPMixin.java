@@ -277,7 +277,7 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     public void onLivingUpdate(CallbackInfo callbackInfo) {
 
         this.updatePlayerMoveState();
-        this.isCrouching = this.isCrouching(((IPlayerResizeable) this).isPoseClear(Pose.STANDING));
+        this.isCrouching = this.isCrouching(!((IPlayerResizeable) this).isPoseClear(Pose.STANDING));
         // handle sprinting behaviour
         this.setSprinting(this.movementStorage.isSprinting);
         boolean isSaturated = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
@@ -305,14 +305,13 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer implement
     }
 
     private boolean isCrouching(boolean cantStand) {
-
         if ((!this.movementStorage.isFlying || !cantStand) && this.getTicksElytraFlying() <= 4) {
 
             if (!((IPlayerResizeable) this).isSwimming() && (this.onGround || !this.isInWater())) {
 
                 if (!this.isOnLadder() && (((IPlayerResizeable) this).isPoseClear(Pose.CROUCHING) || this.noClip)) {
 
-                    return this.movementInput.sneak || ((IPlayerResizeable) this).isResizingAllowed() && !this.isPlayerSleeping() && !cantStand;
+                    return this.movementInput.sneak || ((IPlayerResizeable) this).isResizingAllowed() && !this.isPlayerSleeping() && cantStand;
                 }
             }
         }
