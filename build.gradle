@@ -1,34 +1,15 @@
-buildscript {
+import com.gtnewhorizons.retrofuturagradle.mcp.ReobfuscatedJar
+import org.jetbrains.gradle.ext.Gradle
 
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
-        mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-
-    dependencies {
-        classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
-            changing = true
-        }
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.6-SNAPSHOT'
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-    }
+plugins {
+    id("java")
+    id("java-library")
+    id("maven-publish")
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
+    id("eclipse")
+    id("com.gtnewhorizons.retrofuturagradle") version "1.3.0"
+    id("com.matthewprenger.cursegradle") version "1.4.0"
 }
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: "com.matthewprenger.cursegradle"
-
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 version = mod_version
 group = "${mod_group}"
@@ -42,91 +23,111 @@ ext.loader = "${loader_version.replaceAll("\\..*", "")}"
 ext.forge = "${loader_version}"
 ext.mc = "${mc_version}"
 
+// Set the toolchain version to decouple the Java we run Gradle with from the Java used to compile and run the mod
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        // Azul covers the most platforms for Java 8 toolchains, crucially including MacOS arm64
+        vendor.set(org.gradle.jvm.toolchain.JvmVendorSpec.AZUL)
+    }
+    // Generate sources and javadocs jars when building and publishing
+    withSourcesJar()
+    withJavadocJar()
+}
+
 minecraft {
-    version = "${forge_version}"
-    runDir = "run"
-    useDepAts = true
-    mappings = "stable_39"
-    
-    replaceIn 'src/main/java/com/fuzs/aquaacrobatics/AquaAcrobatics.java'
-    replace '@version@', mod_version
-    
-    /* This workaround is needed to make dev work properly */
-    def extraArgs = "-Daquaacrobatics.fghack=true"
-    
-    clientJvmArgs += extraArgs
-    clientJvmArgs += "-Dmixin.debug.export=true"
-    serverJvmArgs += extraArgs
-    clientJvmArgs += "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+    mcVersion = "1.12.2"
+
+    injectedTags.put("VERSION", project.version)
+
+    extraRunJvmArguments.addAll("-ea:${project.group}", "-Dmixin.debug.export=true")
+}
+
+tasks.injectTags.configure {
+    outputClassName.set("${project.group}.Tags")
 }
 
 repositories {
-    mavenLocal()
     maven { url = "https://repo.spongepowered.org/repository/maven-public" }
     //maven { url "https://maven.mcmoddev.com/" }
     maven {
         url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
     ivy {
         url "https://witchery-api.msrandom.net/download/"
-        layout "pattern", {
-            artifact "[organisation]/[artifact].[ext]"
+        patternLayout {
+            artifact "[organisation]/[artifact]-[revision](-[classifier])(.[ext])"
         }
+        content {
+            includeGroup "WitcheryResurrected0.5.2Hotfix4"
+        }
+        metadataSources { artifact() }
     }
     maven {
         name = "Progwml6 maven"
-        url = "http://dvs1.progwml6.com/files/maven"
+        url = "https://dvs1.progwml6.com/files/maven"
     }
-    maven { url = "http://maven.cil.li/" }
+    maven { url = "https://maven.cil.li/" }
+    mavenLocal()
 }
 
 dependencies {
-    //deobfProvided "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
-    //deobfProvided "net.ilexiconn:llibrary:1.7.9-1.12.2"
-    deobfProvided "appeng:appliedenergistics2:rv6-stable-7"
-    deobfProvided "curse.maven:artemislib-313590:2741812:"
-    deobfCompile "curse.maven:baubles-227083:2518667:"
-    deobfProvided "curse.maven:betweenlands-243363:3540287:"
-    deobfProvided "curse.maven:chiseledme-250075:3467731"
-    deobfProvided "curse.maven:endercore-231868:2972849:"
-    deobfProvided "curse.maven:enderio-64578:3328811:"
-    deobfProvided "curse.maven:hats-229073:2960397:"
-    deobfProvided "curse.maven:ichunutil-229060:2801262:"
-    deobfProvided "curse.maven:journeymap-32274:2916002:"
-    deobfProvided "curse.maven:mobends-231347:3573346:"
-    deobfProvided "curse.maven:morph-229080:2995522:"
+    //compileOnly rfg.deobf("net.ilexiconn:llibrary-core:1.0.11-1.12.2")
+    //compileOnly rfg.deobf("net.ilexiconn:llibrary:1.7.9-1.12.2")
+    compileOnly rfg.deobf("appeng:appliedenergistics2:rv6-stable-7")
+    compileOnly rfg.deobf("curse.maven:artemislib-313590:2741812:")
+    api rfg.deobf("curse.maven:baubles-227083:2518667:")
+    compileOnly rfg.deobf("curse.maven:betweenlands-243363:3540287:")
+    compileOnly rfg.deobf("curse.maven:chiseledme-250075:3467731")
+    compileOnly rfg.deobf("curse.maven:endercore-231868:2972849:")
+    compileOnly rfg.deobf("curse.maven:enderio-64578:3328811:")
+    compileOnly rfg.deobf("curse.maven:hats-229073:2960397:")
+    compileOnly rfg.deobf("curse.maven:ichunutil-229060:2801262:")
+    compileOnly rfg.deobf("curse.maven:journeymap-32274:2916002:")
+    compileOnly rfg.deobf("curse.maven:mobends-231347:3573346:")
+    compileOnly rfg.deobf("curse.maven:morph-229080:2995522:")
     runtimeOnly "curse.maven:naturescompass-252848:2893527:"
-    deobfProvided "curse.maven:thaumcraft-223628:2629023"
-    deobfProvided "curse.maven:thaumicaugmentation-319441:3536155:"
-    deobfProvided "curse.maven:trinketsandbaubles-279900:3604719:"
-    deobfProvided "curse.maven:wings-302584:2829351:"
-    deobfProvided "curse.maven:xaerosminimap-263420:3630494:"
-    deobfCompile "curse.maven:mixinbooter-419286:3575119:"
+    compileOnly rfg.deobf("curse.maven:thaumcraft-223628:2629023")
+    compileOnly rfg.deobf("curse.maven:thaumicaugmentation-319441:3536155:")
+    compileOnly rfg.deobf("curse.maven:trinketsandbaubles-279900:3604719:")
+    compileOnly rfg.deobf("curse.maven:wings-302584:2829351:")
+    compileOnly rfg.deobf("curse.maven:xaerosminimap-263420:3630494:")
+    api rfg.deobf("curse.maven:mixinbooter-419286:4459218:")
     compileOnly files('deps/GalacticraftCore-1.12.2-4.0.2.280-deobf.jar')
     compileOnly files('deps/MicdoodleCore-1.12.2-4.0.2.280-deobf.jar')
-    compileOnly 'WitcheryResurrected0.5.2Hotfix4:WitcheryResurrected-1.12.2-0.5.2.4-forge-all'
+    compileOnly 'WitcheryResurrected0.5.2Hotfix4:WitcheryResurrected:1.12.2-0.5.2.4:forge-all'
 
-    compile ("org.spongepowered:mixin:0.8.3") {
-
-        exclude module: "asm-commons"
-        exclude module: "asm-tree"
-        exclude module: "launchwrapper"
-        exclude module: "guava"
-        exclude module: "log4j-core"
-        exclude module: "gson"
-        exclude module: "commons-io"
-    }
+    api ("org.spongepowered:mixin:0.8.3") {transitive = false}
+    annotationProcessor('org.ow2.asm:asm-debug-all:5.2')
+    annotationProcessor('com.google.guava:guava:24.1.1-jre')
+    annotationProcessor('com.google.code.gson:gson:2.8.6')
+    annotationProcessor ("org.spongepowered:mixin:0.8.3") {transitive = false}
 }
 
-sourceSets {
-    main {
-        ext.refMap = "mixins.${project.ext.id}.refmap.json"
-    }
+def mixinConfigRefMap = 'mixins.' + project.ext.id + '.refmap.json'
+def mixinTmpDir = buildDir.path + File.separator + 'tmp' + File.separator + 'mixins'
+def refMap = "${mixinTmpDir}" + File.separator + mixinConfigRefMap
+def mixinSrg = "${mixinTmpDir}" + File.separator + "mixins.srg"
+
+tasks.named("reobfJar", ReobfuscatedJar).configure {
+    extraSrgFiles.from(mixinSrg)
 }
 
+tasks.named("compileJava", JavaCompile).configure {
+    doFirst {
+        new File(mixinTmpDir).mkdirs()
+    }
+    options.compilerArgs += [
+        "-AreobfSrgFile=${tasks.reobfJar.srg.get().asFile}",
+        "-AoutSrgFile=${mixinSrg}",
+        "-AoutRefMapFile=${refMap}",
+    ]
+}
 
 processResources {
-
     // this will ensure that this task is redone when the versions change.
     inputs.property "mod_id", project.ext.id
     inputs.property "mod_name", project.ext.name
@@ -141,12 +142,8 @@ processResources {
     inputs.property "mc_version", project.ext.mc
 
     // replace stuff in mods.toml and pack.mcmeta
-    from(sourceSets.main.resources.srcDirs) {
-
-        include 'mcmod.info', 'pack.mcmeta'
-
-        expand (
-
+    filesMatching(['mcmod.info', 'pack.mcmeta']) { fcd ->
+        fcd.expand (
                 'mod_id': project.ext.id,
                 'mod_name': project.ext.name,
                 'mod_name2': project.ext.name.replaceAll("\\s", ""),
@@ -161,11 +158,9 @@ processResources {
         )
     }
 
-    // copy everything else except mods.toml and pack.mcmeta
-    from(sourceSets.main.resources.srcDirs) {
-
-        exclude 'mcmod.info', 'pack.mcmeta'
-    }
+    // Embed mixin refmap
+    from refMap
+    dependsOn("compileJava")
 }
 
 jar {
@@ -175,8 +170,6 @@ jar {
         attributes "ForceLoadAsMod": "true"
     }
 }
-
-jar.finalizedBy('reobfJar')
 
 publishing {
 
@@ -191,7 +184,37 @@ publishing {
     }
 }
 
-idea { module { inheritOutputDirs = true } }
+idea {
+    module { inheritOutputDirs = true }
+    project { settings {
+        runConfigurations {
+            "1. Run Client"(Gradle) {
+                taskNames = ["runClient"]
+            }
+            "2. Run Server"(Gradle) {
+                taskNames = ["runServer"]
+            }
+            "3. Run Obfuscated Client"(Gradle) {
+                taskNames = ["runObfClient"]
+            }
+            "4. Run Obfuscated Server"(Gradle) {
+                taskNames = ["runObfServer"]
+            }
+        }
+        compiler.javac {
+            afterEvaluate {
+                javacAdditionalOptions = "-encoding utf8"
+                moduleJavacAdditionalOptions = [
+                        (project.name + ".main"): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
+                ]
+            }
+        }
+    }}
+}
+
+tasks.named("processIdeaSettings").configure {
+    dependsOn("injectTags")
+}
 
 curseforge {
     if (!file('CHANGELOG.md').canRead()) { throw new FileNotFoundException("Could not read changelog file") }

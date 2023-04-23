@@ -9,15 +9,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
+    - name: Validate gradle wrapper checksum
+      uses: gradle/wrapper-validation-action@v1
+    - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        distribution: 'adopt'
-        java-version: '8'
+        distribution: 'zulu'
+        java-version: |
+          8
+          17
+        cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew --no-daemon -Pnet.minecraftforge.gradle.disableUpdateChecker=true setupCiWorkspace build
+      run: ./gradlew --no-daemon build
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:

@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -22,6 +23,9 @@ public abstract class EntityLivingBaseMixin extends Entity {
 
         super(worldIn);
     }
+
+    @Accessor(value = "isJumping")
+    public abstract boolean aqua$isJumping();
 
     @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;isSneaking()Z"))
     public boolean isSneaking(EntityLivingBase entity) {
@@ -61,7 +65,7 @@ public abstract class EntityLivingBaseMixin extends Entity {
     @Redirect(method = "travel", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/EntityLivingBase;collidedHorizontally:Z", ordinal = 1))
     private boolean isJumpingOnLadder(EntityLivingBase instance) {
         if(ConfigHandler.MovementConfig.newClimbingBehavior)
-            return instance.collidedHorizontally || instance.isJumping;
+            return instance.collidedHorizontally || ((EntityLivingBaseMixin) (Object) instance).aqua$isJumping();
         else
             return instance.collidedHorizontally;
     }
